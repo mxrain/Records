@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { X, ArrowUp, ArrowDown, Trash2, GithubIcon } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/app/store/store';
-import { deleteChangeRecord, moveChangeRecord, syncToGithub, syncToGithub2 } from '@/app/store/features/changeRecords/changeRecordsSlice';
+import { deleteChangeRecord, moveChangeRecord, syncToGithub2 } from '@/app/store/features/changeRecords/changeRecordsSlice';
 import { log } from 'console';
 
 
@@ -54,7 +54,7 @@ const ChangeHistoryDrawer: React.FC<ChangeHistoryDrawerProps> = ({ isOpen, onClo
   };
 
   const handleSyncToGithub = async () => {
-    await dispatch(syncToGithub());
+    // await dispatch(syncToGithub());
   };
 
   const handleTest = async () => {

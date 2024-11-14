@@ -3,7 +3,7 @@ import axios from 'axios';
 import { config } from '@/appConfig';
 import { cachedFetch } from '@/lib/cacheUtils';
 
-const GITHUB_API_URL = `${config.GITHUB_API_URL}/repos/${config.GITHUB_OWNER}/${config.GITHUB_RESOURCES_REPO}/contents`;
+const GITHUB_API_URL = `${config.GITHUB_API_URL}/repos/${config.GITHUB_OWNER}/${config.GITHUB_REPO}/contents`;
 
 async function fetchResourceData(uuid: string) {
   const resourceUrl = `${GITHUB_API_URL}/${uuid}.json`;
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('获取资源数据时出错:', error);
     return NextResponse.json(
-      { error: '获取资源数据失败', details: (error as Error).message },
+      { error: '获取资源数据失败', details: (error as Error).message ,url: `${GITHUB_API_URL}/${uuid}.json`},
       { status: 500 }
     );
   }

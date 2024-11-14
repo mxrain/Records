@@ -37,12 +37,11 @@ const changeRecordsSlice = createSlice({
     // 移动变更记录的位置
     moveChangeRecord: (state, action: PayloadAction<{ index: number; direction: 'up' | 'down' }>) => {
       const { index, direction } = action.payload;
-      
       // 如果方向是向上移动，且当前索引大于0（不是第一个元素）
       if (direction === 'up' && index > 0) {
         // 交换当前元素和它上面的元素
         [state.records[index - 1], state.records[index]] = [state.records[index], state.records[index - 1]];
-      } 
+      }
       // 如果方向是向下移动，且当前索引小于数组最后一个元素的索引
       else if (direction === 'down' && index < state.records.length - 1) {
         // 交换当前元素和它下面的元素
@@ -103,98 +102,6 @@ export const {
   setSyncStatus,
 } = changeRecordsSlice.actions;
 
-// 添加新的工具函数
-export const processChangeRecord = (record: ChangeRecord) => {
-  switch (record.action) {
-    case 'add':
-      if (!record.data) {
-        throw new Error('添加操作必须包含 data 字段');
-      }
-      return {
-        type: '添加',
-        description: `添加新记录: ${JSON.stringify(record.data).slice(0, 50)}...`,
-        data: record.data
-      };
-
-    case 'edit':
-      if (!record.uuid || !record.data) {
-        throw new Error('编辑操作必包含 uuid 和 data 字段');
-      }
-      return {
-        type: '编辑',
-        description: `编辑记录 ${record.uuid}: ${JSON.stringify(record.data).slice(0, 50)}...`,
-        uuid: record.uuid,
-        data: record.data
-      };
-
-    case 'delete':
-      if (!record.uuid) {
-        throw new Error('删除操作必须包含 uuid 字段');
-      }
-      return {
-        type: '删除',
-        description: `删除记录: ${record.uuid}`,
-        uuid: record.uuid
-      };
-
-    case 'bulk':
-      if (!record.data) {
-        throw new Error('批量操作必须包含 data 字段');
-      }
-      // if (!record.data || !Array.isArray(record.data)) {
-      //   throw new Error('批量操作必须包含数组类型的 data 字段');
-      // }
-      return {
-        type: '批量操作',
-        description: `批量处理 ${record.data.length} 条记录`,
-        data: record.data
-      };
-
-    default:
-      return {
-        type: '未知操作',
-        description: `未知的操作类型: ${record.action}`
-      };
-  }
-};
-
-// 修改同步方法
-// 这个函数用于将变更记录同步到 GitHub 仓库
-// 通过调用 GitHub API 将数据更新到指定的文件中
-// 参数说明:
-// - owner: GitHub 仓库所有者
-// - repo: GitHub 仓库名称 
-// - path: 要更新的文件路径
-// - content: 文件内容
-// - sha: 文件的 SHA 值,用于版本控制
-export const syncToGithub = createAsyncThunk(
-  'changeRecords/syncToGithub',
-  async (_, { getState }) => {
-    // 发送 POST 请求到 GitHub API
-    const response = await fetch('/api/github', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        action: 'updateFile',
-        owner: process.env.NEXT_PUBLIC_GITHUB_OWNER, // GitHub 仓库所有者
-        repo: process.env.NEXT_PUBLIC_GITHUB_REPO,   // GitHub 仓库名称
-        path: 'path/to/your/file',  // 要更新的文件路径
-        content: 'your content',     // 文件内容
-        sha: 'file-sha'             // 文件的 SHA 值
-      })
-    });
-
-    // 检查响应状态
-    if (!response.ok) {
-      throw new Error('Failed to sync with GitHub');
-    }
-
-    // 返回响应数据
-    return await response.json();
-  }
-);
 
 const fetchFileSha = async (owner: string, repo: string, path: string): Promise<string> => {
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
@@ -217,56 +124,87 @@ export const syncToGithub2 = createAsyncThunk(
   'changeRecords/syncToGithub2',
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
-    console.log('state:', state.changeRecords.records);
 
+    // 检查是否有变更记录
+    if (state.changeRecords.records.length === 0) {
+      throw new Error('没有需要同步的变更记录');
+    }
 
-    // 逐一处理变更记录
-    const processedChanges = state.changeRecords.records.map(record => processChangeRecord(record));
-    processedChanges.forEach(change => {
-      console.log('change:', change);
-    });
-    // 整理同步内容
-    // const content = processedChanges.map(change => change.description).join('\n');
-    // console.log('content:', content);
-    
-    // try {
-    //   // 获取文件的最新 SHA
-    //   const fileSha = await fetchFileSha(
-    //     process.env.NEXT_PUBLIC_GITHUB_OWNER!,
-    //     process.env.NEXT_PUBLIC_GITHUB_REPO!,
-    //     'path/to/your/file'
-    //   );
+    try {
+      // 处理每个变更记录
+      const promises = state.changeRecords.records.map(async (change) => {
+        if (!change.uuid) {
+          console.error('变更记录缺少 UUID:', change);
+          return;
+        }
 
-    //   // 发送统一请求到 GitHub
-    //   const response = await fetch('/api/github/updateFile', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       owner: process.env.NEXT_PUBLIC_GITHUB_OWNER, // GitHub 仓库所有者
-    //       repo: process.env.NEXT_PUBLIC_GITHUB_REPO,   // GitHub 仓库名称
-    //       path: 'path/to/your/file',                    // 要更新的文件路径
-    //       content: btoa(content),                       // 文件内容进行Base64编码
-    //       sha: fileSha                                  // 文件的 SHA 值
-    //     })
-    //   });
-      
-    //   if (!response.ok) {
-    //     const errorData = await response.json();
-    //     throw new Error(errorData.error || 'GitHub 同步失败');
-    //   }
-      
-    //   const data = await response.json();
-    //   console.log('GitHub 同步成功:', data);
-      
-    //   // 同步成功后，清空变更记录
-    //   dispatch(clearChangeRecords());
-      
-    // } catch (error) {
-    //   console.error('GitHub 同步错误:', error);
-    //   throw error;
-    // }
+        switch (change.action) {
+          case 'add':
+            try {
+                // 1. 首先创建独立的 JSON 文件
+                const fileContent = JSON.stringify(change.data, null, 2);
+                const createFileResponse = await fetch('/api/github/createFile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        path: `${change.uuid}.json`,
+                        content: fileContent,
+                    })
+                });
+
+                if (!createFileResponse.ok) {
+                    const errorData = await createFileResponse.json();
+                    throw new Error(errorData.error || `创建文件 ${change.uuid}.json 失败`);
+                }
+
+                // 2. 然后更新 resources.json
+                const addResourceResponse = await fetch('/api/github/addResource', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        uuid: change.uuid,
+                        data: change.data
+                    })
+                });
+
+                if (!addResourceResponse.ok) {
+                    const errorData = await addResourceResponse.json();
+                    throw new Error(errorData.error || `更新 resources.json 失败`);
+                }
+
+                return {
+                    file: await createFileResponse.json(),
+                    resource: await addResourceResponse.json()
+                };
+            } catch (error) {
+                console.error(`处理变更记录 ${change.uuid} 时出错:`, error);
+                throw error;
+            }
+          case 'edit':
+            console.log(change);
+            break;
+
+          default:
+            break;
+        }
+      });
+
+      // 等待所有请求完成
+      await Promise.all(promises.filter(p => p)); // 过滤掉 undefined
+
+      // 同步成功后，清空变更记录
+      dispatch(clearChangeRecords());
+
+      return { success: true };
+
+    } catch (error) {
+      console.error('GitHub 同步错误:', error);
+      throw error;
+    }
   }
 );
 
