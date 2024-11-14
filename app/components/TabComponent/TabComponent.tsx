@@ -133,40 +133,41 @@ export default function TabComponent() {
   }
 
   return (
-    <div className={`${styles.tabContainer} ${styles.noHorizontalScroll}`} ref={headerRef}>
-      {!isExceed && (
-        <div className={styles.tabList}>
-          {/* 如果是小屏幕，显示所有标签；否则只显示前23个 */}
-          {(isSmallScreen ? tabs : tabs.slice(0, 23)).map((tab, index) => (
-            <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index}>{tab.name}</Link>
-          ))}
-          {/* 只在非小屏幕时显示"更多"按钮 */}
-          {!isSmallScreen && (
-            <div className={styles.tabItem} onClick={toggleMoreModal} ref={moreButtonRef}>
-              更多
-            </div>
-          )}
-          {/* "更多"模态框的逻辑保持不变 */}
-          {showMoreModal && (
-            <div className={styles.moreModal} ref={moreModalRef} style={{
-              top: moreButtonRef.current ? `${moreButtonRef.current.offsetHeight + 135}px` : '100%',
-              left: moreButtonRef.current ? `${moreButtonRef.current.offsetLeft - 80}px` : '0'
-            }}>
-              {tabs.slice(19).map((tab, index) => (
-                <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index + 23}>{tab.name}</Link>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+    <div className={`${styles.noOverflow}`}>
+      <div className={`${styles.tabContainer} ${styles.noHorizontalScroll}`} ref={headerRef}>
+        {!isExceed && (
+          <div className={styles.tabList}>
+            {/* 如果是小屏幕，显示所有标签；否则只显示前23个 */}
+            {(isSmallScreen ? tabs : tabs.slice(0, 23)).map((tab, index) => (
+              <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index}>{tab.name}</Link>
+            ))}
+            {/* 只在非小屏幕时显示"更多"按钮 */}
+            {!isSmallScreen && (
+              <div className={styles.tabItem} onClick={toggleMoreModal} ref={moreButtonRef}>
+                更多
+              </div>
+            )}
+            {/* "更多"模态框的逻辑保持不变 */}
+            {showMoreModal && (
+              <div className={styles.moreModal} ref={moreModalRef}>
+                {tabs.slice(19).map((tab, index) => (
+                  <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index + 23}>
+                    {tab.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-      {isExceed && (
-        <div className={`${styles.exceedList} ${styles.fadeIn}`}>
-          {tabs.map((tab, index) => (
-            <Link href={`/category/${tab.link}`} className={styles.exceedListItem} key={index}>{tab.name}</Link>
-          ))}
-        </div>
-      )}
+        {isExceed && (
+          <div className={`${styles.exceedList} ${styles.fadeIn}`}>
+            {tabs.map((tab, index) => (
+              <Link href={`/category/${tab.link}`} className={styles.exceedListItem} key={index}>{tab.name}</Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -320,8 +320,9 @@
   /* 小型手机 (<576px): 1列布局 */
   @media screen and (max-width: 575px) {
     .grid {
+
       grid-template-columns: 1fr;
-      margin: 10px 5%;
+      margin: 5rem 0.5rem 0px 0.5rem;
     }
     
     .grid > * {

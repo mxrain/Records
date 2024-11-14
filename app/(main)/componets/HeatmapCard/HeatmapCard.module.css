@@ -52,28 +52,32 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .scrollContainer {
   position: relative;
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 8px;
-  padding-left: 45px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  margin-top: 10px;
+  padding: 0 5px;
+  margin-top: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .scrollContainer::-webkit-scrollbar {
-  display: none;
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 .heatmap {
   display: block;
-  min-height: 800px;
-  margin-top: -30px;
+  width: 100%;
+  height: auto;
+  margin-left: 5px;
 }
 
 .cellWrapper {
@@ -93,7 +97,7 @@
 .monthLabel {
   position: absolute;
   left: 0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-color);
   white-space: nowrap;
@@ -149,13 +153,19 @@
 .detailsList {
   max-height: 300px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 1px;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.detailsList::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 .detailItem {
   font-size: 13px;
   line-height: 1.5;
-  padding: 4px 0;
+  padding: 2px 0;
   color: #666;
   word-break: break-word;
 }
@@ -169,48 +179,30 @@
 }
 
 .popoverWrapper :global(.ant-popover-inner-content) {
-  padding: 12px;
-}
-
-/* 滚动条样式 */
-.detailsList::-webkit-scrollbar {
-  width: 4px;
-}
-
-.detailsList::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 2px;
-}
-
-.detailsList::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 2px;
-}
-
-.detailsList::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  padding: 0px;
 }
 
 .weekdayLabels {
+  padding-left: 0px;
   display: flex;
   justify-content: space-between;
-  padding: 0 40px 10px 40px;
   background: #ffffff;
   position: sticky;
   top: 0;
   z-index: 1;
-  margin: 0 5px;
+  width: calc(100% - 5px);
+  margin: 0 auto;
 }
 
 .weekdayLabel {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-color);
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   text-align: center;
-  line-height: 35px;
-  border-radius: 6px;
+  line-height: 25px;
+  border-radius: 4px;
   transition: background-color 0.3s;
 }
 
@@ -222,9 +214,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 40px;
+  width: 12px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  pointer-events: none;
+  padding-left: 0;
 }

@@ -11,8 +11,8 @@ type HeatmapValue = {
 
 const DAYS_IN_WEEK = 7;
 const WEEKS_IN_YEAR = 52;
-const CELL_SIZE = 35;
-const CELL_PADDING = 5;
+const CELL_SIZE = 25;
+const CELL_PADDING = 3;
 const LABEL_OFFSET = 50;
 
 export default function HeatmapCard() {
@@ -155,55 +155,14 @@ export default function HeatmapCard() {
           ))}
         </div>
         <div className={styles.scrollContainer}>
-          <svg
-            width="100%"
-            preserveAspectRatio="none"
-            viewBox={`-${LABEL_OFFSET} -${LABEL_OFFSET} ${DAYS_IN_WEEK * (CELL_SIZE + CELL_PADDING) + LABEL_OFFSET * 1.5} ${WEEKS_IN_YEAR * (CELL_SIZE + CELL_PADDING) + LABEL_OFFSET * 1.5}`}
-            className={styles.heatmap}
-          >
-            {gridData.map((week, weekIndex) =>
-              week.map((day, dayIndex) => {
-                // 只渲染有数据且不是未来日期的格子
-                if (!day) return null;
-                const date = new Date(day.date);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                if (date > today) return null;
-
-                return (
-                  <Popover
-                    key={`${weekIndex}-${dayIndex}`}
-                    content={renderDetails(day)}
-                    title={null}
-                    trigger="click"
-                    placement="top"
-                    overlayClassName={`${styles.detailsPopover} ${styles.popoverWrapper}`}
-                  >
-                    <g className={styles.cellWrapper}>
-                      <rect
-                        x={dayIndex * (CELL_SIZE + CELL_PADDING)}
-                        y={weekIndex * (CELL_SIZE + CELL_PADDING)}
-                        width={CELL_SIZE}
-                        height={CELL_SIZE}
-                        rx={6}
-                        ry={6}
-                        fill={getColorForValue(day)}
-                        className={styles.cell}
-                      />
-                    </g>
-                  </Popover>
-                );
-              })
-            )}
-            
+          <div className={styles.monthLabelsContainer}>
             {getMonthLabels().map((label, index) => (
-              <text
+              <div
                 key={index}
-                x={-15}
-                y={label.x}
                 className={styles.monthLabel}
-                dominantBaseline="middle"
-                textAnchor="end"
+                style={{
+                  transform: `translateY(${label.x}px)`
+                }}
               >
                 {label.text.replace('Jan', '一月')
                   .replace('Feb', '二月')
@@ -217,8 +176,64 @@ export default function HeatmapCard() {
                   .replace('Oct', '十月')
                   .replace('Nov', '十一月')
                   .replace('Dec', '十二月')}
-              </text>
+              </div>
             ))}
+          </div>
+          <svg
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMin meet"
+            viewBox={`0 0 ${DAYS_IN_WEEK * (CELL_SIZE + CELL_PADDING)} ${WEEKS_IN_YEAR * (CELL_SIZE + CELL_PADDING)}`}
+            className={styles.heatmap}
+          >
+            {gridData.map((week, weekIndex) =>
+              week.map((day, dayIndex) => {
+                // 计算当前格子的日期
+                const currentDate = new Date();
+                currentDate.setFullYear(currentDate.getFullYear() - 1);
+                currentDate.setDate(currentDate.getDate() + (weekIndex * 7 + dayIndex));
+                
+                // 检查是否是未来日期
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (currentDate > today) return null;
+
+                return (
+                  <g
+                    key={`${weekIndex}-${dayIndex}`}
+                    transform={`translate(${dayIndex * (CELL_SIZE + CELL_PADDING)}, ${weekIndex * (CELL_SIZE + CELL_PADDING)})`}
+                  >
+                    {day ? (
+                      <Popover
+                        content={renderDetails(day)}
+                        title={null}
+                        trigger="click"
+                        placement="top"
+                        overlayClassName={`${styles.detailsPopover} ${styles.popoverWrapper}`}
+                      >
+                        <rect
+                          width={CELL_SIZE}
+                          height={CELL_SIZE}
+                          rx={6}
+                          ry={6}
+                          fill={getColorForValue(day)}
+                          className={styles.cell}
+                        />
+                      </Popover>
+                    ) : (
+                      <rect
+                        width={CELL_SIZE}
+                        height={CELL_SIZE}
+                        rx={6}
+                        ry={6}
+                        fill="var(--heatmap-empty-color)"
+                        className={styles.cell}
+                      />
+                    )}
+                  </g>
+                );
+              })
+            )}
           </svg>
         </div>
       </div>
