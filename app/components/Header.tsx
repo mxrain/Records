@@ -49,6 +49,20 @@ const Header: React.FC = () => {
   // 直接从 Redux store 中获取数据
   const categoriesFromStore = useSelector((state: RootState) => state.categoriesApi.queries['getCategories(undefined)']?.data);
 
+  // 添加窗口宽度监听
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // 初始化检查
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     let index = 0;
@@ -73,6 +87,18 @@ const Header: React.FC = () => {
   useEffect(() => {
   }, [categories, categoriesFromStore, isLoading, isError, error]);
 
+  // 修改资源机器人按钮的渲染逻辑
+  const renderResourceBotButton = () => (
+    <Link 
+      href="https://chatbot.weixin.qq.com/webapp/zR6XpGC9NjMrGjpuuboUQACIxqCwLZ?robotName=%E8%B5%84%E6%BA%90%E6%90%9C%E7%B4%A2%E6%9C%BA%E5%99%A8%E4%BA%BA" 
+      className={`${styles.menuButton} ${styles.enhancedMenuButton}`}
+    >
+      <span className={styles.menuText}>
+        {isMobile ? '机器人' : '资源机器人'}
+      </span>
+    </Link>
+  );
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -83,7 +109,7 @@ const Header: React.FC = () => {
           {isLoading ? (
             <div className={styles.skeletonContainer}>
               <Skeleton className="h-10 w-[100px]" />
-              <Skeleton className="h-10 w-[100px]" />
+              {!isMobile && <Skeleton className="h-10 w-[100px]" />}
             </div>
           ) : isError ? (
             <div className={styles.errorMessage}>
@@ -110,9 +136,7 @@ const Header: React.FC = () => {
                   </div>
                 )}
               </div>
-              <Link href="https://chatbot.weixin.qq.com/webapp/zR6XpGC9NjMrGjpuuboUQACIxqCwLZ?robotName=%E8%B5%84%E6%BA%90%E6%90%9C%E7%B4%A2%E6%9C%BA%E5%99%A8%E4%BA%BA" className={`${styles.menuButton} ${styles.enhancedMenuButton}`}>
-                <span className={styles.menuText}>资源机器人</span>
-              </Link>
+              {renderResourceBotButton()}
             </>
           ) : (
             <div className={styles.errorMessage}>没有可用的分类数据</div>

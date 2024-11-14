@@ -259,11 +259,11 @@
     }
   }
 
-  /* 大屏幕 (≥1200px): 5列布局 */
+  /* 大屏幕 (≥1200px) */
   @media screen and (min-width: 1200px) {
     .grid {
       grid-template-columns: repeat(5, 1fr);
-      margin: 10px 20%; /* 减少左右边距以显示更多内容 */
+      margin: 40px 15%; /* 调整为更合适的边距 */
     }
     
     .grid > *:nth-child(1),
@@ -277,11 +277,11 @@
     }
   }
 
-  /* 中等屏幕 (≥992px 和 <1200px): 4列布局 */
+  /* 中等屏幕 (≥992px 和 <1200px) */
   @media screen and (min-width: 992px) and (max-width: 1199px) {
     .grid {
       grid-template-columns: repeat(4, 1fr);
-      margin: 10px 5%;
+      margin: 40px 6%; /* 略微减少边距 */
     }
     
     .grid > *:nth-child(1),
@@ -290,11 +290,11 @@
     }
   }
 
-  /* 平板 (≥768px 和 <992px): 3列布局 */
+  /* 平板 (≥768px 和 <992px) */
   @media screen and (min-width: 768px) and (max-width: 991px) {
     .grid {
       grid-template-columns: repeat(3, 1fr);
-      margin: 10px 5%;
+      margin: 40px 4%; /* 平板设备使用较小边距 */
     }
     
     .grid > *:nth-child(1) {
@@ -305,11 +305,11 @@
     }
   }
 
-  /* 大型手机 (≥576px 和 <768px): 2列布局 */
+  /* 大型手机 (≥576px 和 <768px) */
   @media screen and (min-width: 576px) and (max-width: 767px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
-      margin: 10px 5%;
+      margin: 30px 20px; /* 使用固定边距 */
     }
     
     .grid > * {
@@ -317,15 +317,57 @@
     }
   }
 
-  /* 小型手机 (<576px): 1列布局 */
+  /* 小型手机 (<576px) */
   @media screen and (max-width: 575px) {
     .grid {
-
       grid-template-columns: 1fr;
-      margin: 5rem 0.5rem 0px 0.5rem;
+      margin: 20px 15px; /* 稍微增加边距 */
     }
     
     .grid > * {
       grid-column: span 1 !important;
+    }
+  }
+
+  /* 超大屏幕 (≥1400px) */
+  @media screen and (min-width: 1400px) {
+    .grid {
+      grid-template-columns: repeat(5, 1fr);
+      margin: 40px 12%; /* 减小边距，避免内容过于集中 */
+    }
+    
+    .grid > *:nth-child(1),
+    .grid > *:nth-child(2),
+    .grid > *:nth-child(4),
+    .grid > *:nth-child(5) {
+      grid-column: span 2;
+    }
+    .grid > *:nth-child(3) {
+      grid-column: span 1;
+    }
+  }
+
+  /* 大屏幕 (≥1200px 和 <1400px) */
+  @media screen and (min-width: 1200px) and (max-width: 1399px) {
+    .grid {
+      grid-template-columns: repeat(5, 1fr);
+      margin: 40px 8%; /* 适中的边距 */
+    }
+    
+    .grid > *:nth-child(1),
+    .grid > *:nth-child(2),
+    .grid > *:nth-child(4),
+    .grid > *:nth-child(5) {
+      grid-column: span 2;
+    }
+    .grid > *:nth-child(3) {
+      grid-column: span 1;
+    }
+  }
+
+  /* 折叠屏设备 (<400px) */
+  @media screen and (max-width: 400px) {
+    .grid {
+      margin: 15px 12px; /* 折叠屏使用较小但合适的边距 */
     }
   }

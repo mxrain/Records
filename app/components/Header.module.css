@@ -178,6 +178,22 @@
     animation: fadeIn 0.3s ease-out;
 }
 
+@media (max-width: 1200px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .logoText {
+        font-size: 1.8rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hideOnMobile {
         display: none;
@@ -185,7 +201,8 @@
 
     .container {
         font-size: 0.8rem;
-        padding: 0 0.5rem;
+        padding: 0 0.75rem;
+        max-width: 540px;
     }
 
     .logoText {
@@ -215,13 +232,15 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .container {
         font-size: 0.7rem;
+        padding: 0 0.5rem;
+        width: 100%;
     }
 
     .logoText {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
 
     .menuText {
@@ -234,6 +253,41 @@
 
     .header {
         height: 50px;
+    }
+
+    .skeletonContainer .h-10 {
+        height: 2rem;
+        width: 80px;
+    }
+}
+
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    .logoText {
+        font-size: 2.2rem;
+    }
+    
+    .menuText {
+        font-size: 1.2rem;
+    }
+}
+
+
+@media (max-width: 360px) {
+    .logoText {
+        font-size: 1.1rem;
+    }
+    
+    .menuText {
+        font-size: 0.75rem;
+    }
+    
+    .menuButton {
+        padding: 0.25rem 0.5rem;
     }
 }
 

@@ -19,8 +19,8 @@ export default function MainContent() {
     // 渲染主页内容    
     <div>
       <div className={styles.grid}>
-      <RecommendCard title="推荐资源" type="recommend" />
       <CarouselCard title="轮播图" />
+      <RecommendCard title="推荐资源" type="recommend" />
       <LatestResourceCard title="最新资源" />
       <HotCard title="热门资源" />
       <RevenueRankingCard title="收入排行榜" />
