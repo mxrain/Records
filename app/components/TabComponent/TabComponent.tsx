@@ -149,13 +149,17 @@ export default function TabComponent() {
             )}
             {/* "更多"模态框的逻辑保持不变 */}
             {showMoreModal && (
-              <div className={styles.moreModal} ref={moreModalRef}>
-                {tabs.slice(19).map((tab, index) => (
-                  <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index + 23}>
-                    {tab.name}
-                  </Link>
-                ))}
-              </div>
+              <>
+                <div className={styles.modalOverlay} onClick={() => setShowMoreModal(false)}>
+                  <div className={styles.moreModal} ref={moreModalRef} onClick={e => e.stopPropagation()}>
+                    {tabs.slice(19).map((tab, index) => (
+                      <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index + 23}>
+                        {tab.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
           </div>
         )}

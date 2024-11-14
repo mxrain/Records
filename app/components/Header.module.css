@@ -185,6 +185,59 @@
     .hideOnMobile {
         display: none;
     }
+
+    .container {
+        font-size: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    .logoText {
+        font-size: 1.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .menuText {
+        font-size: 0.9rem;
+    }
+
+    .menuButton {
+        padding: 0.4rem 0.8rem;
+    }
+
+    .header {
+        height: 60px;
+    }
+
+    .categoryLink {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .topLevelMenu, .subMenu {
+        min-width: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        font-size: 0.7rem;
+    }
+
+    .logoText {
+        font-size: 1.2rem;
+    }
+
+    .menuText {
+        font-size: 0.8rem;
+    }
+
+    .menuButton {
+        padding: 0.3rem 0.6rem;
+    }
+
+    .header {
+        height: 50px;
+    }
 }
 
 .grid {
