@@ -49,15 +49,7 @@ const Header: React.FC = () => {
   // 直接从 Redux store 中获取数据
   const categoriesFromStore = useSelector((state: RootState) => state.categoriesApi.queries['getCategories(undefined)']?.data);
 
-  // 这里处理fullLogoText是为了实现一个打字机效果的动画
-  // 当组件加载时，"资源桶"这三个字会逐个显示出来，给用户一种动态的感觉
-  // 这种效果可以吸引用户的注意力，并为网站增添一些视觉趣味性
-  // 具体实现方法是:
-  // 1. 使用useState hook来管理logoText状态
-  // 2. 使用useEffect hook在组件挂载后启动一个定时器
-  // 3. 定时器每200毫秒添加一个字符到logoText中
-  // 4. 当所有字符都添加完毕后，清除定时器
-  // 5. 组件卸载时也会清除定时器，防止内存泄漏
+
   useEffect(() => {
     let index = 0;
     const timer = setInterval(() => {

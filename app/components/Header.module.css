@@ -1,12 +1,11 @@
 .header {
     background-color: #f8f9fa;
-    box-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.1);
     height: 70px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1001;
 }
 
 
@@ -114,10 +113,9 @@
     top: 100%;
     right: 0;
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     min-width: 200px;
-    z-index: 10;
+    z-index: 1002;
     border: 1px solid #e0e0e0;
 }
 
@@ -126,7 +124,6 @@
     top: -1px;
     right: 100%;
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     min-width: 200px;
     border: 1px solid #e0e0e0;
