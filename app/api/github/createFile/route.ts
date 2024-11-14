@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
+const githubToken = process.env.GITHUB_TOKEN;
+const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
+const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
 export async function POST(request: Request) {
-    const githubToken = process.env.GITHUB_TOKEN;
-    const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
-    const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
+
     try {
         const { path, content } = await request.json();
 

@@ -1,10 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { X, ArrowUp, ArrowDown, Trash2, GithubIcon } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { X, ArrowUp, ArrowDown, Trash2, GithubIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/app/store/store';
-import { deleteChangeRecord, moveChangeRecord, syncToGithub2 } from '@/app/store/features/changeRecords/changeRecordsSlice';
-import { log } from 'console';
-
+import { deleteChangeRecord, moveChangeRecord, syncToGithub } from '@/app/store/features/changeRecords/changeRecordsSlice';
 
 interface ChangeHistoryDrawerProps {
   isOpen: boolean;
@@ -15,6 +13,7 @@ const ChangeHistoryDrawer: React.FC<ChangeHistoryDrawerProps> = ({ isOpen, onClo
   const dispatch = useDispatch<AppDispatch>();
   const changeRecords = useSelector((state: RootState) => state.changeRecords.records);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [expandedItems, setExpandedItems] = useState<number[]>([]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,24 +52,43 @@ const ChangeHistoryDrawer: React.FC<ChangeHistoryDrawerProps> = ({ isOpen, onClo
     dispatch(moveChangeRecord({ index, direction }));
   };
 
-  const handleSyncToGithub = async () => {
-    // await dispatch(syncToGithub());
+  const toggleExpand = (index: number) => {
+    setExpandedItems(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
   };
 
-  const handleTest = async () => {
-    await dispatch(syncToGithub2());
+  const getActionSummary = (record: any) => {
+    switch (record.action) {
+      case 'add':
+        return `添加资源: ${record.data?.title || record.data?.name || '未命名'}`;
+      case 'edit':
+        return `编辑资源: ${record.data?.title || record.data?.name || '未命名'}`;
+      case 'bulk':
+        return `批量操作: ${record.data?.operation || '未知操作'}`;
+      default:
+        return `${record.action} 操作`;
+    }
+  };
+
+  const getFieldsSummary = (data: any) => {
+    if (!data) return '无数据';
+    const fields = Object.keys(data);
+    return fields.length > 3 
+      ? `${fields.slice(0, 3).join(', ')}...等${fields.length}个字段` 
+      : fields.join(', ');
   };
 
   return (
     <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
       <div
         ref={drawerRef}
-        className={`absolute bg-white shadow-lg rounded-tl-lg overflow-hidden flex flex-col transition-all duration-300 ease-in-out ${isOpen ? 'bottom-0 right-0 w-[80vw] h-[80vh]' : 'bottom-0 right-0 w-0 h-0'
-          }`}
-        style={{
-          maxWidth: '80vw',
-          maxHeight: '80vh',
-        }}
+        className={`absolute bg-white shadow-lg rounded-tl-lg overflow-hidden flex flex-col transition-all duration-300 ease-in-out ${
+          isOpen ? 'bottom-0 right-0 w-[80vw] h-[80vh]' : 'bottom-0 right-0 w-0 h-0'
+        }`}
+        style={{ maxWidth: '80vw', maxHeight: '80vh' }}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">变更历史</h2>
@@ -78,45 +96,58 @@ const ChangeHistoryDrawer: React.FC<ChangeHistoryDrawerProps> = ({ isOpen, onClo
             <X size={24} />
           </button>
         </div>
+        
         <div className="flex-grow overflow-y-auto p-4 scrollbar-hide">
           {changeRecords.map((record, index) => (
-            <div key={index} className={`mb-4 p-3 rounded-lg ${getBackgroundColor(record.action)}`}>
-              <div className="flex justify-between items-start mb-2">
-                <span className="font-semibold">{record.action === 'bulk' ? `${record.data.operation}` : record.action}</span>
-                <div>
-                  <button onClick={() => handleMove(index, 'up')} className="p-1 hover:bg-gray-200 rounded-full mr-1">
-                    <ArrowUp size={16} />
-                  </button>
-                  <button onClick={() => handleMove(index, 'down')} className="p-1 hover:bg-gray-200 rounded-full mr-1">
-                    <ArrowDown size={16} />
-                  </button>
-                  <button onClick={() => handleDelete(index)} className="p-1 hover:bg-gray-200 rounded-full">
-                    <Trash2 size={16} />
-                  </button>
+            <div 
+              key={index} 
+              className={`mb-2 rounded-lg border ${getBackgroundColor(record.action)} hover:shadow-md transition-shadow`}
+            >
+              <div 
+                className="flex items-center justify-between p-3 cursor-pointer"
+                onClick={() => toggleExpand(index)}
+              >
+                <div className="flex items-center space-x-2">
+                  {expandedItems.includes(index) ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                  <span className="font-medium">{getActionSummary(record)}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600">{getFieldsSummary(record.data)}</span>
+                  <div className="flex space-x-1">
+                    <button onClick={(e) => { e.stopPropagation(); handleMove(index, 'up'); }} className="p-1 hover:bg-gray-200 rounded-full">
+                      <ArrowUp size={16} />
+                    </button>
+                    <button onClick={(e) => { e.stopPropagation(); handleMove(index, 'down'); }} className="p-1 hover:bg-gray-200 rounded-full">
+                      <ArrowDown size={16} />
+                    </button>
+                    <button onClick={(e) => { e.stopPropagation(); handleDelete(index); }} className="p-1 hover:bg-gray-200 rounded-full">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
-              <pre className="text-sm overflow-x-auto">{JSON.stringify(record.data, null, 2)}</pre>
+              
+              {expandedItems.includes(index) && (
+                <div className="px-3 pb-3 border-t">
+                  <pre className="text-sm overflow-x-auto mt-2">
+                    {JSON.stringify(record.data, null, 2)}
+                  </pre>
+                </div>
+              )}
             </div>
           ))}
-          <div>
-            <pre>{JSON.stringify(changeRecords, null, 2)}</pre>
-          </div>
         </div>
 
         <div className="p-4 border-t">
-          <button onClick={handleSyncToGithub} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded flex items-center justify-center">
+          <button 
+            onClick={() => dispatch(syncToGithub())} 
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded flex items-center justify-center"
+          >
             <GithubIcon className="mr-2" size={20} />
             同步到 GitHub
           </button>
-          <button onClick={handleTest} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded flex items-center justify-center">
-            <GithubIcon className="mr-2" size={20} />
-            test
-          </button>
         </div>
-
-
       </div>
-
     </div>
   );
 };

@@ -1,57 +1,99 @@
 import { NextResponse } from 'next/server';
 
-// 定义请求体的类型
 interface UpdateFileRequest {
-  owner: string;
-  repo: string;
   path: string;
-  content: string; // 已进行 Base64 编码
+  content: string;
   sha: string;
 }
 
+interface GitHubErrorResponse {
+  message: string;
+  documentation_url?: string;
+}
+
+const githubToken = process.env.GITHUB_TOKEN;
+const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
+const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
+
 export async function POST(request: Request) {
   try {
-    const body: UpdateFileRequest = await request.json();
-
-    const { owner, repo, path, content, sha } = body;
-
-    // GitHub API 的文件更新端点
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-
-    // 获取 GitHub 个人访问令牌
-    const token = process.env.GITHUB_TOKEN;
-    if (!token) {
-      return NextResponse.json({ error: 'GitHub token 未配置。' }, { status: 500 });
+    // 验证环境变量
+    if (!githubToken || !owner || !repo) {
+      return NextResponse.json(
+        { error: '缺少必要的环境变量配置' },
+        { status: 500 }
+      );
     }
 
-    // 构建请求体
-    const commitMessage = `同步变更记录 - ${new Date().toLocaleString()}`;
+    const body: UpdateFileRequest = await request.json();
+    const { path, content, sha } = body;
+
+    // 验证请求参数
+    if (!path || !content || !sha) {
+      return NextResponse.json(
+        { error: '缺少必要的请求参数' },
+        { status: 400 }
+      );
+    }
+
+    // 确保 content 是 base64 编码格式
+    let base64Content = content;
+    try {
+      if (!content.match(/^[A-Za-z0-9+/=]+$/)) {
+        base64Content = Buffer.from(content).toString('base64');
+      }
+      // 验证 base64 格式
+      Buffer.from(base64Content, 'base64').toString();
+    } catch (error) {
+      return NextResponse.json(
+        { error: '内容编码格式错误' },
+        { status: 400 }
+      );
+    }
+
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
     const payload = {
-      message: commitMessage,
-      content: content,
+      message: `update: ${path} - ${new Date().toISOString()}`,
+      content: base64Content,
       sha: sha,
     };
 
-    // 发送 PUT 请求到 GitHub API
-    const response = await fetch(apiUrl, {
+    const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Authorization': `token ${token}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json',
+        'X-GitHub-Api-Version': '2022-11-28',
       },
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    const data = await response.json() as GitHubErrorResponse;
 
     if (!response.ok) {
-      return NextResponse.json({ error: data.message || 'GitHub 同步失败' }, { status: response.status });
+      console.error('GitHub API 错误:', data);
+      return NextResponse.json(
+        { 
+          error: data.message || 'GitHub 同步失败',
+          details: data.documentation_url 
+        }, 
+        { status: response.status }
+      );
     }
 
-    return NextResponse.json({ message: 'GitHub 同步成功', data });
-  } catch (error: any) {
-    console.error('GitHub API 错误:', error);
-    return NextResponse.json({ error: '内部服务器错误' }, { status: 500 });
+    return NextResponse.json({
+      message: 'GitHub 同步成功',
+      data,
+      path
+    });
+
+  } catch (error) {
+    console.error('服务器错误:', error);
+    return NextResponse.json(
+      { error: '内部服务器错误' },
+      { status: 500 }
+    );
   }
 } 

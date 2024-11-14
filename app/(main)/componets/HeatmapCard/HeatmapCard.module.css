@@ -1,0 +1,230 @@
+.variables {
+  --heatmap-empty-color: #ebedf0;
+  --heatmap-scale-1: #9be9a8;
+  --heatmap-scale-2: #40c463;
+  --heatmap-scale-3: #30a14e;
+  --heatmap-scale-4: #216e39;
+  --text-color: #24292e;
+  --border-radius: 6px;
+  --shadow-color: rgba(0, 0, 0, 0.12);
+  --month-0: #FF9E80;
+  --month-1: #FF8A80;
+  --month-2: #EA80FC;
+  --month-3: #B388FF;
+  --month-4: #8C9EFF;
+  --month-5: #82B1FF;
+  --month-6: #80D8FF;
+  --month-7: #84FFFF;
+  --month-8: #A7FFEB;
+  --month-9: #B9F6CA;
+  --month-10: #CCFF90;
+  --month-11: #F4FF81;
+}
+
+.heatmapCard {
+  --heatmap-empty-color: #ebedf0;
+  --heatmap-scale-1: #9be9a8;
+  --heatmap-scale-2: #40c463;
+  --heatmap-scale-3: #30a14e;
+  --heatmap-scale-4: #216e39;
+  --text-color: #24292e;
+  
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  height: 330px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  flex-shrink: 0;
+}
+
+.heatmapWrapper {
+  flex-grow: 1;
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.scrollContainer {
+  position: relative;
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 8px;
+  padding-left: 45px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  margin-top: 10px;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.heatmap {
+  display: block;
+  min-height: 800px;
+  margin-top: -30px;
+}
+
+.cellWrapper {
+  cursor: pointer;
+}
+
+.cell {
+  transition: all 0.3s ease;
+}
+
+.cellWrapper:hover .cell {
+  stroke: rgba(0, 0, 0, 0.3);
+  stroke-width: 2;
+  filter: brightness(1.1);
+}
+
+.monthLabel {
+  position: absolute;
+  left: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  white-space: nowrap;
+  padding-right: 8px;
+  text-align: right;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.loadingWrapper,
+.errorWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.errorMessage {
+  color: #ff4d4f;
+  text-align: center;
+}
+
+.retryButton {
+  padding: 4px 15px;
+  background: #1890ff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.retryButton:hover {
+  background: #40a9ff;
+}
+
+/* 详情弹窗样式 */
+.detailsPopover {
+  max-width: 300px;
+  max-height: 400px;
+}
+
+.detailsHeader {
+  font-size: 14px;
+  font-weight: 500;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 8px;
+}
+
+.detailsList {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.detailItem {
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 4px 0;
+  color: #666;
+  word-break: break-word;
+}
+
+/* 自定义 Popover 样式 */
+.popoverWrapper :global(.ant-popover-inner) {
+  border-radius: 8px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+              0 6px 16px 0 rgba(0, 0, 0, 0.08),
+              0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+
+.popoverWrapper :global(.ant-popover-inner-content) {
+  padding: 12px;
+}
+
+/* 滚动条样式 */
+.detailsList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.detailsList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.detailsList::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.detailsList::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.weekdayLabels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px 10px 40px;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 5px;
+}
+
+.weekdayLabel {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.weekdayLabel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.monthLabelsContainer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}

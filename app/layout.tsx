@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import './globals.css';
+import 'react-tooltip/dist/react-tooltip.css';
 import { Inter } from 'next/font/google'  // 这是谷歌字体
 import { Providers } from './components/Providers';
 import { Toaster } from "@/components/ui/toaster"

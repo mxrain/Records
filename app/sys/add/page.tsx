@@ -101,29 +101,6 @@ export default function ResourceCRUD() {
     dispatch(addChangeRecord({ action: 'delete', uuid }));
   };
 
-  const handleSyncGithub = async () => {
-
-    for (const record of changeRecords) {
-      switch (record.action) {
-        case 'add':
-        case 'edit':
-          // await syncWithGithub({ action: record.action, uuid: record.uuid, data: record.data });
-          break;
-        case 'delete':
-          // await syncWithGithub({ action: 'delete', uuid: record.uuid });
-          break;
-        case 'bulk':
-          // await syncWithGithub({ action: 'updateList', data: listData });
-          break;
-      }
-    }
-    // await syncWithGithub({ action: 'sync', data: resources });
-    dispatch(clearChangeRecords());
-    toast({
-      title: "成功",
-      description: "已成功同步到GitHub。",
-    });
-  };
 
   const handleBulkOperation = async (operation: string, uuids: string[]) => {
     dispatch(addChangeRecord({ 
@@ -140,7 +117,6 @@ export default function ResourceCRUD() {
     <div className="mx-auto container p-4">
       <Suspense fallback={<LoadingAnimation />}>
         <div className="hidden sm:flex justify-between items-center mb-5">
-          <Button onClick={handleSyncGithub}>同步到GitHub</Button>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button>添加新资源</Button>
@@ -195,7 +171,9 @@ export default function ResourceCRUD() {
                   />
                 </DialogContent>
               </Dialog>
-              <Button className="rounded-full w-12 h-12 p-0" onClick={handleSyncGithub}>
+              <Button className="rounded-full w-12 h-12 p-0" onClick={() => {
+                console.log('test');
+              }}>
                 <RefreshCwIcon />
               </Button>
               <BulkOperationButtons

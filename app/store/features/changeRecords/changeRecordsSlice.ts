@@ -120,8 +120,8 @@ const fetchFileSha = async (owner: string, repo: string, path: string): Promise<
   return data.sha;
 };
 
-export const syncToGithub2 = createAsyncThunk(
-  'changeRecords/syncToGithub2',
+export const syncToGithub = createAsyncThunk(
+  'changeRecords/syncToGithub',
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
 
@@ -185,9 +185,52 @@ export const syncToGithub2 = createAsyncThunk(
                 throw error;
             }
           case 'edit':
-            console.log(change);
-            break;
+            
+            try {
+              // 1. 更新独立的 JSON 文件
+              const fileContent = JSON.stringify(change.data, null, 2);
+              const updateFileResponse = await fetch('/api/github/updateFile', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  path: `${change.uuid}.json`,
+                  content: fileContent,
+                })
+              });
 
+              if (!updateFileResponse.ok) {
+                const errorData = await updateFileResponse.json();
+                throw new Error(errorData.error || `更新文件 ${change.uuid}.json 失败`);
+              }
+
+              // 2. 更新 resources.json
+              const updateResourceResponse = await fetch('/api/github/addResource', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  uuid: change.uuid,
+                  data: change.data,
+                  isEdit: true // 标记这是一个编辑操作
+                })
+              });
+
+              if (!updateResourceResponse.ok) {
+                const errorData = await updateResourceResponse.json();
+                throw new Error(errorData.error || `更新 resources.json 失败`);
+              }
+
+              return {
+                file: await updateFileResponse.json(),
+                resource: await updateResourceResponse.json()
+              };
+            } catch (error) {
+              console.error(`处理编辑记录 ${change.uuid} 时出错:`, error);
+              throw error;
+            }
           default:
             break;
         }

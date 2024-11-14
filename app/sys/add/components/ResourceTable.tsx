@@ -24,18 +24,21 @@ interface ResourceTableProps {
 }
 
 export function ResourceTable({ resources, visibleColumns, onEdit, onDelete, onSelectionChange }: ResourceTableProps) {
+  // 用于跟踪选中的资源UUID
   const [selectedUuids, setSelectedUuids] = useState<string[]>([]);
 
+  // 处理全选/取消全选
   const handleSelectAll = (checked: boolean) => {
     const newSelectedUuids = checked ? Object.keys(resources) : [];
     setSelectedUuids(newSelectedUuids);
     onSelectionChange(newSelectedUuids);
   };
 
+  // 处理单个资源的选择/取消选择
   const handleSelectOne = (uuid: string, checked: boolean) => {
     const newSelectedUuids = checked
-      ? [...selectedUuids, uuid]
-      : selectedUuids.filter(id => id !== uuid);
+      ? [...selectedUuids, uuid] // 添加到选中列表
+      : selectedUuids.filter(id => id !== uuid); // 从选中列表移除
     setSelectedUuids(newSelectedUuids);
     onSelectionChange(newSelectedUuids);
   };
