@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Spin, Popover } from 'antd';
 import styles from './HeatmapCard.module.css';
 
@@ -19,6 +19,8 @@ export default function HeatmapCard() {
   const [contributions, setContributions] = useState<HeatmapValue[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [visibleMonths, setVisibleMonths] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchContributions = async () => {
@@ -120,6 +122,47 @@ export default function HeatmapCard() {
     </div>
   );
 
+  // 添加滚动处理函数
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const containerCenter = containerRect.top + containerRect.height / 2;
+    
+    // 获取所有月份标签元素
+    const monthLabels = container.getElementsByClassName(styles.monthLabel);
+    const visible: number[] = [];
+    
+    Array.from(monthLabels).forEach((label, index) => {
+      const labelRect = label.getBoundingClientRect();
+      const labelCenter = labelRect.top + labelRect.height / 2;
+      
+      // 检查标签是否在容器中间区域
+      if (Math.abs(labelCenter - containerCenter) < 30) { // 30px 的容差范围
+        visible.push(index);
+      }
+    });
+    
+    setVisibleMonths(visible);
+  };
+
+  // 添加滚动监听
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      // 初始化时触发一次
+      handleScroll();
+    }
+    
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <div className={styles.heatmapCard}>
@@ -154,12 +197,12 @@ export default function HeatmapCard() {
             </div>
           ))}
         </div>
-        <div className={styles.scrollContainer}>
+        <div className={styles.scrollContainer} ref={scrollContainerRef}>
           <div className={styles.monthLabelsContainer}>
             {getMonthLabels().map((label, index) => (
               <div
                 key={index}
-                className={styles.monthLabel}
+                className={`${styles.monthLabel} ${visibleMonths.includes(index) ? styles.visible : ''}`}
                 style={{
                   transform: `translateY(${label.x}px)`
                 }}

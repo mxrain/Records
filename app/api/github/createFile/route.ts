@@ -33,7 +33,7 @@ export async function POST(request: Request) {
                 'Accept': 'application/vnd.github.v3+json',
             },
             body: JSON.stringify({
-                message: `Create file: ${path}`,
+                message: `创建: ${path}`,
                 content: base64Content,
                 branch: 'main'
             }),
