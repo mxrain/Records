@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useGetCategoriesQuery } from '@/app/store/api/categoriesApi';
 import { useGetIconsQuery } from '@/app/store/features/icons/iconsApi';
 import * as Icons from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { addChangeRecord } from '@/app/store/features/changeRecords/changeRecordsSlice';
 
 type CategoryData = {
   icon: string
@@ -55,6 +57,7 @@ const InteractiveTreeTable: React.FC = () => {
   const [page, setPage] = useState(1);
   const pageSize = 60;
   const [allIcons, setAllIcons] = useState<string[]>([]);
+  const dispatch = useDispatch();
 
   const { data: iconsData, isLoading: iconsLoading } = useGetIconsQuery({ 
     page, 
@@ -74,8 +77,19 @@ const InteractiveTreeTable: React.FC = () => {
   }, [categoriesData]);
 
   const pushNewTreeData = () => {
-    console.log('pushNewTreeData',treeData)
-  }
+    console.log('Pushing tree data:', treeData);
+    
+    if (!treeData || Object.keys(treeData).length === 0) {
+      console.error('Tree data is empty or invalid');
+      return;
+    }
+
+    dispatch(addChangeRecord({
+      action: 'edit',
+      uuid: 'categories',
+      data: treeData
+    }));
+  };
   
   const toggleRow = (rowKey: string) => {
     setExpandedRows((prev) => {

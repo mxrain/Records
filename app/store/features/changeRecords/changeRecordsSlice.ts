@@ -120,6 +120,23 @@ const fetchFileSha = async (owner: string, repo: string, path: string): Promise<
   return data.sha;
 };
 
+// 添加获取文件 SHA 的函数
+const getFileSha = async (path: string) => {
+  const response = await fetch(`/api/github/getFileSha?path=${path}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('获取文件 SHA 失败');
+  }
+
+  const data = await response.json();
+  return data.sha;
+};
+
 export const syncToGithub = createAsyncThunk(
   'changeRecords/syncToGithub',
   async (_, { getState, dispatch }) => {
@@ -185,27 +202,63 @@ export const syncToGithub = createAsyncThunk(
                 throw error;
             }
           case 'edit':
-            
             try {
-              // 1. 更新独立的 JSON 文件
+              // 特殊处理 categories.json
+              if (change.uuid === 'categories') {
+                const sha = await getFileSha('db/categories.json');
+                const fileContent = JSON.stringify(change.data, null, 2);
+                
+                const updateCategoriesResponse = await fetch('/api/github/updateFile', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    path: 'db/categories.json',
+                    content: fileContent,
+                    sha: sha,
+                    commitMessage: '更新分类配置'
+                  })
+                });
+
+                if (!updateCategoriesResponse.ok) {
+                  const errorData = await updateCategoriesResponse.json();
+                  throw new Error(errorData.error || `更新 categories.json 失败: ${errorData.details || ''}`);
+                }
+
+                return {
+                  file: await updateCategoriesResponse.json()
+                };
+              }
+
+              // 处理普通资源文件
+              const sha = await getFileSha(`${change.uuid}.json`);
               const fileContent = JSON.stringify(change.data, null, 2);
+              
+              // 构建资源描述
+              const resourceName = change.data?.name || change.uuid;
+              const resourceType = change.data?.type || '资源';
+              const commitMessage = `更新${resourceType}: ${resourceName}`;
+
               const updateFileResponse = await fetch('/api/github/updateFile', {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                   path: `${change.uuid}.json`,
                   content: fileContent,
+                  sha: sha,
+                  commitMessage
                 })
               });
 
               if (!updateFileResponse.ok) {
                 const errorData = await updateFileResponse.json();
-                throw new Error(errorData.error || `更新文件 ${change.uuid}.json 失败`);
+                throw new Error(errorData.error || `更新文件 ${change.uuid}.json 失败: ${errorData.details || ''}`);
               }
 
-              // 2. 更新 resources.json
+              // 更新 resources.json
               const updateResourceResponse = await fetch('/api/github/addResource', {
                 method: 'POST',
                 headers: {
@@ -214,13 +267,13 @@ export const syncToGithub = createAsyncThunk(
                 body: JSON.stringify({
                   uuid: change.uuid,
                   data: change.data,
-                  isEdit: true // 标记这是一个编辑操作
+                  isEdit: true
                 })
               });
 
               if (!updateResourceResponse.ok) {
                 const errorData = await updateResourceResponse.json();
-                throw new Error(errorData.error || `更新 resources.json 失败`);
+                throw new Error(errorData.error || `更新 resources.json 失败: ${errorData.details || ''}`);
               }
 
               return {
@@ -229,8 +282,10 @@ export const syncToGithub = createAsyncThunk(
               };
             } catch (error) {
               console.error(`处理编辑记录 ${change.uuid} 时出错:`, error);
-              throw error;
+              // 重新抛出错误，但包含更多上下文信息
+              throw new Error(`处理资源 ${change.uuid} 的编辑操作失败: ${error instanceof Error ? error.message : '未知错误'}`);
             }
+
           default:
             break;
         }

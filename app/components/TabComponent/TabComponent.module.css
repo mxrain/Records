@@ -13,6 +13,7 @@
   margin-left: 0;
   margin-right: 0;
   padding: 0;
+  z-index: 1007;
 }
 
 .tabList {
@@ -60,13 +61,13 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1007;
 }
 
 .sticky {
   position: sticky;
   top: 65px;
-  z-index: 1000;
+  z-index: 1007;
 }
 
 .tab {
@@ -96,7 +97,7 @@
   top: 65px;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1007;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -231,7 +232,7 @@
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #00000013;
-  z-index: 1001;
+  z-index: 1008;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -335,7 +336,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1008;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -365,7 +366,7 @@
   top: 65px;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1007;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
