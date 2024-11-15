@@ -18,6 +18,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    overflow: hidden;
 }
 
 .logo {
@@ -230,6 +231,25 @@
     .topLevelMenu, .subMenu {
         min-width: 160px;
     }
+
+    .container {
+        padding: 0 0.5rem;
+        max-width: 540px;
+    }
+
+    .menuButton {
+        padding: 0.4rem 0.5rem;
+        min-width: auto;
+    }
+
+    .menuText {
+        font-size: 0.85rem;
+    }
+
+    .nav {
+        flex-shrink: 0;
+        margin-left: 0.5rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -258,6 +278,22 @@
     .skeletonContainer .h-10 {
         height: 2rem;
         width: 80px;
+    }
+
+    .container {
+        padding: 0 0.3rem;
+    }
+
+    .menuButton {
+        padding: 0.3rem 0.4rem;
+    }
+
+    .menuText {
+        font-size: 0.8rem;
+    }
+
+    .logoText {
+        font-size: 1.1rem;
     }
 }
 
