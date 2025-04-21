@@ -39,17 +39,17 @@ const ResourceCard: React.FC<ResourceCardProps> = ({ uuid, resource, isLoading =
                         <Image
                             src="https://api.btstu.cn/sjbz/api.php?lx=dongman&format=images"
                             alt="默认图片"
-                            layout="fill"
-                            objectFit="cover"
-                            className={styles.image}
+                            fill
+                            className={`${styles.image} object-cover`}
+                            sizes="(max-width: 768px) 100vw, 300px"
                         />
                     ) : (
                         <Image
                             src={resource.images[0]}
                             alt={resource.name}
-                            layout="fill"
-                            objectFit="cover"
-                            className={styles.image}
+                            fill
+                            className={`${styles.image} object-cover`}
+                            sizes="(max-width: 768px) 100vw, 300px"
                             onError={() => setImageError(true)}
                         />
                     )}

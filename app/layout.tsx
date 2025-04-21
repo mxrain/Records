@@ -30,28 +30,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <Suspense fallback={<LoadingAnimation />}>
-      <html lang="en">
-        <head>
-          <style>{`
-          #nprogress .bar {
-            background: #000000; /* 黑色进度条 */
-            height: 3px; /* 保持进度条高度不变 */
-          }
-          #nprogress .peg {
-            box-shadow: 0 0 10px #000000, 0 0 5px #000000; /* 黑色阴影效果 */
-          }
-        `}</style>
-        </head>
-        <body>
-          <Providers>
-            <ClientLayout>
+    <html lang="en">
+      <head>
+        <style>{`
+        #nprogress .bar {
+          background: #000000; /* 黑色进度条 */
+          height: 3px; /* 保持进度条高度不变 */
+        }
+        #nprogress .peg {
+          box-shadow: 0 0 10px #000000, 0 0 5px #000000; /* 黑色阴影效果 */
+        }
+      `}</style>
+      </head>
+      <body>
+        <Providers>
+          <ClientLayout>
+            <Suspense fallback={<LoadingAnimation />}>
               <Toaster />
               {children}
-            </ClientLayout>
-          </Providers>
-        </body>
-      </html>
-    </Suspense>
+            </Suspense>
+          </ClientLayout>
+        </Providers>
+      </body>
+    </html>
   );
 }

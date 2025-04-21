@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { addTab, removeTab, setActiveTab, clearAllTabs } from '../../store/features/tabs/tabsSlice';
@@ -15,10 +15,14 @@ const Header: React.FC = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const { tabs, activeTab } = useSelector((state: RootState) => state.tabs);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   React.useEffect(() => {
     if (pathname) {
-      // 检查路径是否以 '/sys' 开头，但不仅仅是 '/sys'
       if (pathname.startsWith('/sys/') && pathname !== '/sys') {
         const currentTab = tabs.find((tab: Tab) => tab.path === pathname);
         if (!currentTab) {
@@ -34,7 +38,6 @@ const Header: React.FC = () => {
     const pathSegments = path.split('/');
     const lastSegment = pathSegments[pathSegments.length - 1];
     
-    // 更新标题映射，包含 'sys'
     const titleMap: { [key: string]: string } = {
       'sys': '系统',
       'add': '添加',
@@ -67,8 +70,8 @@ const Header: React.FC = () => {
     router.push('/sys/add');
   };
 
-  if (!tabs || tabs.length === 0) {
-    return null; // 或者显示一个加载指示器
+  if (!isMounted || !tabs || tabs.length === 0) {
+    return <header className="bg-white shadow flex-shrink-0 sticky top-0 z-10"><nav className="p-1"></nav></header>;
   }
 
   return (

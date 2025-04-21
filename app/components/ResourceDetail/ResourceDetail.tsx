@@ -205,10 +205,9 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                         <Image
                             src={resource.images[currentImageIndex]}
                             alt={`${resource.name} - 图片`}
-                            layout="fill"
-                            objectFit="cover"
+                            fill
                             className={cn(
-                                "rounded-lg transition-opacity duration-300",
+                                "rounded-lg transition-opacity duration-300 object-cover",
                                 imageLoaded[currentImageIndex] ? "opacity-100" : "opacity-0"
                             )}
                             onLoad={() => {
@@ -413,10 +412,9 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                                 <Image
                                                     src={image}
                                                     alt={`${resource.name} - 图片 ${index + 1}`}
-                                                    layout="fill"
-                                                    objectFit="cover"
+                                                    fill
                                                     className={cn(
-                                                        "rounded-lg transition-opacity duration-300",
+                                                        "rounded-lg transition-opacity duration-300 object-cover",
                                                         imageLoaded[index] ? "opacity-100" : "opacity-0"
                                                     )}
                                                     onLoad={() => {
@@ -436,8 +434,8 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                                 alt={`${resource.name} - 图片 ${index + 1}`}
                                                 width={800}
                                                 height={600}
-                                                layout="responsive"
-                                                objectFit="contain"
+                                                className="object-contain" 
+                                                sizes="(max-width: 768px) 100vw, 800px"
                                             />
                                         </DialogContent>
                                     </Dialog>

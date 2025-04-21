@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect ,Suspense } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -9,8 +9,10 @@ import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    setIsMounted(true)
     NProgress.configure({ 
       showSpinner: false,
       trickleSpeed: 100,
@@ -19,6 +21,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [])
 
   useEffect(() => {
+    if (!isMounted) return
+
     const handleStart = () => NProgress.start()
     const handleComplete = () => NProgress.done()
 
@@ -32,7 +36,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       clearTimeout(timer)
       handleComplete()
     }
-  }, [pathname, searchParams])
+  }, [pathname, searchParams, isMounted])
 
-  return <Suspense fallback={<LoadingAnimation />}>{children}</Suspense>
+  // 使用单一的 LoadingAnimation，避免多层 Suspense 嵌套
+  if (!isMounted) {
+    return <LoadingAnimation />
+  }
+
+  return children
 }
