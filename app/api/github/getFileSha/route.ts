@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const githubToken = process.env.GITHUB_TOKEN;
 const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
 const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
     // 验证环境变量
     if (!githubToken || !owner || !repo) {
@@ -17,8 +19,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const { searchParams } = new URL(request.url);
-    const path = searchParams.get('path');
+    const path = request.nextUrl.searchParams.get('path');
 
     if (!path) {
       return NextResponse.json(
@@ -96,4 +97,4 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

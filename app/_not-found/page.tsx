@@ -1,16 +1,21 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import NotFoundContent from './NotFoundContent';
+import dynamic from 'next/dynamic';
 import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation';
 
-const NotFoundPage = () => {
+const NotFoundContent = dynamic(
+  () => import('./NotFoundContent'),
+  { 
+    loading: () => <LoadingAnimation />,
+    ssr: false
+  }
+);
+
+export default function NotFoundPage() {
   return (
     <Suspense fallback={<LoadingAnimation />}>
-      {/* 使用 useSearchParams 的部分 */}
       <NotFoundContent />
     </Suspense>
   );
-};
-
-export default NotFoundPage;
+}

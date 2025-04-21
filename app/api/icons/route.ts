@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '60');
+    const page = parseInt(request.nextUrl.searchParams.get('page') || '1');
+    const pageSize = parseInt(request.nextUrl.searchParams.get('pageSize') || '60');
 
     // 定义固定的图标列表
     const iconNames = [
@@ -5192,25 +5193,26 @@ export async function GET(request: Request) {
       "icons"
     ];
 
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    const paginatedIcons = iconNames.slice(start, end);
-
-    if (paginatedIcons.length === 0) {
-      return NextResponse.json(
-        { error: "未找到任何图标" },
-        { status: 404 }
-      );
-    }
+    const total = iconNames.length;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, total);
+    const icons = iconNames.slice(startIndex, endIndex);
 
     return NextResponse.json({
-      icons: paginatedIcons,
-      total: iconNames.length
+      success: true,
+      icons,
+      total,
+      page,
+      pageSize,
+      hasMore: endIndex < total
     });
   } catch (error) {
     console.error('获取图标列表时出错:', error);
     return NextResponse.json(
-      { error: "获取图标失败" },
+      { 
+        error: '获取图标列表失败',
+        details: error instanceof Error ? error.message : '未知错误'
+      },
       { status: 500 }
     );
   }

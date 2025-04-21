@@ -1,12 +1,5 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-
-// 定义类别的接口
-interface CategoryData {
-  link?: string;
-  icon?: string;
-  items?: { [key: string]: CategoryData };
-  [key: string]: any;
-}
+import { CategoryData } from '@/app/types/categories';
 
 // 创建 API slice
 export const categoriesApi = createApi({

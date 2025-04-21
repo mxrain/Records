@@ -37,7 +37,7 @@ const ResourceForm = dynamic(
   { ssr: false }
 );
 
-export default function ResourceCRUD() {
+function ResourceCRUDContent() {
   const [isClient, setIsClient] = useState(false);
   const [resources, setResources] = useState<ResourcesState>({});
   const [visibleColumns, setVisibleColumns] = useState<ColumnName[]>(['name', 'uuid', 'category', 'images', 'source_links', 'tags', 'uploaded', 'update_time']);
@@ -114,112 +114,120 @@ export default function ResourceCRUD() {
   }
 
   return (
-    <div className="mx-auto container p-4">
-      <Suspense fallback={<LoadingAnimation />}>
-        <div className="hidden sm:flex justify-between items-center mb-5">
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>添加新资源</Button>
-            </DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>添加新资源</DialogTitle>
-              </DialogHeader>
-              <ResourceForm
-                onSubmit={handleAddResource}
-                categories={categoriesData || []}
-                tags={tagsData || {}}
-              />
-            </DialogContent>
-          </Dialog>
-          <BulkOperationButtons
-            onOperation={handleBulkOperation}
-            selectedUuids={selectedUuids}
-          />
-          <ColumnVisibilityToggle
-            columns={['uuid', 'name', 'category', 'images', 'source_links', 'tags', 'uploaded', 'update_time']}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
-          />
-        </div>
-
-        {/* 小屏幕布局 */}
-        <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-2 sm:hidden z-10">
-          <Button
-            className="rounded-full w-12 h-12 p-0"
-            onClick={() => setIsMenuExpanded(!isMenuExpanded)}
-          >
-            {isMenuExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
-          </Button>
-
-          {isMenuExpanded && (
-            <>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="rounded-full w-12 h-12 p-0">
-                    <PlusIcon />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>添加新资源</DialogTitle>
-                  </DialogHeader>
-                  <ResourceForm
-                    onSubmit={handleAddResource}
-                    categories={categoriesData || []}
-                    tags={tagsData || {}}
-                  />
-                </DialogContent>
-              </Dialog>
-              <Button className="rounded-full w-12 h-12 p-0" onClick={() => {
-                console.log('test');
-              }}>
-                <RefreshCwIcon />
-              </Button>
-              <BulkOperationButtons
-                onOperation={handleBulkOperation}
-                selectedUuids={selectedUuids}
-                useSmallScreen={true}
-              />
-              <ColumnVisibilityToggle
-                columns={['uuid', 'name', 'category', 'images', 'source_links', 'tags', 'uploaded', 'update_time']}
-                visibleColumns={visibleColumns}
-                setVisibleColumns={setVisibleColumns}
-                useSmallScreen={true}
-              >
-                <Button className="rounded-full w-12 h-12 p-0">
-                  <ColumnsIcon />
-                </Button>
-              </ColumnVisibilityToggle>
-            </>
-          )}
-        </div>
-
-        <ResourceTable
-          resources={resources}
-          visibleColumns={visibleColumns}
-          onEdit={(uuid) => setEditingResource({ uuid, resource: resources[uuid] })}
-          onDelete={handleDeleteResource}
-          onSelectionChange={(newSelectedUuids) => {
-            setSelectedUuids(newSelectedUuids);
-          }}
+    <div>
+      <div className="hidden sm:flex justify-between items-center mb-5">
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>添加新资源</Button>
+          </DialogTrigger>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>添加新资源</DialogTitle>
+            </DialogHeader>
+            <ResourceForm
+              onSubmit={handleAddResource}
+              categories={categoriesData || []}
+              tags={tagsData || {}}
+            />
+          </DialogContent>
+        </Dialog>
+        <BulkOperationButtons
+          onOperation={handleBulkOperation}
+          selectedUuids={selectedUuids}
         />
-        {editingResource && (
-          <Dialog open={!!editingResource} onOpenChange={() => setEditingResource(null)}>
-            <DialogContent className="max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>编辑资源</DialogTitle>
-              </DialogHeader>
-              <ResourceForm
-                initialData={editingResource.resource}
-                onSubmit={(data) => handleEditResource(editingResource.uuid, data)}
-                categories={categoriesData || []}
-                tags={tagsData || {}}
-              />
-            </DialogContent>
-          </Dialog>
+        <ColumnVisibilityToggle
+          columns={['uuid', 'name', 'category', 'images', 'source_links', 'tags', 'uploaded', 'update_time']}
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+        />
+      </div>
+
+      {/* 小屏幕布局 */}
+      <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-2 sm:hidden z-10">
+        <Button
+          className="rounded-full w-12 h-12 p-0"
+          onClick={() => setIsMenuExpanded(!isMenuExpanded)}
+        >
+          {isMenuExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
+        </Button>
+
+        {isMenuExpanded && (
+          <>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="rounded-full w-12 h-12 p-0">
+                  <PlusIcon />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>添加新资源</DialogTitle>
+                </DialogHeader>
+                <ResourceForm
+                  onSubmit={handleAddResource}
+                  categories={categoriesData || []}
+                  tags={tagsData || {}}
+                />
+              </DialogContent>
+            </Dialog>
+            <Button className="rounded-full w-12 h-12 p-0" onClick={() => {
+              console.log('test');
+            }}>
+              <RefreshCwIcon />
+            </Button>
+            <BulkOperationButtons
+              onOperation={handleBulkOperation}
+              selectedUuids={selectedUuids}
+              useSmallScreen={true}
+            />
+            <ColumnVisibilityToggle
+              columns={['uuid', 'name', 'category', 'images', 'source_links', 'tags', 'uploaded', 'update_time']}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              useSmallScreen={true}
+            >
+              <Button className="rounded-full w-12 h-12 p-0">
+                <ColumnsIcon />
+              </Button>
+            </ColumnVisibilityToggle>
+          </>
         )}
-      </Suspense>
+      </div>
+
+      <ResourceTable
+        resources={resources}
+        visibleColumns={visibleColumns}
+        onEdit={(uuid) => setEditingResource({ uuid, resource: resources[uuid] })}
+        onDelete={handleDeleteResource}
+        onSelectionChange={(newSelectedUuids) => {
+          setSelectedUuids(newSelectedUuids);
+        }}
+      />
+      {editingResource && (
+        <Dialog open={!!editingResource} onOpenChange={() => setEditingResource(null)}>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>编辑资源</DialogTitle>
+            </DialogHeader>
+            <ResourceForm
+              initialData={editingResource.resource}
+              onSubmit={(data) => handleEditResource(editingResource.uuid, data)}
+              categories={categoriesData || []}
+              tags={tagsData || {}}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
+  );
+}
+
+export default function ResourceCRUD() {
+  return (
+    <Suspense fallback={<LoadingAnimation />}>
+      <div className="mx-auto container p-4">
+        <ResourceCRUDContent />
+      </div>
+    </Suspense>
   );
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense } from 'react';
 import MainContent from './MainContent';
 import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation';
