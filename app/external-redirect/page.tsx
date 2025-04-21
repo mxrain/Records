@@ -1,29 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import ExternalLinkRedirect from '../components/ExternalLinkRedirect';
 import LoadingAnimation from '../components/LoadingAnimation/LoadingAnimation';
+import { useSearchParams } from 'next/navigation';
 
-export default function ExternalRedirectPage() {
-  const [url, setUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const urlParam = searchParams.get('url');
-    setUrl(urlParam);
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return (
-      <LoadingAnimation />
-    )
-  }
+// 将使用 useSearchParams 的逻辑提取到子组件
+function ExternalRedirectContent() {
+  const searchParams = useSearchParams();
+  const url = searchParams?.get('url');
 
   if (!url) {
     return <div>无效的URL</div>;
   }
 
   return <ExternalLinkRedirect href={url} />;
+}
+
+export default function ExternalRedirectPage() {
+  return (
+    <Suspense fallback={<LoadingAnimation />}>
+      <ExternalRedirectContent />
+    </Suspense>
+  );
 }

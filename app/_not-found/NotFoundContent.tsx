@@ -2,10 +2,11 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation';
 
-export default function NotFoundContent() {
+function NotFoundContentInner() {
   const searchParams = useSearchParams();
-  
   const referrer = searchParams?.get('from') || '/';
 
   return (
@@ -16,5 +17,13 @@ export default function NotFoundContent() {
         返回上一页
       </Link>
     </div>
+  );
+}
+
+export default function NotFoundContent() {
+  return (
+    <Suspense fallback={<LoadingAnimation />}>
+      <NotFoundContentInner />
+    </Suspense>
   );
 }
