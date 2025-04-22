@@ -55,41 +55,64 @@ async function verifyTurnstile(token: string | null): Promise<boolean> {
   }
 }
 
+export async function OPTIONS(request: Request) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(request: Request) {
-  const { password, token, refreshToken, turnstileToken } = await request.json();
+  let password, token, refreshToken;
+  try {
+    const { password: reqPassword, token: reqToken, refreshToken: reqRefreshToken, turnstileToken } = await request.json();
+    password = reqPassword;
+    token = reqToken;
+    refreshToken = reqRefreshToken;
 
-  const turnstileValid = await verifyTurnstile(turnstileToken);
-  if (!turnstileValid) {
-    console.log('Turnstile验证失败，token:', turnstileToken);
-    return NextResponse.json({ error: '人机验证失败' }, { status: 400 });
-  }
-
-  if (refreshToken) {
-    try {
-      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
-      const payload = jwt.decode(refreshToken) as any;
-      const newToken = generateToken({ userId: payload.userId }, '7d');
-      return NextResponse.json({ success: true, token: newToken }, { status: 200 });
-    } catch (error) {
-      return NextResponse.json({ error: 'RefreshToken无效' }, { status: 401 });
+    if (!turnstileToken) {
+      return NextResponse.json({ error: '缺少 turnstileToken 参数' }, { status: 400 });
     }
-  }
 
-  if (token) {
-    if (verifyToken(token)) {
-      const newToken = generateToken({ timestamp: Date.now() }, '7d');
-      return NextResponse.json({ success: true, token: newToken }, { status: 200 });
+    const turnstileValid = await verifyTurnstile(turnstileToken);
+    if (!turnstileValid) {
+      console.log('Turnstile验证失败，token:', turnstileToken);
+      return NextResponse.json({ error: '人机验证失败' }, { status: 400 });
+    }
+
+    if (refreshToken) {
+      try {
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
+        const payload = jwt.decode(refreshToken) as any;
+        const newToken = generateToken({ userId: payload.userId }, '7d');
+        return NextResponse.json({ success: true, token: newToken }, { status: 200 });
+      } catch (error) {
+        return NextResponse.json({ error: 'RefreshToken无效' }, { status: 401 });
+      }
+    } else if (token) {
+      if (verifyToken(token)) {
+        const newToken = generateToken({ timestamp: Date.now() }, '7d');
+        return NextResponse.json({ success: true, token: newToken }, { status: 200 });
+      } else {
+        return NextResponse.json({ error: 'Token无效' }, { status: 401 });
+      }
+    } else if (password) {
+      if (password !== process.env.VERIFY_PASSWORD) {
+        console.log('密码验证失败，输入密码:', password, '存储密码:', process.env.VERIFY_PASSWORD);
+        return NextResponse.json({ 
+          error: '密码错误',
+          hint: '请检查环境变量VERIFY_PASSWORD是否包含正确的密码'
+        }, { status: 400 });
+      }
     } else {
-      return NextResponse.json({ error: 'Token无效' }, { status: 401 });
+      return NextResponse.json({ error: '缺少 password, token 或 refreshToken 参数' }, { status: 400 });
     }
-  }
-
-  if (password !== process.env.VERIFY_PASSWORD) {
-    console.log('密码验证失败，输入密码:', password, '存储密码:', process.env.VERIFY_PASSWORD);
-    return NextResponse.json({ 
-      error: '密码错误',
-      hint: '请检查环境变量VERIFY_PASSWORD是否包含正确的密码'
-    }, { status: 400 });
+  } catch (error) {
+    return NextResponse.json({ error: '无效的请求体' }, { status: 400 });
   }
 
   if (process.env.ENABLE_GITHUB_VERIFY === 'true') {
