@@ -123,9 +123,6 @@ export default function SimpleLogin() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">登录</CardTitle>
-        </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div>
@@ -134,28 +131,26 @@ export default function SimpleLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="请输入密码"
-                className="w-full"
+                className="w-full text-lg p-3 bg-white" // Added bg-white
               />
             </div>
 
             {/* 人机验证占位区域 */}
-            <div className="border border-dashed border-gray-300 rounded-md p-4 flex items-center justify-center h-[78px] bg-gray-50">
-              <Turnstile
+            <Turnstile
                 sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''}
                 onSuccess={(token) => {
                   setTurnstileToken(token);
                 }}
               />
-            </div>
           </CardContent>
 
           <CardFooter>
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-gray-900 hover:bg-gray-800"
               disabled={isLoading}
             >
-              {isLoading ? "登录中..." : "登录"}
+              {isLoading ? "检查..." : "进入"}
             </Button>
           </CardFooter>
         </form>
