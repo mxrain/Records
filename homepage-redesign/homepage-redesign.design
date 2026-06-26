@@ -24,7 +24,7 @@
       "createdAt": 1782483850000,
       "canvasData": {
         "x": 0,
-        "y": 3335
+        "y": 664
       },
       "devMetadata": {
         "imageSrc": "assets/hero-banner.jpg"
@@ -33,7 +33,7 @@
   ],
   "config": {
     "autoLayout": true,
-    "deviceType": "mobile",
+    "deviceType": "desktop",
     "projectName": "四次元资源桶 首页设计稿",
     "designLibrary": {
       "name": "Golden Time",

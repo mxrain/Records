@@ -1,4 +1,4 @@
-import { db } from './db.ts';
+import { db } from './db';
 
 export async function initializeTables() {
   try {

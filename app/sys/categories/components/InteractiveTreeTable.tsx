@@ -73,7 +73,7 @@ export function InteractiveTreeTable() {
     }));
   };
 
-  const renderCategoryRow = (name: string, data: CategoryData, path: string[] = []): JSX.Element => {
+  const renderCategoryRow = (name: string, data: CategoryData, path: string[] = []): React.ReactNode => {
     const isExpanded = expandedCategories.includes(path.join('>'));
     const hasChildren = data.items && Object.keys(data.items).length > 0;
     const IconComponent = (Icons[data.icon as keyof typeof Icons] || Album) as React.ElementType;
