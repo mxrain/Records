@@ -1,29 +1,39 @@
-/**
- * 数据库初始化脚本
- * 运行此脚本以初始化 PostgreSQL 表结构
- */
+import { db } from '../lib/db';
+import { redis } from '../lib/cache/redis';
+import { r2 } from '../lib/storage/r2';
 
-import { initializeDatabases } from '../lib/db';
-import { initializeTables } from '../lib/db-init';
-
-async function main() {
+export async function initializeDatabases() {
   try {
-    console.log('Starting database initialization...\n');
+    const client = await db.getClient();
+    await client.query('SELECT NOW()');
+    client.release();
+    console.log('✓ PostgreSQL connected successfully');
 
-    // 初始化数据库连接
-    console.log('1. Connecting to databases...');
-    await initializeDatabases();
+    await redis.set('test', 'ok');
+    await redis.del('test');
+    console.log('✓ Redis connected successfully');
 
-    // 创建表结构
-    console.log('\n2. Creating tables...');
-    await initializeTables();
+    console.log('✓ R2 client ready (bucket must be created in Cloudflare dashboard)');
 
-    console.log('\n✓ Database initialization completed successfully!');
-    console.log('\nYou can now start the application with: npm run dev');
+    console.log('All remote services initialized successfully');
   } catch (error) {
-    console.error('\n✗ Database initialization failed:', error);
-    process.exit(1);
+    console.error('Remote service initialization error:', error);
+    throw error;
   }
 }
 
-main();
+async function main() {
+  await initializeDatabases();
+}
+
+if (require.main === module) {
+  main()
+    .then(() => {
+      console.log('Service check completed');
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('Service check failed:', error);
+      process.exit(1);
+    });
+}

@@ -1,7 +1,10 @@
 version: '3.8'
 
 services:
-  # 所有服务现在都使用远程数据库
-  # PostgreSQL: postgresql.6200052.xyz:5432
-  # Redis: redis.6200052.xyz:6379
-  # MinIO: minio.6200052.xyz:444
+  # 所有服务现在使用云服务，不再本地启动:
+  # PostgreSQL: Neon (https://neon.tech) — 免费 0.5GB
+  #   DATABASE_URL=postgresql://username:password@ep-xxx.us-east-2.aws.neon.tech/dbname?sslmode=require
+  # Redis: Upstash (https://upstash.com) — 免费 256MB
+  #   REDIS_URL=redis://default:password@your-upstash-redis.upstash.io:6379
+  # 对象存储: Cloudflare R2 (https://developers.cloudflare.com/r2/) — 免费 10GB
+  #   R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_ENDPOINT

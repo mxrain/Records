@@ -1,4 +1,6 @@
-import { db, redis, minio, initializeDatabases, closeDatabaseConnections } from './db';
+import { db, closeDatabaseConnections } from './db';
+import { redis } from './cache/redis';
+import { r2 } from './storage/r2';
 
 /**
  * PostgreSQL 使用示例
@@ -60,29 +62,29 @@ async function redisExample() {
 }
 
 /**
- * MinIO 使用示例
+ * R2 使用示例
  */
 async function minioExample() {
-  console.log('\n=== MinIO Examples ===');
+  console.log('\n=== R2 Examples ===');
 
   const bucketName = 'records';
 
   // 上传文件
   try {
-    const uploadResult = await minio.uploadFile(
+    const uploadResult = await r2.uploadFile(
       bucketName,
       'test-file.txt',
-      './test-file.txt',
-      { 'Content-Type': 'text/plain' }
+      Buffer.from('Hello R2'),
+      'text/plain'
     );
     console.log('Upload result:', uploadResult);
   } catch (error) {
-    console.log('Upload failed (file may not exist):', (error as Error).message);
+    console.log('Upload failed:', (error as Error).message);
   }
 
   // 获取文件 URL
   try {
-    const urlResult = await minio.getFileUrl(bucketName, 'test-file.txt', 3600);
+    const urlResult = await r2.getFileUrl(bucketName, 'test-file.txt', 3600);
     console.log('File URL:', urlResult.url);
   } catch (error) {
     console.log('Get URL failed:', (error as Error).message);
@@ -90,27 +92,23 @@ async function minioExample() {
 
   // 列出文件
   try {
-    const listResult = await minio.listFiles(bucketName);
+    const listResult = await r2.listFiles(bucketName);
     console.log('Files in bucket:', listResult.files);
   } catch (error) {
     console.log('List files failed:', (error as Error).message);
   }
 
-  // 下载文件
+  // 获取文件内容
   try {
-    const downloadResult = await minio.downloadFile(
-      bucketName,
-      'test-file.txt',
-      './downloaded-file.txt'
-    );
-    console.log('Download result:', downloadResult);
+    const fileResult = await r2.getFile(bucketName, 'test-file.txt');
+    console.log('File content length:', fileResult.contentLength);
   } catch (error) {
-    console.log('Download failed:', (error as Error).message);
+    console.log('Get file failed:', (error as Error).message);
   }
 
   // 删除文件
   try {
-    const deleteResult = await minio.deleteFile(bucketName, 'test-file.txt');
+    const deleteResult = await r2.deleteFile(bucketName, 'test-file.txt');
     console.log('Delete result:', deleteResult);
   } catch (error) {
     console.log('Delete failed:', (error as Error).message);
@@ -156,7 +154,10 @@ async function main() {
   try {
     // 初始化数据库连接
     console.log('Initializing databases...');
-    await initializeDatabases();
+    await db.query('SELECT NOW()');
+    await redis.set('init', 'ok');
+    await redis.del('init');
+    console.log('✓ Services ready');
 
     // 运行示例
     await postgresExample();
