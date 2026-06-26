@@ -4,9 +4,9 @@
   --heatmap-scale-2: #40c463;
   --heatmap-scale-3: #30a14e;
   --heatmap-scale-4: #216e39;
-  --text-color: #24292e;
-  --border-radius: var(--radius-md);
-  --shadow-color: rgba(0, 0, 0, 0.12);
+  --text-color: var(--gt-foreground);
+  --border-radius: var(--gt-radius);
+  --shadow-color: rgba(59, 53, 43, 0.08);
   --month-0: #FF9E80;
   --month-1: #FF8A80;
   --month-2: #EA80FC;
@@ -27,22 +27,26 @@
   --heatmap-scale-2: #40c463;
   --heatmap-scale-3: #30a14e;
   --heatmap-scale-4: #216e39;
-  --text-color: #24292e;
+  --text-color: var(--gt-foreground);
 
-  background: var(--color-background);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  box-shadow: var(--shadow-sm);
+  background: var(--gt-card);
+  border-radius: var(--gt-radius);
+  padding: 1rem;
+  box-shadow: var(--gt-shadow);
+  border: 1px solid var(--gt-border);
   height: 330px;
   display: flex;
   flex-direction: column;
 }
 
 .title {
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--spacing-3);
-  color: var(--text-color);
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--gt-foreground);
   flex-shrink: 0;
+  font-family: 'Fraunces', ui-serif, serif;
+  letter-spacing: var(--gt-tracking);
 }
 
 .heatmapWrapper {
@@ -61,23 +65,23 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 var(--spacing-1-5);
-  margin-top: var(--spacing-1-5);
+  padding: 0 6px;
+  margin-top: 6px;
   width: 100%;
   box-sizing: border-box;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollContainer::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
 }
 
 .heatmap {
   display: block;
   width: 100%;
   height: auto;
-  margin-left: var(--spacing-1-5);
+  margin-left: 6px;
 }
 
 .cellWrapper {
@@ -85,11 +89,11 @@
 }
 
 .cell {
-  transition: all var(--transition-slow) var(--ease-out);
+  transition: all 0.3s ease;
 }
 
 .cellWrapper:hover .cell {
-  stroke: rgba(0, 0, 0, 0.3);
+  stroke: rgba(59, 53, 43, 0.3);
   stroke-width: 2;
   filter: brightness(1.1);
 }
@@ -98,8 +102,9 @@
   position: absolute;
   left: 0;
   opacity: 0;
-  transition: opacity var(--transition-slow) var(--ease-out);
+  transition: opacity 0.3s ease;
   pointer-events: none;
+  font-family: 'Fraunces', ui-serif, serif;
 }
 
 .monthLabel.visible {
@@ -113,66 +118,68 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  gap: var(--spacing-4);
+  gap: 1rem;
 }
 
 .errorMessage {
-  color: var(--color-accent-500);
+  color: var(--gt-secondary);
   text-align: center;
+  font-family: 'Fraunces', ui-serif, serif;
 }
 
 .retryButton {
-  padding: var(--spacing-1) var(--spacing-3-5);
-  background: var(--color-primary-500);
+  padding: 0.5rem 1.25rem;
+  background: var(--gt-foreground);
   border: none;
-  border-radius: var(--radius-base);
-  color: white;
+  border-radius: var(--gt-radius);
+  color: var(--gt-primary-foreground);
   cursor: pointer;
-  transition: background var(--transition-slow) var(--ease-out);
+  transition: opacity 0.3s ease;
+  font-family: 'Fraunces', ui-serif, serif;
 }
 
 .retryButton:hover {
-  background: var(--color-primary-400);
+  opacity: 0.85;
 }
 
-/* 详情弹窗样式 */
 .detailsPopover {
   max-width: 300px;
   max-height: 400px;
 }
 
 .detailsHeader {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-medium);
-  padding-bottom: var(--spacing-2);
-  border-bottom: 1px solid var(--color-gray-200);
-  margin-bottom: var(--spacing-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--gt-border);
+  margin-bottom: 0.5rem;
+  font-family: 'Fraunces', ui-serif, serif;
 }
 
 .detailsList {
   max-height: 300px;
   overflow-y: auto;
-  padding-right: var(--spacing-0-5);
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  padding-right: 4px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .detailsList::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
 }
 
 .detailItem {
-  font-size: var(--font-size-xs);
-  line-height: var(--leading-normal);
+  font-size: 0.75rem;
+  line-height: 1.5;
   padding: 2px 0;
-  color: var(--color-gray-500);
+  color: var(--gt-muted-foreground);
   word-break: break-word;
 }
 
-/* 自定义 Popover 样式 */
 .popoverWrapper :global(.ant-popover-inner) {
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--gt-radius);
+  box-shadow: var(--gt-shadow-md);
+  border: 1px solid var(--gt-border);
 }
 
 .popoverWrapper :global(.ant-popover-inner-content) {
@@ -180,10 +187,10 @@
 }
 
 .weekdayLabels {
-  padding-left: 0px;
+  padding-left: 0;
   display: flex;
   justify-content: space-between;
-  background: var(--color-background);
+  background: var(--gt-card);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -192,19 +199,20 @@
 }
 
 .weekdayLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-semibold);
-  color: var(--text-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gt-muted-foreground);
   width: 25px;
   height: 25px;
   text-align: center;
   line-height: 25px;
-  border-radius: var(--radius-base);
-  transition: background-color var(--transition-slow) var(--ease-out);
+  border-radius: var(--gt-radius);
+  transition: background-color 0.3s ease;
+  font-family: 'Fraunces', ui-serif, serif;
 }
 
 .weekdayLabel:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--gt-muted);
 }
 
 .monthLabelsContainer {

@@ -4,31 +4,31 @@
   max-width: 1400px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  gap: 1.5rem;
+  padding: 1.5rem;
 }
 
 @media (max-width: 1024px) {
   .resourceList {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
-    padding: 16px;
+    gap: 1.25rem;
+    padding: 1.25rem;
   }
 }
 
 @media (max-width: 768px) {
   .resourceList {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    padding: 12px;
+    gap: 1rem;
+    padding: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .resourceList {
     grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 16px;
+    gap: 1rem;
+    padding: 1rem;
   }
 }
 
@@ -39,16 +39,17 @@
   justify-content: center;
   height: 300px;
   text-align: center;
-  padding: 20px;
+  padding: 1.25rem;
 }
 
 .icon {
-  font-size: 48px;
-  color: var(--color-gray-400);
-  margin-bottom: 16px;
+  font-size: 3rem;
+  color: var(--gt-muted);
+  margin-bottom: 1rem;
 }
 
 .message {
-  font-size: 18px;
-  color: var(--color-gray-600);
+  font-size: 1.125rem;
+  color: var(--gt-muted-foreground);
+  font-family: 'Fraunces', ui-serif, serif;
 }

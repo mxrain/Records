@@ -40,20 +40,22 @@
 .tabItem {
   display: inline-block;
   padding: 3px var(--spacing-2-5);
-  border-radius: var(--radius-base);
+  border-radius: var(--gt-radius);
   cursor: pointer;
   font-size: var(--font-size-lg);
   font-weight: var(--font-semibold);
-  background: var(--color-gray-50);
-  color: var(--color-gray-700);
+  background: var(--gt-background);
+  color: var(--gt-foreground);
   text-decoration: none;
   white-space: nowrap;
   transition: color var(--transition-slow) var(--ease-out), background-color var(--transition-slow) var(--ease-out);
+  font-family: 'Fraunces', ui-serif, serif;
+  letter-spacing: var(--gt-tracking);
 }
 
 .tabItem:hover {
-  background: var(--color-gray-200);
-  color: var(--color-secondary-500);
+  background: var(--gt-muted);
+  color: var(--gt-secondary);
 }
 
 .tabContainer.sticky {
@@ -107,22 +109,25 @@
   /* 火狐浏览器隐藏滚动条 */
   -ms-overflow-style: none;
   /* IE和Edge隐藏滚动条 */
-  background-color: var(--color-gray-50);
+  background-color: var(--gt-background);
   padding: var(--spacing-2-5) var(--spacing-3-5);
   -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid var(--gt-border);
 }
 
 .exceedList .exceedListItem {
   padding: 3px var(--spacing-2-5);
   margin: 0 var(--spacing-1);
-  border-radius: var(--radius-sm);
+  border-radius: var(--gt-radius);
   cursor: pointer;
   font-size: var(--font-size-lg);
   font-weight: var(--font-semibold);
-  background: var(--color-gray-50);
-  color: var(--color-gray-700);
+  background: var(--gt-background);
+  color: var(--gt-foreground);
   flex: 0 0 auto;
   white-space: nowrap;
+  font-family: 'Fraunces', ui-serif, serif;
+  letter-spacing: var(--gt-tracking);
 }
 
 /* 添加滚动条样式（可选） */
@@ -135,8 +140,8 @@
 }
 
 .exceedList::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: var(--radius-sm);
+  background: var(--gt-accent);
+  border-radius: var(--gt-radius);
 }
 
 /* 淡入淡出动画 */
@@ -228,10 +233,10 @@
 
 .moreModal {
   position: fixed;
-  background-color: var(--color-gray-50);
+  background-color: var(--gt-card);
   padding: var(--spacing-2-5);
-  border-radius: var(--radius-base);
-  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: var(--gt-radius);
+  border: 1px solid var(--gt-border);
   z-index: 1008;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -257,15 +262,17 @@
   justify-content: center;
   align-items: center;
   padding: var(--spacing-1);
-  border-radius: var(--radius-base);
-  background-color: var(--color-gray-200);
-  color: var(--color-gray-900);
+  border-radius: var(--gt-radius);
+  background-color: var(--gt-muted);
+  color: var(--gt-foreground);
   text-decoration: none;
   font-size: var(--font-size-lg);
+  font-family: 'Fraunces', ui-serif, serif;
+  letter-spacing: var(--gt-tracking);
 }
 
 .moreModal .tabItem:hover {
-  background-color: var(--color-gray-300);
+  background-color: var(--gt-accent);
 }
 
 /* 在文件末尾添加以下样式 */
@@ -374,9 +381,10 @@
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  background-color: var(--color-gray-50);
+  background-color: var(--gt-background);
   padding: var(--spacing-2-5) var(--spacing-3-5);
   -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid var(--gt-border);
 }
 
 /* 大屏幕设备 (1200px 及以上) */
@@ -547,17 +555,17 @@
 /* 深色模式支持 */
 @media (prefers-color-scheme: dark) {
   .tabContainer, .exceedList {
-    background-color: var(--color-gray-900);
+    background-color: var(--gt-background, #060201);
   }
 
   .tabItem, .exceedListItem {
-    background: var(--color-gray-800);
-    color: var(--color-gray-200);
+    background: var(--gt-card, #060201);
+    color: var(--gt-foreground, #e3dfd6);
   }
 
   .tabItem:hover, .exceedListItem:hover {
-    background: var(--color-gray-700);
-    color: var(--color-secondary-500);
+    background: var(--gt-muted, #1c1810);
+    color: var(--gt-secondary, #605039);
   }
 }
 

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled</title>
+    <style id="theme-vars">
+/* Source: structured-spec */
+:root {
+  /* bg */
+  --background: 40 16% 98%;
+  --card: 40 16% 98%;
+  --popover: 40 16% 98%;
+
+  /* text */
+  --foreground: 37.5000 15.6863% 20%;
+  --card-foreground: 37.5000 15.6863% 20%;
+  --popover-foreground: 37.5000 15.6863% 20%;
+  --muted-foreground: 36.0000 19.8413% 49.4118%;
+
+  /* accent */
+  --primary: 37.5000 15.6863% 20%;
+  --primary-foreground: 40 16% 98%;
+  --secondary: 55.0000 24.0000% 49.0196%;
+  --secondary-foreground: 40 16% 98%;
+  --muted: 44.0000 26.3158% 88.8235%;
+  --accent: 40.0000 24.0876% 73.1373%;
+  --accent-foreground: 30 14.0000% 30%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 43.3333 23.0769% 84.7059%;
+  --input: 44.0000 26.3158% 88.8235%;
+  --ring: 37.5000 15.6863% 20%;
+
+  /* chart */
+  --chart-1: 55 20% 80%;
+  --chart-2: 0 15.3374% 31.9608%;
+  --chart-3: 70.5882 10.0592% 66.8627%;
+  --chart-4: 55.0000 24.0000% 49.0196%;
+  --chart-5: 28.9888 91.7526% 61.9608%;
+
+  /* sidebar */
+  --sidebar: 40 16% 98%;
+  --sidebar-foreground: 37.5000 15.6863% 20%;
+  --sidebar-primary: 37.5000 15.6863% 20%;
+  --sidebar-primary-foreground: 40 16% 98%;
+  --sidebar-accent: 40.0000 24.0876% 73.1373%;
+  --sidebar-accent-foreground: 37.5000 15.6863% 20%;
+  --sidebar-border: 43.3333 23.0769% 84.7059%;
+  --sidebar-ring: 37.5000 15.6863% 20%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 50%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 2px 4px -1px hsl(35 15% 50% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 4px 6px -1px hsl(35 15% 50% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 8px 10px -1px hsl(35 15% 50% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --tracking-normal: 0.01em;
+  --spacing: 0.3rem;
+}
+
+.dark {
+  /* bg */
+  --background: 12 71.4286% 1.3725%;
+  --card: 12 71.4286% 1.3725%;
+  --popover: 12 71.4286% 1.3725%;
+
+  /* text */
+  --foreground: 41.5385 18.8406% 86.4706%;
+  --card-foreground: 41.5385 18.8406% 86.4706%;
+  --popover-foreground: 41.5385 18.8406% 86.4706%;
+  --muted-foreground: 35 15% 60%;
+
+  /* accent */
+  --primary: 41.5385 18.8406% 86.4706%;
+  --primary-foreground: 12 71.4286% 1.3725%;
+  --secondary: 35 25% 30%;
+  --secondary-foreground: 41.5385 18.8406% 86.4706%;
+  --muted: 35 15% 20%;
+  --accent: 35 25% 40%;
+  --accent-foreground: 41.5385 18.8406% 86.4706%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 42.8571 8.4337% 16.2745%;
+  --input: 35 15% 20%;
+  --ring: 35.4545 29.7297% 70.9804%;
+
+  /* chart */
+  --chart-1: 35 25% 60%;
+  --chart-2: 20 20% 40%;
+  --chart-3: 34.5000 60.6061% 87.0588%;
+  --chart-4: 10 10% 50%;
+  --chart-5: 13.7430 78.1659% 55.0980%;
+
+  /* sidebar */
+  --sidebar: 12 71.4286% 1.3725%;
+  --sidebar-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary-foreground: 12 71.4286% 1.3725%;
+  --sidebar-accent: 35 25% 40%;
+  --sidebar-accent-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-border: 35 15% 25%;
+  --sidebar-ring: 41.5385 18.8406% 86.4706%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 5%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 2px 4px -1px hsl(35 15% 5% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 4px 6px -1px hsl(35 15% 5% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 8px 10px -1px hsl(35 15% 5% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+}
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-foreground: var(--card-foreground);
+  }
+  @layer base {
+    body { background: var(--card-background); color: var(--card-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- ====== FIXED HEADER / NAVBAR ====== -->
+      <header class="sticky top-0 z-50 flex items-center justify-between gap-4 border-b px-6 py-3 lg:px-10" style="background:hsl(var(--background));border-color:hsl(var(--border));">
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl tracking-tight" style="font-family:var(--font-serif);color:hsl(var(--foreground));">四次元资源桶</h1>
+        </div>
+        <nav class="flex items-center gap-2" style="font-family:var(--font-sans);">
+          <!-- 动漫 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              动漫
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">番剧资源</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">漫画合集</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">轻小说</a>
+            </div>
+          </div>
+          <!-- 电影 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              电影
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">院线电影</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">经典影片</a>
+            </div>
+          </div>
+          <!-- 音乐 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              音乐
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">无损专辑</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">配乐原声</a>
+            </div>
+          </div>
+          <!-- 游戏 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              游戏
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">单机游戏</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">主机资源</a>
+            </div>
+          </div>
+          <!-- 软件 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              软件
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">系统工具</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">办公软件</a>
+            </div>
+          </div>
+          <!-- 学习 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              学习
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">教程文档</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">公开课程</a>
+            </div>
+          </div>
+          <!-- 更多 -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--foreground));">
+              更多
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="absolute left-0 top-full mt-1 hidden w-48 rounded-xl border p-2 group-hover:grid grid-cols-1 gap-1" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-lg);">
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">电子书</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">壁纸素材</a>
+              <a href="#" class="flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)] truncate" style="color:hsl(var(--card-foreground));">其他资源</a>
+            </div>
+          </div>
+        </nav>
+        <!-- Search -->
+        <div class="flex items-center gap-2 rounded-lg border px-3 py-2" style="background:hsl(var(--card));border-color:hsl(var(--input));min-width:14rem;">
+          <i data-lucide="search" class="w-4 h-4 shrink-0" style="color:hsl(var(--muted-foreground));"></i>
+          <input type="text" placeholder="搜索资源..." class="w-full bg-transparent text-sm outline-none" style="color:hsl(var(--foreground));">
+        </div>
+      </header>
+
+      <!-- ====== TAB NAVIGATION BAR ====== -->
+      <div class="flex items-center gap-1 overflow-x-auto border-b px-6 lg:px-10 no-scrollbar" style="background:hsl(var(--background));border-color:hsl(var(--border));">
+        <button class="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150" style="background:hsl(var(--muted)/0.5);color:hsl(var(--secondary));" data-tab-key="recommend" data-active="true">推荐</button>
+        <button class="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.3)]" style="color:hsl(var(--muted-foreground));" data-tab-key="latest">最新</button>
+        <button class="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.3)]" style="color:hsl(var(--muted-foreground));" data-tab-key="hot">热门</button>
+        <button class="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.3)]" style="color:hsl(var(--muted-foreground));" data-tab-key="revenue">收入排行</button>
+        <button class="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.3)]" style="color:hsl(var(--muted-foreground));" data-tab-key="activity">活跃度</button>
+      </div>
+
+      <!-- ====== DASHBOARD CARD GRID ====== -->
+      <div class="grid grid-cols-1 gap-4 p-6 lg:gap-5 lg:p-10 xl:grid-cols-5" style="background:hsl(var(--background));">
+
+        <!-- Row 1 -->
+        <!-- Carousel Banner (span 2) -->
+        <section class="relative overflow-hidden rounded-[2rem] xl:col-span-2" style="height:330px;box-shadow:var(--shadow-xs);">
+          <img src="../assets/hero-banner.jpg" alt="精选资源推荐" class="absolute inset-0 h-full w-full object-cover">
+          <div class="absolute inset-0" style="background:linear-gradient(to bottom, hsl(37 15% 22% / 0.3), hsl(37 15% 22% / 0.6));"></div>
+          <div class="relative flex h-full flex-col justify-end gap-2 p-6">
+            <h2 class="text-2xl font-semibold leading-tight" style="font-family:var(--font-serif);color:hsl(var(--primary-foreground));text-wrap:balance;word-break:keep-all;overflow-wrap:break-word;">精选资源推荐</h2>
+            <p class="text-sm max-w-xs" style="color:hsl(40 16% 98% / 0.8);">发现优质动漫、电影、音乐等资源合集</p>
+          </div>
+          <!-- Nav dots -->
+          <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+            <span class="h-2 w-2 rounded-full" style="background:hsl(var(--primary-foreground));"></span>
+            <span class="h-2 w-2 rounded-full" style="background:hsl(var(--primary-foreground) / 0.35);"></span>
+            <span class="h-2 w-2 rounded-full" style="background:hsl(var(--primary-foreground) / 0.35);"></span>
+          </div>
+        </section>
+
+        <!-- Recommend Card (span 2) -->
+        <section class="flex flex-col rounded-[2rem] border xl:col-span-2" style="height:330px;background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+          <div class="flex items-center justify-between border-b px-5 pt-4 pb-3" style="border-color:hsl(var(--border));">
+            <h2 class="text-base font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">推荐资源</h2>
+            <button class="flex items-center justify-center rounded-lg p-1.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--muted-foreground));" aria-label="刷新">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto px-5 pb-2 no-scrollbar" style="scrollbar-width:none;">
+            <div class="flex flex-col gap-0">
+              <!-- Recommend items -->
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">进击的巨人 完结篇</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">完结番剧合集 1080P</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">12.3 GB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">灌篮高手 剧场版</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">4K修复版 国粤日多语言</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">8.7 GB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">坂本龙一 精选集</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">FLAC无损 32bit/192kHz</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">2.1 GB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">GitHub Copilot 教程</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">开发工具使用指南 PDF</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">45 MB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">2024顶级摄影作品</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">RAW+JPG 5000张合集</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">18.5 GB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">编程之美 第三版</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">技术书籍 EPUB+PDF</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">120 MB</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border-t py-2.5 transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">宫崎骏 全集蓝光</p>
+                  <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));">吉卜力工作室 4K REMUX</p>
+                </div>
+                <span class="shrink-0 text-xs" style="color:hsl(var(--muted-foreground));">156 GB</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Hot Card (span 1) -->
+        <section class="flex flex-col rounded-[2rem] border xl:col-span-1" style="height:330px;background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+          <div class="border-b px-5 pt-4 pb-3" style="border-color:hsl(var(--border));">
+            <h2 class="text-base font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">热门资源</h2>
+          </div>
+          <div class="flex-1 overflow-y-auto px-5 pb-2 no-scrollbar">
+            <div class="flex flex-col gap-0">
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">1</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">咒术回战 第二季</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">2</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">铃芽之旅 4K</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">3</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">鬼灭之刃 柱训练篇</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">4</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">星际穿越 IMAX版</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">5</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">ChatGPT 进阶教程</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">6</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">万智牌 卡牌合集</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">7</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">JavaScript 权威指南</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">8</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">原神 OST 原声集</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">9</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">Figma 设计系统</p>
+              </div>
+              <div class="flex items-center gap-2 border-t overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-medium" style="color:hsl(var(--secondary));">10</span>
+                <p class="text-sm truncate" style="color:hsl(var(--card-foreground));">电影台词精选集</p>
+              </div>
+            </div>
+          </div>
+          <!-- Page dots -->
+          <div class="flex items-center justify-center gap-1.5 border-t px-5 py-2.5" style="border-color:hsl(var(--border));">
+            <span class="h-1.5 w-1.5 rounded-full" style="background:hsl(var(--secondary));"></span>
+            <span class="h-1.5 w-1.5 rounded-full" style="background:hsl(var(--border));"></span>
+            <span class="h-1.5 w-1.5 rounded-full" style="background:hsl(var(--border));"></span>
+          </div>
+        </section>
+
+        <!-- Row 2 -->
+        <!-- Latest Resources (span 2) -->
+        <section class="flex flex-col rounded-[2rem] border xl:col-span-2" style="height:330px;background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+          <div class="border-b px-5 pt-4 pb-3" style="border-color:hsl(var(--border));">
+            <h2 class="text-base font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">最新资源</h2>
+          </div>
+          <div class="flex-1 overflow-y-auto px-5 pb-3 no-scrollbar">
+            <div class="flex flex-col gap-3 pt-1">
+              <!-- Latest item 1 -->
+              <div class="flex gap-3 rounded-xl overflow-hidden transition-all duration-200 hover:translate-y-[-1px]" style="box-shadow:var(--shadow-xs);">
+                <div class="h-16 w-24 shrink-0 rounded-lg" style="background:linear-gradient(135deg, hsl(35 30% 85%), hsl(25 25% 75%));"></div>
+                <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">孤独摇滚 第二季预告</p>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">动漫</span>
+                    <span class="text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">3小时前</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Latest item 2 -->
+              <div class="flex gap-3 rounded-xl overflow-hidden transition-all duration-200 hover:translate-y-[-1px]" style="box-shadow:var(--shadow-xs);">
+                <div class="h-16 w-24 shrink-0 rounded-lg" style="background:linear-gradient(135deg, hsl(40 35% 80%), hsl(30 20% 70%));"></div>
+                <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">沙丘2 加长版蓝光</p>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">电影</span>
+                    <span class="text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">6小时前</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Latest item 3 -->
+              <div class="flex gap-3 rounded-xl overflow-hidden transition-all duration-200 hover:translate-y-[-1px]" style="box-shadow:var(--shadow-xs);">
+                <div class="h-16 w-24 shrink-0 rounded-lg" style="background:linear-gradient(135deg, hsl(45 28% 82%), hsl(35 22% 72%));"></div>
+                <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">Taylor Swift 新专辑</p>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">音乐</span>
+                    <span class="text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">昨天</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Latest item 4 -->
+              <div class="flex gap-3 rounded-xl overflow-hidden transition-all duration-200 hover:translate-y-[-1px]" style="box-shadow:var(--shadow-xs);">
+                <div class="h-16 w-24 shrink-0 rounded-lg" style="background:linear-gradient(135deg, hsl(38 32% 78%), hsl(28 18% 68%));"></div>
+                <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                  <p class="text-sm font-medium truncate" style="color:hsl(var(--card-foreground));">Stable Diffusion 模型</p>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">软件</span>
+                    <span class="text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">昨天</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Revenue Ranking (span 2) -->
+        <section class="flex flex-col rounded-[2rem] border xl:col-span-2" style="height:330px;background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+          <div class="border-b px-5 pt-4 pb-3" style="border-color:hsl(var(--border));">
+            <h2 class="text-base font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">收入排行</h2>
+          </div>
+          <div class="flex-1 overflow-y-auto px-5 pb-3 no-scrollbar">
+            <div class="flex flex-col gap-0 pt-1">
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">1</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">Adobe 全家桶 2024</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥89,200</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">2</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">热门游戏合集包</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥67,500</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">3</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">日剧精选 剧集包</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥52,100</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">4</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">Python 数据分析</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥45,800</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">5</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">韩流音乐 MV合集</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥38,400</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">6</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">UI设计素材大全</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥31,200</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">7</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">欧美经典电影 500部</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥28,900</span>
+              </div>
+              <div class="flex items-center gap-3 border-t py-2.5 overflow-hidden transition-all duration-200 hover:h-auto hover:bg-[hsl(var(--muted)/0.25)]" style="border-color:hsl(var(--border));height:32px;" onmouseenter="this.style.height='auto'" onmouseleave="this.style.height='32px'">
+                <span class="shrink-0 text-xs font-semibold" style="color:hsl(var(--secondary));">8</span>
+                <p class="text-sm truncate flex-1 min-w-0" style="color:hsl(var(--card-foreground));">Linux 运维手册</p>
+                <span class="shrink-0 text-xs whitespace-nowrap" style="color:hsl(var(--muted-foreground));">¥22,600</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Activity Heatmap (span 1) -->
+        <section class="flex flex-col rounded-[2rem] border xl:col-span-1" style="height:330px;background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+          <div class="border-b px-5 pt-4 pb-3" style="border-color:hsl(var(--border));">
+            <h2 class="text-base font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">活跃度</h2>
+          </div>
+          <div class="flex-1 flex items-center justify-center px-4 pb-4">
+            <div class="flex gap-0.5">
+              <!-- Weekday labels -->
+              <div class="flex flex-col gap-0.5 mr-1 justify-around">
+                <span class="text-[9px] leading-none" style="color:hsl(var(--muted-foreground));">一</span>
+                <span class="text-[9px] leading-none" style="color:hsl(var(--muted-foreground));">三</span>
+                <span class="text-[9px] leading-none" style="color:hsl(var(--muted-foreground));">五</span>
+                <span class="text-[9px] leading-none" style="color:hsl(var(--muted-foreground));">日</span>
+              </div>
+              <!-- Heatmap grid: 7 rows x 20 cols -->
+              <div class="grid grid-rows-7 grid-flow-col gap-0.5">
+                <!-- Row 1 (Mon) - 20 cells -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <!-- Row 2 (Tue) - 20 cells -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <!-- Row 3 (Wed) -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <!-- Row 4 (Thu) -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <!-- Row 5 (Fri) -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <!-- Row 6 (Sat) -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <!-- Row 7 (Sun) -->
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.7);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.9);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.4);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(var(--muted)/0.3);"></span>
+                <span class="h-[10px] w-[10px] rounded-sm" style="background:hsl(120 40% 65% / 0.55);"></span>
+              </div>
+            </div>
+          </div>
+          <!-- Month labels below heatmap -->
+          <div class="flex justify-between px-6 pb-4">
+            <span class="text-[9px]" style="color:hsl(var(--muted-foreground));">1月</span>
+            <span class="text-[9px]" style="color:hsl(var(--muted-foreground));">4月</span>
+            <span class="text-[9px]" style="color:hsl(var(--muted-foreground));">7月</span>
+            <span class="text-[9px]" style="color:hsl(var(--muted-foreground));">10月</span>
+          </div>
+        </section>
+      </div>
+
+      <!-- ====== RESOURCE LIST GRID ====== -->
+      <div class="border-t px-6 pb-10 pt-8 lg:px-10" style="border-color:hsl(var(--border));background:hsl(var(--background));">
+        <h2 class="mb-6 text-xl font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));text-wrap:balance;word-break:keep-all;overflow-wrap:break-word;">全部资源</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Resource card 1 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(35 30% 85%), hsl(25 25% 75%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">进击的巨人 完结篇</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">最终季完结篇全集 1080P/4K 双语字幕</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">动漫</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">1080P</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 2 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(40 35% 80%), hsl(30 20% 70%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">星际穿越 IMAX版</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">诺兰经典科幻 4K IMAX 国粤双语</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">电影</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">4K</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 3 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(45 28% 82%), hsl(35 22% 72%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">坂本龙一 精选集</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">大师经典作品 FLAC无损 32bit高解析</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">音乐</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">FLAC</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--muted-foreground));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 4 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(38 32% 78%), hsl(28 18% 68%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">Python 数据分析</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">从入门到实战 全套视频课程</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">学习</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">教程</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 5 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(42 26% 80%), hsl(32 20% 74%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">灌篮高手 剧场版</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">4K修复版 多语言音轨 含导演评论</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">动漫</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">4K</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--muted-foreground));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 6 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(36 28% 84%), hsl(26 22% 76%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">Adobe 全家桶 2024</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">PS AI PR AE 全套最新版本</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">软件</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">Windows</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 7 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(44 30% 81%), hsl(34 24% 73%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">UI设计素材大全</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">3000+组件 Figma源文件 含设计规范</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">软件</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">设计</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--muted-foreground));"></i>
+              </div>
+            </div>
+          </article>
+          <!-- Resource card 8 -->
+          <article class="flex flex-col gap-3 rounded-[2rem] border overflow-hidden transition-all duration-200 hover:translate-y-[-2px]" style="background:hsl(var(--card));border-color:hsl(var(--border));box-shadow:var(--shadow-xs);">
+            <div class="h-36 w-full" style="background:linear-gradient(135deg, hsl(37 25% 83%), hsl(27 19% 75%));"></div>
+            <div class="flex flex-col gap-2 px-4 pb-4">
+              <h3 class="text-sm font-semibold truncate" style="color:hsl(var(--card-foreground));">Linux 运维手册</h3>
+              <p class="text-xs line-clamp-2" style="color:hsl(var(--muted-foreground));">企业级运维实战指南 PDF电子书</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">学习</span>
+                <span class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));">PDF</span>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--secondary));fill:hsl(var(--secondary));"></i>
+                <i data-lucide="star" class="w-3 h-3" style="color:hsl(var(--muted-foreground));"></i>
+              </div>
+            </div>
+          </article>
+        </div>
+        <!-- Load more button -->
+        <div class="mt-8 flex justify-center">
+          <button class="inline-flex items-center justify-center gap-2 rounded-lg border px-6 py-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.4)]" style="background:hsl(var(--card));color:hsl(var(--foreground));border-color:hsl(var(--border));">
+            加载更多
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ====== FOOTER ====== -->
+      <footer class="border-t px-6 py-8 lg:px-10" style="background:hsl(var(--background));border-color:hsl(var(--border));">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex flex-col gap-2">
+            <span class="text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">四次元资源桶</span>
+            <span class="text-xs" style="color:hsl(var(--muted-foreground));">精选优质资源 持续更新</span>
+          </div>
+          <nav class="flex items-center gap-4">
+            <a href="#" class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--muted-foreground));" aria-label="GitHub">
+              <i data-lucide="github" class="w-4 h-4"></i>
+            </a>
+            <a href="#" class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--muted-foreground));" aria-label="邮箱">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </a>
+            <a href="#" class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 hover:bg-[hsl(var(--muted)/0.5)]" style="color:hsl(var(--muted-foreground));" aria-label="RSS">
+              <i data-lucide="rss" class="w-4 h-4"></i>
+            </a>
+          </nav>
+          <nav class="flex items-center gap-4">
+            <a href="#" class="text-xs transition-colors duration-150 hover:underline" style="color:hsl(var(--muted-foreground));">关于我们</a>
+            <a href="#" class="text-xs transition-colors duration-150 hover:underline" style="color:hsl(var(--muted-foreground));">使用条款</a>
+            <a href="#" class="text-xs transition-colors duration-150 hover:underline" style="color:hsl(var(--muted-foreground));">隐私政策</a>
+            <a href="#" class="text-xs transition-colors duration-150 hover:underline" style="color:hsl(var(--muted-foreground));">联系方式</a>
+          </nav>
+          <span class="text-xs" style="color:hsl(var(--muted-foreground));">2024 四次元资源桶 保留所有权利</span>
+        </div>
+      </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

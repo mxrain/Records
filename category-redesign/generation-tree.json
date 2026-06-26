@@ -1,0 +1,36 @@
+{
+  "root": {
+    "nodeId": "gen-project-shell",
+    "kind": "project-shell",
+    "pageIds": ["page-category", "page-category-detail"],
+    "output": "partials/project-shell.html",
+    "sharedRegions": ["header", "footer", "brand-treatment", "typography-scale", "radius-scale", "shadow-model"],
+    "privateRegions": [],
+    "mutableSlots": ["activeNavItem", "pageTitle"],
+    "status": "planned",
+    "children": [
+      {
+        "nodeId": "gen-page-category",
+        "kind": "page-leaf",
+        "pageIds": ["page-category"],
+        "output": "pages/category.html",
+        "sharedRegions": [],
+        "privateRegions": ["main-content"],
+        "mutableSlots": [],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-category-detail",
+        "kind": "page-leaf",
+        "pageIds": ["page-category-detail"],
+        "output": "pages/category-detail.html",
+        "sharedRegions": [],
+        "privateRegions": ["main-content"],
+        "mutableSlots": [],
+        "status": "planned",
+        "children": []
+      }
+    ]
+  }
+}

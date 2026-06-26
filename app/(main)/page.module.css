@@ -1,373 +1,390 @@
 .container {
-    max-width: 1200px;
-    margin: 64px auto 0 auto;
-    padding: 20px;
-    
-  }
-  
-  .header {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.header {
     display: flex;
     justify-content: start;
-    margin: 10px 0 15px 0;
+    margin: 0 0 1.5rem 0;
     align-items: center;
+}
 
-  }
-  
-  .refreshButton {
+.refreshButton {
     display: flex;
     background: none;
     border: none;
     cursor: pointer;
     align-items: center;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 10px;
-  }
-  
-  .refreshIcon {
-    margin-right: 8px;
-  }
-  
-  .grid {
-    margin: 40px 20%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);/*参数4表示4列，1fr表示每列的宽度相等*/
-    gap: 20px;
-  }
-  
-  .grid > *:nth-child(1) {
-    grid-column: span 2;
-  }
+    background-color: var(--gt-muted);
+    padding: 0.5rem;
+    border-radius: var(--gt-radius);
+}
 
-  .grid > *:nth-child(2) {
+.refreshIcon {
+    margin-right: 0.5rem;
+}
+
+.grid {
+    margin: 2rem 10%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.grid > *:nth-child(1) {
     grid-column: span 2;
-  }
-  
-  .button {
-    background-color: #3490dc;
-    color: white;
-    padding: 10px 20px;
+}
+
+.grid > *:nth-child(2) {
+    grid-column: span 2;
+}
+
+.button {
+    background-color: var(--gt-foreground);
+    color: var(--gt-primary-foreground);
+    padding: 0.625rem 1.25rem;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--gt-radius);
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button-sm {
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
+}
+
+.button:hover {
+    opacity: 0.85;
+}
+
+.button-sm {
     font-size: 0.875rem;
-    padding: 8px 16px;
-  }
-  
-  .button-disabled {
-    opacity: 0.5;
+    padding: 0.5rem 1rem;
+}
+
+.button-disabled {
+    opacity: 0.4;
     cursor: not-allowed;
-  }
-  
-  .refresh-button {
+}
+
+.refresh-button {
     display: flex;
     align-items: center;
-  }
-  
-  .refresh-icon {
-    margin-right: 8px;
-  }
-  
-  .carousel {
+}
+
+.refresh-icon {
+    margin-right: 0.5rem;
+}
+
+.carousel {
     position: relative;
-    margin-bottom: 40px;
-  }
-  
-  .carousel-content {
+    margin-bottom: 2rem;
+}
+
+.carousel-content {
     display: flex;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .carousel-item {
+    transition: transform 0.3s ease;
+}
+
+.carousel-item {
     flex: 0 0 100%;
-  }
-  
-  .carousel-image-container {
+}
+
+.carousel-image-container {
     position: relative;
     height: 200px;
     width: 100%;
-  }
-  
-  .carousel-image {
+}
+
+.carousel-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .carousel-nav {
+    border-radius: var(--gt-radius);
+}
+
+.carousel-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(59, 53, 43, 0.6);
     border: none;
-    border-radius: 50%;
+    border-radius: var(--gt-radius);
     width: 40px;
     height: 40px;
-    font-size: 20px;
+    font-size: 1.25rem;
     cursor: pointer;
-  }
-  
-  .carousel-prev {
-    left: 10px;
-  }
-  
-  .carousel-next {
-    right: 10px;
-  }
-  
-  .list-section {
-    margin-bottom: 40px;
-  }
-  
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    border-radius: 10px;
-  }
-  
-  .card {
-    margin: 0px;
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    color: #fbfaf9;
+}
+
+.carousel-prev {
+    left: 0.75rem;
+}
+
+.carousel-next {
+    right: 0.75rem;
+}
+
+.list-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--gt-foreground);
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
+}
+
+.card {
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--gt-border);
+    border-radius: var(--gt-radius);
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .card-image-container {
+    background: var(--gt-card);
+    box-shadow: var(--gt-shadow);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--gt-shadow-md);
+}
+
+.card-image-container {
     position: relative;
     height: 150px;
-  }
-  
-  .card-image {
+}
+
+.card-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  
-  .card-content {
-    padding: 10px;
-  }
-  
-  .card-title {
+}
+
+.card-content {
+    padding: 0.75rem;
+}
+
+.card-title {
     font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  
-  .card-description {
+    color: var(--gt-foreground);
+    font-family: 'Fraunces', ui-serif, serif;
+}
+
+.card-description {
     font-size: 0.875rem;
-    color: #4a5568;
-    margin-bottom: 5px;
+    color: var(--gt-muted-foreground);
+    margin-bottom: 0.25rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     line-clamp: 2;
     overflow: hidden;
-  }
-  
-  .card-score {
+}
+
+.card-score {
     display: flex;
     align-items: center;
-  }
-  
-  .star-icon {
-    color: #f6e05e;
+}
+
+.star-icon {
+    color: var(--gt-secondary);
     width: 16px;
     height: 16px;
-    margin-right: 4px;
-  }
-  
-  .card-footer {
-    padding: 10px;
-    border-top: 1px solid #e2e8f0;
-  }
-  
-  .card-link {
+    margin-right: 0.25rem;
+}
+
+.card-footer {
+    padding: 0.75rem;
+    border-top: 1px solid var(--gt-border);
+}
+
+.card-link {
     font-size: 0.875rem;
-    color: #3490dc;
+    color: var(--gt-secondary);
     text-decoration: none;
-  }
-  
-  .card-link:hover {
+}
+
+.card-link:hover {
     text-decoration: underline;
-  }
-  
-  .load-more-container {
+}
+
+.load-more-container {
     text-align: center;
-    margin-top: 40px;
-  }
-  
-  .footer {
-    margin-top: 60px;
+    margin-top: 2rem;
+}
+
+.footer {
+    margin-top: 3rem;
     text-align: center;
-  }
-  
-  .social-links {
+}
+
+.social-links {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .social-link {
-    margin: 0 10px;
-    color: #4a5568;
+    margin-bottom: 1rem;
+}
+
+.social-link {
+    margin: 0 0.75rem;
+    color: var(--gt-muted-foreground);
     font-size: 1.25rem;
-  }
-  
-  .copyright {
+}
+
+.copyright {
     font-size: 0.875rem;
-    color: #4a5568;
-  }
-  
-  @media (max-width: 768px) {
+    color: var(--gt-muted-foreground);
+}
+
+/* Responsive - Mobile First Override */
+@media (max-width: 768px) {
     .grid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        margin: 10px 5%;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        margin: 1rem 5%;
+        gap: 1rem;
     }
     .card-image-container {
-      height: 120px;
+        height: 120px;
     }
     .card-title {
-      font-size: 0.9rem;
+        font-size: 0.9375rem;
     }
     .card-description {
-      font-size: 0.8rem;
+        font-size: 0.8125rem;
     }
-  }
+}
 
-  /* 大屏幕 (≥1200px) */
-  @media screen and (min-width: 1200px) {
+/* Large screens (>=1200px) */
+@media screen and (min-width: 1200px) {
     .grid {
-      grid-template-columns: repeat(5, 1fr);
-      margin: 40px 15%; /* 调整为更合适的边距 */
+        grid-template-columns: repeat(5, 1fr);
+        margin: 2rem 12%;
+        gap: 1.5rem;
     }
     
     .grid > *:nth-child(1),
     .grid > *:nth-child(2),
     .grid > *:nth-child(4),
     .grid > *:nth-child(5) {
-      grid-column: span 2;
+        grid-column: span 2;
     }
     .grid > *:nth-child(3) {
-      grid-column: span 1;
+        grid-column: span 1;
     }
-  }
+}
 
-  /* 中等屏幕 (≥992px 和 <1200px) */
-  @media screen and (min-width: 992px) and (max-width: 1199px) {
+/* Medium screens (>=992px and <1200px) */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
     .grid {
-      grid-template-columns: repeat(4, 1fr);
-      margin: 40px 6%; /* 略微减少边距 */
+        grid-template-columns: repeat(4, 1fr);
+        margin: 2rem 6%;
+        gap: 1.25rem;
     }
     
     .grid > *:nth-child(1),
     .grid > *:nth-child(2) {
-      grid-column: span 2;
+        grid-column: span 2;
     }
-  }
+}
 
-  /* 平板 (≥768px 和 <992px) */
-  @media screen and (min-width: 768px) and (max-width: 991px) {
+/* Tablet (>=768px and <992px) */
+@media screen and (min-width: 768px) and (max-width: 991px) {
     .grid {
-      grid-template-columns: repeat(3, 1fr);
-      margin: 40px 4%; /* 平板设备使用较小边距 */
+        grid-template-columns: repeat(3, 1fr);
+        margin: 2rem 4%;
+        gap: 1rem;
     }
     
     .grid > *:nth-child(1) {
-      grid-column: span 3;
+        grid-column: span 3;
     }
     .grid > *:nth-child(2) {
-      grid-column: span 2;
+        grid-column: span 2;
     }
-  }
+}
 
-  /* 大型手机 (≥576px 和 <768px) */
-  @media screen and (min-width: 576px) and (max-width: 767px) {
+/* Large phone (>=576px and <768px) */
+@media screen and (min-width: 576px) and (max-width: 767px) {
     .grid {
-      grid-template-columns: repeat(2, 1fr);
-      margin: 30px 20px; /* 使用固定边距 */
+        grid-template-columns: repeat(2, 1fr);
+        margin: 1.5rem 1.25rem;
+        gap: 1rem;
     }
     
     .grid > * {
-      grid-column: span 1 !important;
+        grid-column: span 1 !important;
     }
-  }
+}
 
-  /* 小型手机 (<576px) */
-  @media screen and (max-width: 575px) {
+/* Small phone (<576px) */
+@media screen and (max-width: 575px) {
     .grid {
-      grid-template-columns: 1fr;
-      margin: 20px 15px; /* 稍微增加边距 */
+        grid-template-columns: 1fr;
+        margin: 1rem 1rem;
+        gap: 1rem;
     }
     
     .grid > * {
-      grid-column: span 1 !important;
+        grid-column: span 1 !important;
     }
-  }
+}
 
-  /* 超大屏幕 (≥1400px) */
-  @media screen and (min-width: 1400px) {
+/* Extra large (>=1400px) */
+@media screen and (min-width: 1400px) {
     .grid {
-      grid-template-columns: repeat(5, 1fr);
-      margin: 40px 12%; /* 减小边距，避免内容过于集中 */
+        grid-template-columns: repeat(5, 1fr);
+        margin: 2rem 10%;
+        gap: 1.5rem;
     }
     
     .grid > *:nth-child(1),
     .grid > *:nth-child(2),
     .grid > *:nth-child(4),
     .grid > *:nth-child(5) {
-      grid-column: span 2;
+        grid-column: span 2;
     }
     .grid > *:nth-child(3) {
-      grid-column: span 1;
+        grid-column: span 1;
     }
-  }
+}
 
-  /* 大屏幕 (≥1200px 和 <1400px) */
-  @media screen and (min-width: 1200px) and (max-width: 1399px) {
+/* Large (>=1200px and <1400px) */
+@media screen and (min-width: 1200px) and (max-width: 1399px) {
     .grid {
-      grid-template-columns: repeat(5, 1fr);
-      margin: 40px 8%; /* 适中的边距 */
+        grid-template-columns: repeat(5, 1fr);
+        margin: 2rem 8%;
+        gap: 1.25rem;
     }
     
     .grid > *:nth-child(1),
     .grid > *:nth-child(2),
     .grid > *:nth-child(4),
     .grid > *:nth-child(5) {
-      grid-column: span 2;
+        grid-column: span 2;
     }
     .grid > *:nth-child(3) {
-      grid-column: span 1;
+        grid-column: span 1;
     }
-  }
+}
 
-  /* 折叠屏设备 (<400px) */
-  @media screen and (max-width: 400px) {
+/* Foldable (<400px) */
+@media screen and (max-width: 400px) {
     .grid {
-      margin: 15px 12px; /* 折叠屏使用较小但合适的边距 */
+        margin: 0.75rem 0.75rem;
     }
-  }
+}

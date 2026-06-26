@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源列表</title>
+    <style id="theme-vars">
+/* Source: structured-spec */
+:root {
+  /* bg */
+  --background: 40 16% 98%;
+  --card: 40 16% 98%;
+  --popover: 40 16% 98%;
+
+  /* text */
+  --foreground: 37.5000 15.6863% 20%;
+  --card-foreground: 37.5000 15.6863% 20%;
+  --popover-foreground: 37.5000 15.6863% 20%;
+  --muted-foreground: 36.0000 19.8413% 49.4118%;
+
+  /* accent */
+  --primary: 37.5000 15.6863% 20%;
+  --primary-foreground: 40 16% 98%;
+  --secondary: 55.0000 24.0000% 49.0196%;
+  --secondary-foreground: 40 16% 98%;
+  --muted: 44.0000 26.3158% 88.8235%;
+  --accent: 40.0000 24.0876% 73.1373%;
+  --accent-foreground: 30 14.0000% 30%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 43.3333 23.0769% 84.7059%;
+  --input: 44.0000 26.3158% 88.8235%;
+  --ring: 37.5000 15.6863% 20%;
+
+  /* chart */
+  --chart-1: 55 20% 80%;
+  --chart-2: 0 15.3374% 31.9608%;
+  --chart-3: 70.5882 10.0592% 66.8627%;
+  --chart-4: 55.0000 24.0000% 49.0196%;
+  --chart-5: 28.9888 91.7526% 61.9608%;
+
+  /* sidebar */
+  --sidebar: 40 16% 98%;
+  --sidebar-foreground: 37.5000 15.6863% 20%;
+  --sidebar-primary: 37.5000 15.6863% 20%;
+  --sidebar-primary-foreground: 40 16% 98%;
+  --sidebar-accent: 40.0000 24.0876% 73.1373%;
+  --sidebar-accent-foreground: 37.5000 15.6863% 20%;
+  --sidebar-border: 43.3333 23.0769% 84.7059%;
+  --sidebar-ring: 37.5000 15.6863% 20%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 50%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 2px 4px -1px hsl(35 15% 50% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 4px 6px -1px hsl(35 15% 50% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 8px 10px -1px hsl(35 15% 50% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --tracking-normal: 0.01em;
+  --spacing: 0.3rem;
+}
+
+.dark {
+  /* bg */
+  --background: 12 71.4286% 1.3725%;
+  --card: 12 71.4286% 1.3725%;
+  --popover: 12 71.4286% 1.3725%;
+
+  /* text */
+  --foreground: 41.5385 18.8406% 86.4706%;
+  --card-foreground: 41.5385 18.8406% 86.4706%;
+  --popover-foreground: 41.5385 18.8406% 86.4706%;
+  --muted-foreground: 35 15% 60%;
+
+  /* accent */
+  --primary: 41.5385 18.8406% 86.4706%;
+  --primary-foreground: 12 71.4286% 1.3725%;
+  --secondary: 35 25% 30%;
+  --secondary-foreground: 41.5385 18.8406% 86.4706%;
+  --muted: 35 15% 20%;
+  --accent: 35 25% 40%;
+  --accent-foreground: 41.5385 18.8406% 86.4706%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 42.8571 8.4337% 16.2745%;
+  --input: 35 15% 20%;
+  --ring: 35.4545 29.7297% 70.9804%;
+
+  /* chart */
+  --chart-1: 35 25% 60%;
+  --chart-2: 20 20% 40%;
+  --chart-3: 34.5000 60.6061% 87.0588%;
+  --chart-4: 10 10% 50%;
+  --chart-5: 13.7430 78.1659% 55.0980%;
+
+  /* sidebar */
+  --sidebar: 12 71.4286% 1.3725%;
+  --sidebar-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary-foreground: 12 71.4286% 1.3725%;
+  --sidebar-accent: 35 25% 40%;
+  --sidebar-accent-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-border: 35 15% 25%;
+  --sidebar-ring: 41.5385 18.8406% 86.4706%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 5%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 2px 4px -1px hsl(35 15% 5% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 4px 6px -1px hsl(35 15% 5% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 8px 10px -1px hsl(35 15% 5% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+}
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-foreground: var(--card-foreground);
+  }
+  @layer base {
+    body { background: var(--card-background); color: var(--card-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+
+      <!-- Top Navigation Bar -->
+      <nav class="w-full" style="border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--background));">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8" style="height: 64px;">
+          <!-- Brand -->
+          <a href="#" class="flex items-center gap-2 no-underline" style="color: hsl(var(--foreground));">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:999px;background:hsl(var(--accent)/0.22);">
+              <span data-icon="house" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/house.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/house.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+            </span>
+            <span class="font-semibold text-lg tracking-tight">资源库</span>
+          </a>
+
+          <!-- Search (center) -->
+          <div class="hidden sm:flex items-center flex-1 max-w-md mx-6 lg:mx-8" style="background: hsl(var(--muted)); border-radius: calc(var(--radius) * 0.76); padding: calc(var(--spacing) * 2) calc(var(--spacing) * 5);">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:1.2rem;height:1.2rem;margin-right:calc(var(--spacing) * 2);color:hsl(var(--muted-foreground));">
+              <span data-icon="search" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+            </span>
+            <input type="text" placeholder="搜索资源..." class="bg-transparent outline-none flex-1 text-sm" style="color: hsl(var(--foreground)); border: none; font-family: var(--font-sans);">
+          </div>
+
+          <!-- Nav links (right) -->
+          <div class="flex items-center gap-1">
+            <a href="#" class="hidden md:inline-flex items-center px-3 py-2 text-sm no-underline transition-colors duration-150" style="color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--sidebar-accent)/0.18)';this.style.color='hsl(var(--sidebar-accent-foreground))'" onmouseout="this.style.background='transparent';this.style.color='hsl(var(--muted-foreground))'">分类</a>
+            <a href="#" class="hidden md:inline-flex items-center px-3 py-2 text-sm no-underline transition-colors duration-150" style="color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--sidebar-accent)/0.18)';this.style.color='hsl(var(--sidebar-accent-foreground))'" onmouseout="this.style.background='transparent';this.style.color='hsl(var(--muted-foreground))'">收藏</a>
+            <a href="#" class="inline-flex items-center px-3 py-2 text-sm no-underline transition-colors duration-150" style="color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--sidebar-accent)/0.18)';this.style.color='hsl(var(--sidebar-accent-foreground))'" onmouseout="this.style.background='transparent';this.style.color='hsl(var(--muted-foreground))'">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:1.4rem;height:1.4rem;color:hsl(var(--muted-foreground));">
+                <span data-icon="user" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/user.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/user.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Breadcrumb Bar -->
+      <div class="w-full" style="background: hsl(var(--background)); border-bottom: 1px solid hsl(var(--border));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto no-scrollbar">
+          <nav class="flex items-center gap-1 py-2 text-sm" style="font-family: var(--font-sans);">
+            <a href="#" data-dom-id="back-categories" class="flex items-center gap-1 no-underline whitespace-nowrap transition-colors duration-150" style="color: hsl(var(--muted-foreground));" onmouseover="this.style.color='hsl(var(--foreground))'" onmouseout="this.style.color='hsl(var(--muted-foreground))'">首页</a>
+            <span style="color: hsl(var(--muted-foreground)); display:inline-flex;align-items:center;justify-content:center;width:1rem;height:1rem;">
+              <span data-icon="chevron-right" style="display:inline-block;width:0.75rem;height:0.75rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/chevron-right.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/chevron-right.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+            </span>
+            <span class="whitespace-nowrap" style="color: hsl(var(--muted-foreground));">分类</span>
+            <span style="color: hsl(var(--muted-foreground)); display:inline-flex;align-items:center;justify-content:center;width:1rem;height:1rem;">
+              <span data-icon="chevron-right" style="display:inline-block;width:0.75rem;height:0.75rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/chevron-right.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/chevron-right.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+            </span>
+            <span class="whitespace-nowrap font-semibold" style="color: hsl(var(--foreground));">设计工具</span>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Page Header Band -->
+      <section class="w-full" style="background: hsl(var(--background));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <!-- Left: Title + Description -->
+          <div class="min-w-0">
+            <h1 class="text-2xl font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-serif); font-size: 2rem; line-height: 1.2;">设计工具</h1>
+            <p class="mt-1 text-sm truncate" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans);">精选的设计工具和资源合集</p>
+          </div>
+          <!-- Right: Count + View Toggle -->
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="inline-flex items-center px-3 py-1 text-sm whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans);">12 个资源</span>
+            <div class="flex items-center" style="border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.76); overflow: hidden;">
+              <button class="inline-flex items-center justify-center transition-colors duration-150" style="width: 2.2rem; height: 2.2rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));" title="网格视图" aria-label="网格视图">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:1rem;height:1rem;">
+                  <span data-icon="grip" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/grip.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/grip.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+                </span>
+              </button>
+              <button class="inline-flex items-center justify-center transition-colors duration-150" style="width: 2.2rem; height: 2.2rem; background: transparent; color: hsl(var(--muted-foreground));" title="列表视图" aria-label="列表视图">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:1rem;height:1rem;">
+                  <span data-icon="file" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter Bar -->
+      <section class="w-full" style="background: hsl(var(--background));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <!-- Funnel icon button -->
+            <button class="inline-flex items-center justify-center shrink-0 transition-colors duration-150" style="width: 2.2rem; height: 2.2rem; background: hsl(var(--muted)); border-radius: calc(var(--radius) * 0.76); color: hsl(var(--muted-foreground));" title="筛选">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:1rem;height:1rem;">
+                <span data-icon="funnel" style="display:inline-block;width:1rem;height:1rem;background:currentColor;-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;"></span>
+              </span>
+            </button>
+            <!-- Filter tags -->
+            <div class="flex items-center gap-2 flex-nowrap overflow-x-auto no-scrollbar">
+              <button class="shrink-0 inline-flex items-center px-3 py-1 text-sm whitespace-nowrap transition-colors duration-150" style="background: hsl(var(--accent)/0.42); color: hsl(var(--accent-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans); font-weight: 500;">全部</button>
+              <button class="shrink-0 inline-flex items-center px-3 py-1 text-sm whitespace-nowrap transition-colors duration-150" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--accent)/0.22)'" onmouseout="this.style.background='hsl(var(--muted))'">UI设计</button>
+              <button class="shrink-0 inline-flex items-center px-3 py-1 text-sm whitespace-nowrap transition-colors duration-150" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--accent)/0.22)'" onmouseout="this.style.background='hsl(var(--muted))'">图标库</button>
+              <button class="shrink-0 inline-flex items-center px-3 py-1 text-sm whitespace-nowrap transition-colors duration-150" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--accent)/0.22)'" onmouseout="this.style.background='hsl(var(--muted))'">设计系统</button>
+              <button class="shrink-0 inline-flex items-center px-3 py-1 text-sm whitespace-nowrap transition-colors duration-150" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.76); font-family: var(--font-sans);" onmouseover="this.style.background='hsl(var(--accent)/0.22)'" onmouseout="this.style.background='hsl(var(--muted))'">原型工具</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resource Card Grid -->
+      <section class="w-full" style="background: hsl(var(--background)); min-height: 60vh;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 lg:pb-12">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+
+            <!-- Card 1: Ant Design Pro -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-1.jpg" alt="Ant Design Pro 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Ant Design Pro</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">设计系统</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">企业级中后台前端解决方案</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">UI设计</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">React</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2: Heroicons -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-2.jpg" alt="Heroicons 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Heroicons</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">图标库</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">Hand-crafted SVG icons</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">图标库</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">React</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3: Figma Toolkit -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-3.jpg" alt="Figma Toolkit 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Figma Toolkit</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">原型工具</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">Complete design system toolkit</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">Figma</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">设计系统</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: Material Design 3 -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-1.jpg" alt="Material Design 3 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Material Design 3</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">设计系统</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">Google's latest design language</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">UI设计</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">Material</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5: Phosphor Icons -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-2.jpg" alt="Phosphor Icons 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Phosphor Icons</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">图标库</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">Flexible icon family</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">图标库</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">多平台</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6: Design Tokens Spec -->
+            <article class="group flex flex-col overflow-hidden transition-transform duration-200" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 0.82); padding: calc(var(--spacing) * 4);" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='hsl(var(--accent)/0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='hsl(var(--border))'">
+              <div class="overflow-hidden" style="border-radius: calc(var(--radius) * 0.76);">
+                <img src="../assets/resource-thumb-3.jpg" alt="Design Tokens Spec 预览" class="w-full aspect-video object-cover transition-transform duration-300" style="display:block;" loading="lazy">
+              </div>
+              <div class="flex flex-col flex-1 mt-3 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-semibold truncate" style="color: hsl(var(--foreground)); font-family: var(--font-sans);">Design Tokens Spec</h3>
+                  <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">文档</span>
+                </div>
+                <p class="mt-1.5 text-sm line-clamp-2" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); line-height: 1.55;">Design token specification</p>
+                <div class="flex items-center gap-2 mt-auto pt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">设计系统</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: calc(var(--radius) * 0.72); font-family: var(--font-sans);">规范</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="w-full" style="background: hsl(var(--muted)); border-top: 1px solid hsl(var(--border));">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span class="text-sm" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans);">资源库</span>
+          <span class="text-xs" style="color: hsl(var(--muted-foreground)); font-family: var(--font-sans); opacity: 0.7;">2026 All rights reserved.</span>
+        </div>
+      </footer>
+
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

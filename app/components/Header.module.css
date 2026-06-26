@@ -1,19 +1,19 @@
 .header {
-    background-color: var(--color-gray-50);
-    height: 70px;
+    background-color: var(--gt-background);
+    border-bottom: 1px solid var(--gt-border);
+    height: 64px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1010;
+    box-shadow: none;
 }
 
-
-
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -23,20 +23,26 @@
 .logo {
     display: flex;
     align-items: center;
+    text-decoration: none;
 }
 
 .logoText {
-    font-size: 2rem;
-    padding-left: 1rem;
-    font-weight: 800;
-    color: var(--color-gray-800);
-    letter-spacing: -0.5px;
-    transition: color var(--transition-slow) var(--ease-out), text-shadow var(--transition-slow) var(--ease-out);
+    font-size: 1.75rem;
+    padding-left: 0;
+    font-weight: 700;
+    color: var(--gt-foreground);
+    letter-spacing: var(--gt-tracking);
+    transition: color 0.3s ease;
+    font-family: 'Fraunces', ui-serif, serif;
 }
 
 .enhancedLogo:hover .logoText {
-    color: var(--color-primary-500);
-    text-shadow: 2px 2px 4px rgba(52, 152, 219, 0.3);
+    color: var(--gt-secondary);
+    text-shadow: none;
+}
+
+.enhancedLogo:hover {
+    transform: none;
 }
 
 .nav {
@@ -46,7 +52,7 @@
 
 .menuContainer {
     position: relative;
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     z-index: 1011;
 }
 
@@ -58,47 +64,44 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color var(--transition-slow) var(--ease-out);
+    transition: background-color 0.3s ease, color 0.3s ease;
     white-space: nowrap;
     overflow: visible;
-    font-weight: bold; 
+    font-weight: 600;
     position: relative;
     z-index: 9999;
+    color: var(--gt-foreground);
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
 }
 
 .menuButton:hover {
-    background-color: var(--color-gray-200);
-    border-radius: var(--radius-base);
-    font-weight: bold; 
-}
-
-.menuIcon {
-    width: 24px;
-    height: 24px;
-    margin-right: 0.5rem;
-    position: absolute;
-    right: 1rem;
+    background-color: var(--gt-muted);
+    border-radius: var(--gt-radius);
 }
 
 .menuText {
     position: relative;
     z-index: 1;
     font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--color-gray-700);
-    transition: color var(--transition-slow) var(--ease-out), transform var(--transition-slow) var(--ease-out);
+    font-size: 1rem;
+    color: var(--gt-foreground);
+    transition: color 0.3s ease;
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
 }
 
 .menuButton:hover .menuText {
-    color: var(--color-secondary-500);
-    transform: translateY(-2px);
+    color: var(--gt-secondary);
+    transform: none;
 }
 
 .arrowDown {
-    width: 16px;
-    height: 16px;
-    margin-left: 0.5rem;
-    transition: transform var(--transition-slow) var(--ease-out);
+    width: 14px;
+    height: 14px;
+    margin-left: 0.375rem;
+    transition: transform 0.3s ease;
+    color: var(--gt-muted-foreground);
 }
 
 .menuButton:hover .arrowDown {
@@ -113,26 +116,28 @@
 
 .topLevelMenu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    background-color: white;
-    border-radius: var(--radius-xl);
-    min-width: 200px;
+    background-color: var(--gt-card);
+    border-radius: var(--gt-radius);
+    min-width: 220px;
     z-index: 1011;
-    border: 1px solid var(--color-gray-200);
-    box-shadow: var(--shadow-base);
+    border: 1px solid var(--gt-border);
+    box-shadow: var(--gt-shadow-md);
+    padding: 0.5rem 0;
 }
 
 .subMenu {
     position: absolute;
     top: -1px;
-    right: 100%;
-    background-color: white;
-    border-radius: var(--radius-xl);
-    min-width: 200px;
-    border: 1px solid var(--color-gray-200);
+    right: calc(100% + 4px);
+    background-color: var(--gt-card);
+    border-radius: var(--gt-radius);
+    min-width: 220px;
+    border: 1px solid var(--gt-border);
     z-index: 1011;
-    box-shadow: var(--shadow-base);
+    box-shadow: var(--gt-shadow-md);
+    padding: 0.5rem 0;
 }
 
 .categoryItem {
@@ -143,55 +148,73 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0.5rem 1rem;
+    padding: 0.625rem 1rem;
     white-space: nowrap;
-    font-size: 1rem;
-    color: var(--color-gray-700);
-    transition: color var(--transition-slow) var(--ease-out), background-color var(--transition-slow) var(--ease-out), padding-left var(--transition-slow) var(--ease-out);
+    font-size: 0.9375rem;
+    color: var(--gt-foreground);
+    transition: color 0.3s ease, background-color 0.3s ease, padding-left 0.3s ease;
+    text-decoration: none;
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
+    border-radius: calc(var(--gt-radius) - 0.25rem);
+    margin: 0 0.25rem;
 }
 
 .categoryLink:hover {
-    color: var(--color-secondary-500);
-    background-color: var(--color-gray-50);
-    padding-left: 1.5rem;
-}
-
-.arrowIcon {
-    width: 16px;
-    height: 16px;
-    margin-left: 0.5rem;
-    transform: rotate(90deg);
-    transition: transform var(--transition-slow) var(--ease-out);
-}
-
-.subMenu .arrowIcon {
-    transform: rotate(90deg);
-}
-
-.chevronLeft {
-    width: 16px;
-    height: 16px;
-    margin-right: 0.5rem;
-    order: -1;
+    color: var(--gt-secondary);
+    background-color: var(--gt-muted);
+    padding-left: 1.25rem;
 }
 
 .topLevelMenu, .subMenu {
-    animation: slideInDown var(--transition-slow) var(--ease-out);
+    animation: slideIn 0.25s ease;
 }
 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.skeletonContainer {
+    display: flex;
+    gap: 1rem;
+}
+
+.errorMessage {
+    color: var(--gt-secondary);
+    font-size: 0.875rem;
+}
+
+.enhancedMenuButton {
+    border-radius: var(--gt-radius);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.enhancedMenuButton::after {
+    display: none;
+}
+
+/* Responsive */
 @media (max-width: 1200px) {
     .container {
-        max-width: 960px;
+        max-width: 1100px;
     }
 }
 
 @media (max-width: 992px) {
     .container {
-        max-width: 720px;
+        max-width: 800px;
     }
-
     .logoText {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 }
 
@@ -199,192 +222,80 @@
     .hideOnMobile {
         display: none;
     }
-
     .container {
-        font-size: 0.8rem;
-        padding: 0 0.75rem;
-        max-width: 540px;
+        font-size: 0.875rem;
+        padding: 0 1rem;
+        max-width: 100%;
     }
-
     .logoText {
-        font-size: 1.5rem;
-        padding-left: 0.5rem;
+        font-size: 1.375rem;
     }
-
     .menuText {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
     }
-
     .menuButton {
-        padding: 0.4rem 0.8rem;
+        padding: 0.375rem 0.75rem;
     }
-
     .header {
-        height: 60px;
+        height: 56px;
     }
-
     .categoryLink {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
     }
-
     .topLevelMenu, .subMenu {
-        min-width: 160px;
+        min-width: 180px;
     }
-
-    .container {
-        padding: 0 0.5rem;
-        max-width: 540px;
-    }
-
-    .menuButton {
-        padding: 0.4rem 0.5rem;
-        min-width: auto;
-    }
-
-    .menuText {
-        font-size: 0.85rem;
-    }
-
     .nav {
         flex-shrink: 0;
-        margin-left: 0.5rem;
+        margin-left: 0.25rem;
     }
 }
 
 @media (max-width: 576px) {
     .container {
-        font-size: 0.7rem;
-        padding: 0 0.5rem;
+        font-size: 0.75rem;
+        padding: 0 0.75rem;
         width: 100%;
     }
-
     .logoText {
-        font-size: 1.3rem;
+        font-size: 1.125rem;
     }
-
     .menuText {
-        font-size: 0.8rem;
+        font-size: 0.8125rem;
     }
-
     .menuButton {
-        padding: 0.3rem 0.6rem;
+        padding: 0.25rem 0.5rem;
     }
-
     .header {
-        height: 50px;
+        height: 48px;
     }
-
     .skeletonContainer .h-10 {
         height: 2rem;
         width: 80px;
     }
-
-    .container {
-        padding: 0 0.3rem;
-    }
-
-    .menuButton {
-        padding: 0.3rem 0.4rem;
-    }
-
-    .menuText {
-        font-size: 0.8rem;
-    }
-
-    .logoText {
-        font-size: 1.1rem;
-    }
 }
-
 
 @media (min-width: 1400px) {
     .container {
         max-width: 1320px;
     }
-
     .logoText {
-        font-size: 2.2rem;
+        font-size: 1.875rem;
     }
-
     .menuText {
-        font-size: 1.2rem;
+        font-size: 1.0625rem;
     }
 }
-
 
 @media (max-width: 360px) {
     .logoText {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
-
     .menuText {
         font-size: 0.75rem;
     }
-
     .menuButton {
-        padding: 0.25rem 0.5rem;
+        padding: 0.25rem 0.375rem;
     }
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-5);
-}
-
-.grid > * {
-    grid-column: span 2;
-}
-
-@media (max-width: 870px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .grid > * {
-        grid-column: span 1;
-    }
-}
-
-.skeletonContainer {
-    display: flex;
-    gap: var(--spacing-4);
-}
-
-.errorMessage {
-    color: var(--color-accent-500);
-}
-
-.enhancedLogo {
-    transition: transform var(--transition-slow) var(--ease-out);
-}
-
-.enhancedLogo:hover {
-    transform: scale(1.05);
-}
-
-.enhancedMenuButton {
-    border-radius: var(--radius-base);
-    transition: all var(--transition-slow) var(--ease-out);
-    overflow: hidden;
-    position: relative;
-}
-
-.enhancedMenuButton::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background-color: rgba(236, 240, 241, 0.5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width var(--transition-slow) var(--ease-out), height var(--transition-slow) var(--ease-out);
-}
-
-.enhancedMenuButton:hover::after {
-    width: 300px;
-    height: 300px;
 }

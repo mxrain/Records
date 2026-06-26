@@ -1,0 +1,187 @@
+{
+  "project": {
+    "name": "分类展示页重设计",
+    "operation": "create",
+    "deviceType": "desktop",
+    "operatingMode": "library-bound",
+    "designRead": "resource catalog / general users / warm editorial premium / medium density / avoid cold corporate grid",
+    "designDials": {
+      "layoutVariance": 3,
+      "motionIntensity": 2,
+      "visualDensity": 3
+    },
+    "generationTree": {
+      "root": {
+        "nodeId": "gen-project-shell",
+        "kind": "project-shell",
+        "pageIds": ["page-category", "page-category-detail"],
+        "output": "partials/project-shell.html",
+        "sharedRegions": ["header", "footer", "brand-treatment", "typography-scale", "radius-scale", "shadow-model"],
+        "privateRegions": [],
+        "mutableSlots": ["activeNavItem", "pageTitle"],
+        "status": "planned",
+        "children": [
+          {
+            "nodeId": "gen-page-category",
+            "kind": "page-leaf",
+            "pageIds": ["page-category"],
+            "output": "pages/category.html",
+            "sharedRegions": [],
+            "privateRegions": ["main-content"],
+            "mutableSlots": [],
+            "status": "planned",
+            "children": []
+          },
+          {
+            "nodeId": "gen-page-category-detail",
+            "kind": "page-leaf",
+            "pageIds": ["page-category-detail"],
+            "output": "pages/category-detail.html",
+            "sharedRegions": [],
+            "privateRegions": ["main-content"],
+            "mutableSlots": [],
+            "status": "planned",
+            "children": []
+          }
+        ]
+      }
+    }
+  },
+  "designSource": {
+    "operatingMode": "library-bound",
+    "libraryIdentity": {
+      "name": "Golden Time",
+      "id": "dl_builtin_golden_time",
+      "version": null,
+      "scope": "built-in-global",
+      "path": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+      "versionSource": "metadata.json"
+    },
+    "brandPrefix": "golden",
+    "cssFilePath": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\colors_and_type.css",
+    "forbiddenInventedComponents": "none",
+    "allowedComponents": "unrestricted",
+    "styleConstraints": {
+      "radiusMax": "32px",
+      "spacingBase": "4.8px",
+      "fontSizeBody": "16px",
+      "controlH": "42px"
+    },
+    "iconAssets": {
+      "source": "assets/icons",
+      "projectIconDir": "assets/icons/dl_builtin_golden_time",
+      "libraryKey": "dl_builtin_golden_time",
+      "renderMethod": "css-mask",
+      "pathTemplate": "../assets/icons/dl_builtin_golden_time/{name}.svg",
+      "availableNames": ["arrow-down","arrow-left","arrow-right","arrow-up","box","check","chevron-down","chevron-left","chevron-right","chevron-up","chevrons-down-up","chevrons-up-down","circle-alert","circle-check","circle-minus","circle-pause","circle-play","circle-plus","circle-question-mark","external-link","file","folder-open","folder","funnel","grip","heart","house","mail","map-pin","message-circle-more","mouse-pointer-click","pen-line","send-horizontal","star","tag","thumbs-down","thumbs-up","trash-2","triangle-alert","user"],
+      "totalCount": 42,
+      "coloringRule": "currentColor by default; override with Library token when needed"
+    }
+  },
+  "pages": [
+    {
+      "nodeId": "page-category",
+      "title": "分类展示",
+      "htmlSrc": "pages/category.html",
+      "pageType": "showcase",
+      "visualNorthStar": "A warm editorial category browsing experience with generous spacing, serif-led typography, and calm neutral surfaces that invite exploration",
+      "compositionPattern": "sidebar + main grid with featured category hero band and three-up subcategory cards",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "large 2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        {
+          "slug": "card",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json"
+        },
+        {
+          "slug": "button",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\button.json"
+        },
+        {
+          "slug": "input",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json"
+        }
+      ],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Featured category hero band at the top with a warm accent background and editorial copy that frames browsing as a curated collection experience"
+    },
+    {
+      "nodeId": "page-category-detail",
+      "title": "资源列表",
+      "htmlSrc": "pages/category-detail.html",
+      "pageType": "showcase",
+      "visualNorthStar": "A refined resource gallery with filter bar, grid/list view toggle, and warm editorial cards that feel like browsing a premium catalog",
+      "compositionPattern": "filter topbar + breadcrumb + view mode toggle + three-column resource card grid with editorial card treatment",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "large 2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        {
+          "slug": "card",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json"
+        },
+        {
+          "slug": "button",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\button.json"
+        },
+        {
+          "slug": "input",
+          "contractKind": "legacy-json",
+          "contractFile": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json"
+        }
+      ],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Grid/list toggle with editorial resource cards that reveal tags and description on hover, making the browse feel like flipping through a curated collection catalog"
+    }
+  ],
+  "assets": [],
+  "wiringPlan": [
+    {
+      "fromPageId": "page-category",
+      "toPageId": "page-category-detail",
+      "domId": "cat-design-tools",
+      "hideEdge": false,
+      "transitionLabel": "Browse design tools"
+    },
+    {
+      "fromPageId": "page-category",
+      "toPageId": "page-category-detail",
+      "domId": "cat-dev-frameworks",
+      "hideEdge": false,
+      "transitionLabel": "Browse dev frameworks"
+    }
+  ],
+  "hiddenInteractionPlan": [
+    {
+      "fromPageId": "page-category-detail",
+      "toPageId": "page-category",
+      "domId": "back-categories",
+      "hideEdge": true,
+      "transitionLabel": "返回分类"
+    }
+  ]
+}

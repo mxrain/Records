@@ -1,111 +1,118 @@
 .card {
-
     width: 100%;
     height: 330px;
-    box-shadow: var(--shadow-md);
-    border-radius: var(--radius-xl);
+    box-shadow: var(--gt-shadow);
+    border-radius: var(--gt-radius);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: box-shadow var(--transition-base) var(--ease-out);
+    transition: box-shadow 0.3s ease;
+    background: var(--gt-card);
+    border: 1px solid var(--gt-border);
 }
 
 .card:hover {
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--gt-shadow-md);
 }
+
 @media (max-width: 870px) {
     .card {
-      height: auto;
-      min-height: 330px;
+        height: auto;
+        min-height: 330px;
     }
-  
     .cardContent {
-      height: auto;
-      max-height: 280px;
+        height: auto;
+        max-height: 280px;
     }
-  }
+}
+
 .cardHeader {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 1.125rem;
+    font-weight: 700;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 15px 5px 15px;
-    /* border-bottom: 1px solid #e0e0e0; */
+    padding: 1rem 1.25rem 0.5rem 1.25rem;
+    color: var(--gt-foreground);
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
 }
 
 .refreshButton {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.5s;
+    transition: transform 0.5s ease;
     user-select: none;
+    color: var(--gt-muted-foreground);
 }
 
 .refreshButton:hover {
-    /* 按中心旋转放大 */
     transform-origin: center;
-    transform: rotate(360deg) scale(1.5);
-
+    transform: rotate(360deg) scale(1.3);
+    color: var(--gt-secondary);
 }
 
 .cardContent {
     flex-grow: 1;
-    padding: 0 15px;
-    /* 可以滚动 */
+    padding: 0 1.25rem;
     overflow-y: auto;
-    /* 隐藏滚动条 */
     scrollbar-width: none;
-    height: 280px;
+    height: 260px;
+}
+
+.cardContent::-webkit-scrollbar {
+    display: none;
 }
 
 .item {
     height: 40px;
     display: flex;
     align-items: center;
-    padding: 0 8px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    padding: 0 0.625rem;
+    border-radius: var(--gt-radius);
+    margin-bottom: 0.5rem;
     transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--gt-foreground);
 }
 
 .item:hover {
-    transform: scale(1.05);
-    background-color: rgba(245, 245, 245, 0.8);
+    transform: none;
+    background-color: var(--gt-muted);
 }
 
 .itemName {
     flex: 1;
-    font-weight: bold;
-    font-size: 14px;
-    /* 超出部分隐藏 */
+    font-weight: 600;
+    font-size: 0.875rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-family: 'Fraunces', ui-serif, serif;
+    letter-spacing: var(--gt-tracking);
 }
 
 .itemDescription {
     flex: 2;
-    color: #666;
-    font-size: 12px;
-    /* 超出部分隐藏 */
+    color: var(--gt-muted-foreground);
+    font-size: 0.8125rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .itemSize {
-    /* 固定宽度 */
-    flex: 0 0 80px;
+    flex: 0 0 70px;
     text-align: right;
-    color: #999;
-    font-size: 10px;
+    color: var(--gt-muted-foreground);
+    font-size: 0.75rem;
 }
 
 .cardFooter {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 0.75rem 1rem;
 }
 
 .cardFooter button {
@@ -113,10 +120,11 @@
     border: none;
     cursor: pointer;
     transition: opacity 0.2s;
+    color: var(--gt-muted-foreground);
 }
 
 .cardFooter button:disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
 }
 
@@ -125,47 +133,41 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #999;
+    color: var(--gt-muted-foreground);
 }
 
 .skeletonItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    padding: 0.625rem;
+    border-bottom: 1px solid var(--gt-border);
     animation: pulse 1.5s infinite;
 }
 
 .skeletonName {
     width: 30%;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    height: 16px;
+    background-color: var(--gt-muted);
+    border-radius: var(--gt-radius);
 }
 
 .skeletonDescription {
     width: 50%;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    height: 16px;
+    background-color: var(--gt-muted);
+    border-radius: var(--gt-radius);
 }
 
 .skeletonSize {
     width: 15%;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    height: 16px;
+    background-color: var(--gt-muted);
+    border-radius: var(--gt-radius);
 }
 
 @keyframes pulse {
-    0% {
-        opacity: 0.6;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.6;
-    }
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
 }

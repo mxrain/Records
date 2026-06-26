@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "id": "page-homepage",
+      "title": "首页设计稿",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1782483800000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/homepage.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "image-001",
+      "title": "首页主视觉",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1782483850000,
+      "canvasData": {
+        "x": 0,
+        "y": 3335
+      },
+      "devMetadata": {
+        "imageSrc": "assets/hero-banner.jpg"
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "mobile",
+    "projectName": "四次元资源桶 首页设计稿",
+    "designLibrary": {
+      "name": "Golden Time",
+      "id": "dl_builtin_golden_time",
+      "version": null,
+      "scope": "built-in-global",
+      "path": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+      "versionSource": null
+    }
+  }
+}

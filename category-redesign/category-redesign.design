@@ -1,0 +1,151 @@
+{
+  "data": [
+    {
+      "id": "page-category",
+      "title": "分类展示",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751000000000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/category.html",
+        "interactions": [
+          {
+            "domId": "cat-design-tools",
+            "targetPageId": "page-category-detail",
+            "transitionLabel": "浏览设计工具"
+          },
+          {
+            "domId": "cat-dev-frameworks",
+            "targetPageId": "page-category-detail",
+            "transitionLabel": "浏览开发框架"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-category-detail",
+      "title": "资源列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751000000001,
+      "canvasData": {
+        "x": 620,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/category-detail.html",
+        "interactions": [
+          {
+            "domId": "back-categories",
+            "targetPageId": "page-category",
+            "hideEdge": true,
+            "transitionLabel": "返回分类"
+          }
+        ]
+      }
+    },
+    {
+      "id": "image-001",
+      "title": "分类页主视觉",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000010,
+      "canvasData": {
+        "x": 0,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/hero-categories.jpg"
+      }
+    },
+    {
+      "id": "image-002",
+      "title": "设计工具分类卡片",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000011,
+      "canvasData": {
+        "x": 620,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/card-design-tools.jpg"
+      }
+    },
+    {
+      "id": "image-003",
+      "title": "开发框架分类卡片",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000012,
+      "canvasData": {
+        "x": 1240,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/card-dev-frameworks.jpg"
+      }
+    },
+    {
+      "id": "image-004",
+      "title": "资源缩略图 1",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000013,
+      "canvasData": {
+        "x": 1860,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/resource-thumb-1.jpg"
+      }
+    },
+    {
+      "id": "image-005",
+      "title": "资源缩略图 2",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000014,
+      "canvasData": {
+        "x": 2480,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/resource-thumb-2.jpg"
+      }
+    },
+    {
+      "id": "image-006",
+      "title": "资源缩略图 3",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751000000015,
+      "canvasData": {
+        "x": 3100,
+        "y": 523
+      },
+      "devMetadata": {
+        "imageSrc": "assets/resource-thumb-3.jpg"
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "分类展示页重设计",
+    "designLibrary": {
+      "name": "Golden Time",
+      "id": "dl_builtin_golden_time",
+      "version": null,
+      "scope": "built-in-global",
+      "path": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+      "versionSource": "metadata.json"
+    }
+  }
+}

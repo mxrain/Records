@@ -3,7 +3,7 @@ import './globals.css';
 import './design-tokens.css';
 import './animations.css';
 import 'react-tooltip/dist/react-tooltip.css';
-import { Inter } from 'next/font/google';
+import { Fraunces } from 'next/font/google';
 import { Providers } from './components/Providers';
 import { Toaster } from "@/components/ui/toaster";
 import 'nprogress/nprogress.css';
@@ -12,7 +12,11 @@ import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation
 import GoogleAnalytics from './components/GoogleAnalytics';
 import type { Metadata } from 'next';
 
-const inter = Inter({ subsets: ['latin'] });
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Records',
@@ -29,15 +33,15 @@ export default function RootLayout({
       <head>
         <style>{`
           #nprogress .bar {
-            background: #000000;
-            height: 3px;
+            background: #3b352b;
+            height: 2px;
           }
           #nprogress .peg {
-            box-shadow: 0 0 10px #000000, 0 0 5px #000000;
+            box-shadow: 0 0 8px rgba(59,53,43,0.5), 0 0 4px rgba(59,53,43,0.3);
           }
         `}</style>
       </head>
-      <body className={inter.className}>
+      <body className={fraunces.className}>
         <GoogleAnalytics />
         <Providers>
           <Suspense fallback={<LoadingAnimation />}>

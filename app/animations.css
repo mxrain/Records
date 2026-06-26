@@ -272,6 +272,10 @@
 }
 
 /* 滑入效果 */
+.animate-slide-up {
+  animation: slideInUp 0.5s var(--ease-out) both;
+}
+
 .animate-slide-in-up {
   animation: slideInUp var(--transition-slow) var(--ease-out);
 }

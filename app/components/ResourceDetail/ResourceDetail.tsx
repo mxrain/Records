@@ -5,8 +5,6 @@ import Image from 'next/image'
 import { format } from 'date-fns'
 import { Star, Download, MessageSquare, ExternalLink, Copy, Eye, Calendar, Info, Link as LinkIcon, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { motion } from 'framer-motion'
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -102,12 +100,7 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="container mx-auto px-4 py-8"
-        >
+        <div className="container mx-auto px-4 py-8 animate-fade-in">
             <Card className="rounded-lg overflow-hidden bg-white border-transparent shadow-md">
                 <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 p-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -159,12 +152,7 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 bg-gray-50">
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="relative w-full h-[300px] mb-6 overflow-hidden rounded-lg"
-                    >
+                    <div className="relative w-full h-[300px] mb-6 overflow-hidden rounded-lg animate-slide-up">
                         <div
                             className={cn(
                                 "absolute inset-0 transition-opacity duration-300",
@@ -194,14 +182,9 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                 <ChevronRight className="h-6 w-6" />
                             </Button>
                         </div>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="flex flex-wrap gap-2 mb-4"
-                    >
+                    <div className="flex flex-wrap gap-2 mb-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                         {Array.isArray(resource.tags) 
                             ? resource.tags.map((tag, index) => (
                                 <Badge key={index} variant="secondary" className="animate-pulse">{tag}</Badge>
@@ -210,13 +193,9 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                 <Badge key={index} variant="secondary" className="animate-pulse">{tag}</Badge>
                             ))
                         }
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                    >
+                    <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
                         <h3 className="text-lg font-semibold mb-4 flex items-center">
                             <Download className="mr-2" /> 网盘资源
                         </h3>
@@ -286,15 +265,11 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                 </div>
                             </Card>
                         ))}
-                    </motion.div>
+                    </div>
 
                     <Separator className="my-6" />
 
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                    >
+                    <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
                         <h3 className="text-lg font-semibold mb-4 flex items-center">
                             <Info className="mr-2" /> 资源信息
                         </h3>
@@ -341,37 +316,28 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
 
                     <Separator className="my-6" />
 
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                    >
+                    <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
                         <h3 className="text-lg font-semibold mb-4 flex items-center">
                             <FileText className="mr-2" /> 简介
                         </h3>
                         <p className="text-gray-700">{resource.introduction}</p>
-                    </motion.div>
+                    </div>
 
                     <Separator className="my-6" />
 
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.7 }}
-                    >
+                    <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
                         <h3 className="text-lg font-semibold mb-4 flex items-center">
                             <Eye className="mr-2" /> 图集
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             {resource.images.map((image, index) => (
-                                <motion.div
+                                <div
                                     key={index}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    className="transition-transform duration-200 hover:scale-105 active:scale-95"
                                 >
                                     <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
                                         <DialogTrigger asChild>
@@ -413,10 +379,10 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                                             />
                                         </DialogContent>
                                     </Dialog>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
                 </CardContent>
                 <CardFooter>
                     <Badge variant="outline" className="w-full justify-center">
@@ -424,6 +390,6 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
                     </Badge>
                 </CardFooter>
             </Card>
-        </motion.div>
+        </div>
     )
 }

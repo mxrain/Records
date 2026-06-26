@@ -1,19 +1,20 @@
 .carouselCard {
-    background-color: var(--color-white);
-    border-radius: var(--radius-xl);
-    color: var(--color-white);
+    background-color: var(--gt-card);
+    border-radius: var(--gt-radius);
+    color: var(--gt-primary-foreground);
     width: 100%;
     height: 330px;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--gt-shadow);
     background-size: cover;
     background-position: center;
-    transition: box-shadow var(--transition-base) var(--ease-out);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid var(--gt-border);
 }
 
 .carouselCard:hover {
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--gt-shadow-md);
 }
 
 .overlay {
@@ -22,18 +23,20 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(70, 70, 70, 0.3);
+    background: linear-gradient(to bottom, rgba(59, 53, 43, 0.2), rgba(59, 53, 43, 0.5));
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 15px;
+    padding: 1.25rem;
 }
 
 .title {
-    font-size: 18px;
-    font-weight: 600;
-    font-family: 'Arial', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-family: 'Fraunces', ui-serif, serif;
     margin: 0;
+    letter-spacing: var(--gt-tracking);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .navigationWrapper {
@@ -45,31 +48,31 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 0.75rem;
 }
 
 .navigationWrapper:hover .navButton {
     display: block;
-    transition: all 0.3s ease;
 }
 
 .navButton {
     display: none;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 15%;
+    background: rgba(59, 53, 43, 0.6);
+    border-radius: var(--gt-radius);
     border: none;
-    color: #ffffff;
-    font-size: 15px;
+    color: var(--gt-primary-foreground);
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    padding: 15px;
-    transition: all 0.3s ease;
+    padding: 0.75rem;
+    transition: background-color 0.3s ease;
     min-width: 44px;
     min-height: 44px;
+    backdrop-filter: blur(4px);
 }
 
 .navButton:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(59, 53, 43, 0.8);
 }
 
 .pageIndicator {
@@ -80,25 +83,25 @@
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background-color: rgb(187, 187, 187);
-    margin: 0 6px;
+    background-color: rgba(251, 250, 249, 0.5);
+    margin: 0 4px;
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    padding: 8px;
-    min-width: 28px;
-    min-height: 28px;
+    padding: 6px;
+    min-width: 20px;
+    min-height: 20px;
 }
 
 .activeDot {
-    width: 12px;
-    height: 12px;
-    background-color: #ffffff;
+    width: 8px;
+    height: 8px;
+    background-color: var(--gt-primary-foreground);
 }
 
 .dot:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(251, 250, 249, 0.75);
 }

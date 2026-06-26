@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类展示</title>
+    <style id="theme-vars">
+/* Source: structured-spec */
+:root {
+  /* bg */
+  --background: 40 16% 98%;
+  --card: 40 16% 98%;
+  --popover: 40 16% 98%;
+
+  /* text */
+  --foreground: 37.5000 15.6863% 20%;
+  --card-foreground: 37.5000 15.6863% 20%;
+  --popover-foreground: 37.5000 15.6863% 20%;
+  --muted-foreground: 36.0000 19.8413% 49.4118%;
+
+  /* accent */
+  --primary: 37.5000 15.6863% 20%;
+  --primary-foreground: 40 16% 98%;
+  --secondary: 55.0000 24.0000% 49.0196%;
+  --secondary-foreground: 40 16% 98%;
+  --muted: 44.0000 26.3158% 88.8235%;
+  --accent: 40.0000 24.0876% 73.1373%;
+  --accent-foreground: 30 14.0000% 30%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 43.3333 23.0769% 84.7059%;
+  --input: 44.0000 26.3158% 88.8235%;
+  --ring: 37.5000 15.6863% 20%;
+
+  /* chart */
+  --chart-1: 55 20% 80%;
+  --chart-2: 0 15.3374% 31.9608%;
+  --chart-3: 70.5882 10.0592% 66.8627%;
+  --chart-4: 55.0000 24.0000% 49.0196%;
+  --chart-5: 28.9888 91.7526% 61.9608%;
+
+  /* sidebar */
+  --sidebar: 40 16% 98%;
+  --sidebar-foreground: 37.5000 15.6863% 20%;
+  --sidebar-primary: 37.5000 15.6863% 20%;
+  --sidebar-primary-foreground: 40 16% 98%;
+  --sidebar-accent: 40.0000 24.0876% 73.1373%;
+  --sidebar-accent-foreground: 37.5000 15.6863% 20%;
+  --sidebar-border: 43.3333 23.0769% 84.7059%;
+  --sidebar-ring: 37.5000 15.6863% 20%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 50%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 2px 4px -1px hsl(35 15% 50% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 4px 6px -1px hsl(35 15% 50% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 8px 10px -1px hsl(35 15% 50% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --tracking-normal: 0.01em;
+  --spacing: 0.3rem;
+}
+
+.dark {
+  /* bg */
+  --background: 12 71.4286% 1.3725%;
+  --card: 12 71.4286% 1.3725%;
+  --popover: 12 71.4286% 1.3725%;
+
+  /* text */
+  --foreground: 41.5385 18.8406% 86.4706%;
+  --card-foreground: 41.5385 18.8406% 86.4706%;
+  --popover-foreground: 41.5385 18.8406% 86.4706%;
+  --muted-foreground: 35 15% 60%;
+
+  /* accent */
+  --primary: 41.5385 18.8406% 86.4706%;
+  --primary-foreground: 12 71.4286% 1.3725%;
+  --secondary: 35 25% 30%;
+  --secondary-foreground: 41.5385 18.8406% 86.4706%;
+  --muted: 35 15% 20%;
+  --accent: 35 25% 40%;
+  --accent-foreground: 41.5385 18.8406% 86.4706%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 42.8571 8.4337% 16.2745%;
+  --input: 35 15% 20%;
+  --ring: 35.4545 29.7297% 70.9804%;
+
+  /* chart */
+  --chart-1: 35 25% 60%;
+  --chart-2: 20 20% 40%;
+  --chart-3: 34.5000 60.6061% 87.0588%;
+  --chart-4: 10 10% 50%;
+  --chart-5: 13.7430 78.1659% 55.0980%;
+
+  /* sidebar */
+  --sidebar: 12 71.4286% 1.3725%;
+  --sidebar-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary-foreground: 12 71.4286% 1.3725%;
+  --sidebar-accent: 35 25% 40%;
+  --sidebar-accent-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-border: 35 15% 25%;
+  --sidebar-ring: 41.5385 18.8406% 86.4706%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 5%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 2px 4px -1px hsl(35 15% 5% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 4px 6px -1px hsl(35 15% 5% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 8px 10px -1px hsl(35 15% 5% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+}
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-foreground: var(--card-foreground);
+  }
+  @layer base {
+    body { background: var(--card-background); color: var(--card-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <!-- Top Navigation Bar -->
+        <nav class="w-full" style="background: var(--background); border-bottom: 1px solid hsl(var(--border));">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between" style="height: calc(var(--spacing) * 20);">
+                <a href="#" class="flex items-center gap-2 shrink-0" style="color: hsl(var(--foreground)); font-family: var(--font-serif); font-size: calc(var(--spacing) * 6); font-weight: 600; letter-spacing: -0.02em;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*5);height:calc(var(--spacing)*5);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));"><span data-icon style="width:calc(var(--spacing)*3);height:calc(var(--spacing)*3);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/box.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/box.svg');"></span></span>
+                    Golden Time
+                </a>
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <span data-icon class="absolute left-3 top-1/2 -translate-y-1/2" style="width:calc(var(--spacing)*3.5);height:calc(var(--spacing)*3.5);color:hsl(var(--muted-foreground));-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/funnel.svg');"></span>
+                        <input type="text" placeholder="搜索资源..." class="w-full pl-10 pr-4 py-2 text-sm outline-none transition-shadow duration-150" style="background:hsl(var(--muted));color:hsl(var(--foreground));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.76);font-family:var(--font-serif);" onfocus="this.style.boxShadow='0 0 0 2px hsl(var(--ring) / 0.3)'" onblur="this.style.boxShadow='none'" />
+                    </div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="#" class="hidden sm:inline-flex items-center px-3 py-2 text-sm rounded-lg transition-colors duration-150 whitespace-nowrap" style="color:hsl(var(--muted-foreground));border-radius:calc(var(--radius)*0.72);font-family:var(--font-serif);" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)'" onmouseout="this.style.background='transparent'">首页</a>
+                    <a href="#" class="inline-flex items-center px-3 py-2 text-sm rounded-lg transition-colors duration-150 whitespace-nowrap" style="color:hsl(var(--foreground));border-radius:calc(var(--radius)*0.72);font-family:var(--font-serif);background:hsl(var(--sidebar-accent) / 0.42);">分类</a>
+                    <a href="#" class="hidden sm:inline-flex items-center px-3 py-2 text-sm rounded-lg transition-colors duration-150 whitespace-nowrap" style="color:hsl(var(--muted-foreground));border-radius:calc(var(--radius)*0.72);font-family:var(--font-serif);" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)'" onmouseout="this.style.background='transparent'">收藏</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Band -->
+        <section class="w-full" style="background:hsl(var(--accent) / 0.22);">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
+                <p class="text-sm tracking-widest uppercase mb-3" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">Curated collections</p>
+                <h1 class="mb-4" style="font-family:var(--font-serif);font-size:clamp(28px,3.5vw,48px);font-weight:600;color:hsl(var(--foreground));letter-spacing:-0.02em;line-height:1.18;text-wrap:balance;word-break:keep-all;overflow-wrap:break-word;">按分类浏览</h1>
+                <p class="max-w-2xl" style="font-family:var(--font-serif);font-size:clamp(15px,1.2vw,18px);color:hsl(var(--muted-foreground));line-height:1.6;">发现精心策划的资源合集，探索设计工具、开发框架以及更多专业内容。</p>
+            </div>
+        </section>
+
+        <!-- Featured Categories Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 lg:pt-16 pb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Design Tools Card -->
+                <a href="#" data-dom-id="cat-design-tools" class="group flex flex-col overflow-hidden transition-transform duration-200" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);padding:calc(var(--spacing)*4);text-decoration:none;color:inherit;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div class="w-full aspect-video overflow-hidden mb-5" style="border-radius:calc(var(--radius)*0.76);">
+                        <img src="../assets/card-design-tools.jpg" alt="设计工具" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="truncate text-lg font-semibold mb-1" style="font-family:var(--font-serif);color:hsl(var(--foreground));font-size:20px;letter-spacing:-0.01em;">设计工具</h2>
+                            <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));border-radius:calc(var(--radius)*0.72);font-family:var(--font-serif);">128 个资源</span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg transition-colors duration-150 whitespace-nowrap shrink-0" style="border:1px solid hsl(var(--border));color:hsl(var(--foreground));border-radius:calc(var(--radius)*0.76);font-family:var(--font-serif);font-weight:500;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)'" onmouseout="this.style.background='transparent'">
+                            浏览
+                            <span style="display:inline-flex;align-items:center;width:calc(var(--spacing)*2.8);height:calc(var(--spacing)*2.8);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/arrow-right.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/arrow-right.svg');"></span>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Development Frameworks Card -->
+                <a href="#" data-dom-id="cat-dev-frameworks" class="group flex flex-col overflow-hidden transition-transform duration-200" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);padding:calc(var(--spacing)*4);text-decoration:none;color:inherit;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div class="w-full aspect-video overflow-hidden mb-5" style="border-radius:calc(var(--radius)*0.76);">
+                        <img src="../assets/card-dev-frameworks.jpg" alt="开发框架" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="truncate text-lg font-semibold mb-1" style="font-family:var(--font-serif);color:hsl(var(--foreground));font-size:20px;letter-spacing:-0.01em;">开发框架</h2>
+                            <span class="inline-flex items-center px-2 py-0.5 text-xs whitespace-nowrap" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground));border-radius:calc(var(--radius)*0.72);font-family:var(--font-serif);">96 个资源</span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg transition-colors duration-150 whitespace-nowrap shrink-0" style="border:1px solid hsl(var(--border));color:hsl(var(--foreground));border-radius:calc(var(--radius)*0.76);font-family:var(--font-serif);font-weight:500;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)'" onmouseout="this.style.background='transparent'">
+                            浏览
+                            <span style="display:inline-flex;align-items:center;width:calc(var(--spacing)*2.8);height:calc(var(--spacing)*2.8);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/arrow-right.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/arrow-right.svg');"></span>
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- All Categories Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pb-14 lg:pb-16">
+            <h2 class="mb-6" style="font-family:var(--font-serif);font-size:clamp(22px,2.4vw,32px);font-weight:600;color:hsl(var(--foreground));letter-spacing:-0.015em;text-wrap:balance;word-break:keep-all;">全部分类</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                <!-- UI Components -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/grip.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/grip.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">UI 组件</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">64 个资源</p>
+                    </div>
+                </a>
+
+                <!-- Icons & Assets -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/star.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/star.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">图标与素材</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">52 个资源</p>
+                    </div>
+                </a>
+
+                <!-- Templates -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">模板</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">38 个资源</p>
+                    </div>
+                </a>
+
+                <!-- Tutorials -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/file.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">教程</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">47 个资源</p>
+                    </div>
+                </a>
+
+                <!-- Libraries -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/box.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/box.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">库</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">73 个资源</p>
+                    </div>
+                </a>
+
+                <!-- Documentation -->
+                <a href="#" class="flex items-center gap-4 p-5 rounded-lg transition-colors duration-150 group" style="background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:calc(var(--radius)*0.82);text-decoration:none;color:inherit;" onmouseover="this.style.background='hsl(var(--sidebar-accent) / 0.42)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='hsl(var(--card))';this.style.transform='translateY(0)'">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:calc(var(--spacing)*8);height:calc(var(--spacing)*8);border-radius:999px;background:hsl(var(--accent)/0.22);color:hsl(var(--accent-foreground));flex-shrink:0;">
+                        <span data-icon style="width:calc(var(--spacing)*4);height:calc(var(--spacing)*4);-webkit-mask-image:url('../assets/icons/dl_builtin_golden_time/folder-open.svg');mask-image:url('../assets/icons/dl_builtin_golden_time/folder-open.svg');"></span>
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold" style="font-family:var(--font-serif);color:hsl(var(--foreground));">文档</p>
+                        <p class="text-xs truncate" style="color:hsl(var(--muted-foreground));font-family:var(--font-serif);">29 个资源</p>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="w-full" style="background:hsl(var(--muted));border-top:1px solid hsl(var(--border));">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-sm" style="font-family:var(--font-serif);color:hsl(var(--foreground));font-weight:600;">Golden Time</p>
+                <p class="text-xs" style="font-family:var(--font-serif);color:hsl(var(--muted-foreground));">2025 Golden Time. 保留所有权利。</p>
+            </div>
+        </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

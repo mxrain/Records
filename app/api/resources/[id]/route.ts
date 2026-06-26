@@ -6,9 +6,9 @@ import { cachedFetch } from '@/lib/cacheUtils';
 const GITHUB_API_URL = `${config.GITHUB_API_URL}/repos/${config.GITHUB_OWNER}/${config.GITHUB_REPO}/contents`;
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(
@@ -19,7 +19,7 @@ export async function GET(
   headers.set('Cache-Control', 'no-store, max-age=0');
 
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(

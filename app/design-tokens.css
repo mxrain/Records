@@ -266,6 +266,34 @@
   --heatmap-scale-2: #40c463;
   --heatmap-scale-3: #30a14e;
   --heatmap-scale-4: #216e39;
+
+  /* ========================================
+   Golden Time Design System Tokens
+   ======================================== */
+  --gt-background: #fbfaf9;
+  --gt-card: #fbfaf9;
+  --gt-foreground: #3b352b;
+  --gt-card-foreground: #3b352b;
+  --gt-muted-foreground: #978365;
+  --gt-primary: #3b352b;
+  --gt-primary-foreground: #fbfaf9;
+  --gt-secondary: #9b965f;
+  --gt-secondary-foreground: #fbfaf9;
+  --gt-muted: #eae6db;
+  --gt-accent: #cbc0aa;
+  --gt-accent-foreground: #574d42;
+  --gt-destructive: #ef4444;
+  --gt-destructive-foreground: #fafafa;
+  --gt-border: #e1dccf;
+  --gt-input: #eae6db;
+  --gt-ring: #3b352b;
+  --gt-radius: 2rem;
+  --gt-spacing: 0.3rem;
+  --gt-tracking: 0.01em;
+  --gt-shadow-sm: 0 1px 3px 0 rgba(59,53,43,0.04), 0 1px 2px -1px rgba(59,53,43,0.04);
+  --gt-shadow: 0 2px 4px 0 rgba(59,53,43,0.04), 0 1px 2px -1px rgba(59,53,43,0.04);
+  --gt-shadow-md: 0 4px 8px 0 rgba(59,53,43,0.06), 0 2px 4px -2px rgba(59,53,43,0.04);
+  --gt-shadow-lg: 0 8px 16px 0 rgba(59,53,43,0.08), 0 4px 8px -4px rgba(59,53,43,0.04);
 }
 
 /* 暗色模式 */
@@ -347,4 +375,25 @@
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
+
+  /* ========================================
+   Golden Time Dark Mode
+   ======================================== */
+  --gt-background: #060201;
+  --gt-card: #060201;
+  --gt-foreground: #e3dfd6;
+  --gt-card-foreground: #e3dfd6;
+  --gt-muted-foreground: #a89c8a;
+  --gt-primary: #e3dfd6;
+  --gt-primary-foreground: #060201;
+  --gt-secondary: #605039;
+  --gt-secondary-foreground: #e3dfd6;
+  --gt-muted: #1c1810;
+  --gt-accent: #806a4d;
+  --gt-accent-foreground: #e3dfd6;
+  --gt-destructive: #ef4444;
+  --gt-destructive-foreground: #fafafa;
+  --gt-border: #2a2520;
+  --gt-input: #1c1810;
+  --gt-ring: #806a4d;
 }

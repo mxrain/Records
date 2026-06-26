@@ -1,0 +1,139 @@
+{
+  "project": {
+    "name": "四次元资源桶 首页设计稿",
+    "path": "e:\\github\\Records\\homepage-redesign",
+    "operation": "create",
+    "deviceType": "desktop",
+    "language": "zh-CN",
+    "dashboardMode": false,
+    "replicationMode": null,
+    "sourceUrl": null,
+    "visualSpecExcerpt": null,
+    "styleDefinitionBrief": null,
+    "designRead": "resource management dashboard / content consumers / warm editorial premium / medium density / avoid cold tech aesthetic",
+    "designDials": {
+      "layoutVariance": 3,
+      "motionIntensity": 2,
+      "visualDensity": 3
+    },
+    "styleContinuityAnchors": null,
+    "specsConstraints": null,
+    "sharedProjectShellContract": null,
+    "generationTree": null
+  },
+  "designSource": {
+    "operatingMode": "library-bound",
+    "libraryIdentity": {
+      "name": "Golden Time",
+      "id": "dl_builtin_golden_time",
+      "version": null,
+      "scope": "built-in-global",
+      "path": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+      "versionSource": null
+    },
+    "libraryPath": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+    "cssFilePath": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\colors_and_type.css",
+    "brandPrefix": "",
+    "themeMode": "light",
+    "designDecisionSummary": "Warm parchment background #fbfaf9, dark cocoa foreground #3b352b, Fraunces serif font, 2rem radius, nearly invisible shadows, border-driven hierarchy",
+    "componentContractKind": "legacy-json",
+    "forbiddenInventedComponents": [],
+    "allowedComponents": [],
+    "styleConstraints": {
+      "radiusMax": 32,
+      "spacingBase": 4.8,
+      "fontSizeBody": 16,
+      "fontSizeMin": 12,
+      "controlHeightDefault": 36,
+      "controlHeightLarge": 44
+    },
+    "productContext": {
+      "kitType": "dashboard",
+      "productType": "resource management platform"
+    },
+    "actualTokenNameReference": [
+      { "semanticPurpose": "Page background", "tokenName": "--background" },
+      { "semanticPurpose": "Card surface", "tokenName": "--card" },
+      { "semanticPurpose": "Primary text", "tokenName": "--foreground" },
+      { "semanticPurpose": "Card text", "tokenName": "--card-foreground" },
+      { "semanticPurpose": "Muted text", "tokenName": "--muted-foreground" },
+      { "semanticPurpose": "Primary action", "tokenName": "--primary" },
+      { "semanticPurpose": "Primary action text", "tokenName": "--primary-foreground" },
+      { "semanticPurpose": "Secondary action", "tokenName": "--secondary" },
+      { "semanticPurpose": "Secondary action text", "tokenName": "--secondary-foreground" },
+      { "semanticPurpose": "Muted surface", "tokenName": "--muted" },
+      { "semanticPurpose": "Accent highlight", "tokenName": "--accent" },
+      { "semanticPurpose": "Accent text", "tokenName": "--accent-foreground" },
+      { "semanticPurpose": "Destructive", "tokenName": "--destructive" },
+      { "semanticPurpose": "Destructive text", "tokenName": "--destructive-foreground" },
+      { "semanticPurpose": "Border", "tokenName": "--border" },
+      { "semanticPurpose": "Input border", "tokenName": "--input" },
+      { "semanticPurpose": "Focus ring", "tokenName": "--ring" },
+      { "semanticPurpose": "Global radius", "tokenName": "--radius" },
+      { "semanticPurpose": "Base spacing", "tokenName": "--spacing" },
+      { "semanticPurpose": "Letter spacing", "tokenName": "--tracking-normal" },
+      { "semanticPurpose": "Sans font", "tokenName": "--font-sans" },
+      { "semanticPurpose": "Serif font", "tokenName": "--font-serif" },
+      { "semanticPurpose": "Shadow sm", "tokenName": "--shadow-sm" },
+      { "semanticPurpose": "Shadow default", "tokenName": "--shadow" },
+      { "semanticPurpose": "Shadow md", "tokenName": "--shadow-md" },
+      { "semanticPurpose": "Shadow lg", "tokenName": "--shadow-lg" },
+      { "semanticPurpose": "Chart color 1", "tokenName": "--chart-1" },
+      { "semanticPurpose": "Chart color 2", "tokenName": "--chart-2" },
+      { "semanticPurpose": "Chart color 3", "tokenName": "--chart-3" },
+      { "semanticPurpose": "Chart color 4", "tokenName": "--chart-4" },
+      { "semanticPurpose": "Chart color 5", "tokenName": "--chart-5" }
+    ],
+    "iconAssets": {
+      "source": "assets/icons",
+      "projectIconDir": "assets/icons/dl_builtin_golden_time",
+      "libraryKey": "dl_builtin_golden_time",
+      "renderMethod": "css-mask",
+      "pathTemplate": "../assets/icons/dl_builtin_golden_time/{name}.svg",
+      "availableNames": ["arrow-down", "arrow-left", "arrow-right", "arrow-up", "box", "check", "chevron-down", "chevron-left", "chevron-right", "chevron-up", "chevrons-down-up", "chevrons-up-down", "circle-alert", "circle-check", "circle-minus", "circle-pause", "circle-play", "circle-plus", "circle-question-mark", "external-link", "file", "folder-open", "folder", "funnel", "grip", "heart", "house", "mail", "map-pin", "message-circle-more", "mouse-pointer-click", "pen-line", "send-horizontal", "star", "tag", "thumbs-down", "thumbs-up", "trash-2", "triangle-alert", "user"],
+      "totalCount": 45,
+      "coloringRule": "currentColor by default"
+    }
+  },
+  "pages": [
+    {
+      "nodeId": "page-homepage",
+      "slug": "homepage",
+      "title": "首页设计稿",
+      "htmlSrc": "pages/homepage.html",
+      "pageIndex": 1,
+      "stateGroupId": null,
+      "stateRole": null,
+      "baseStatePageId": null,
+      "sharedShellContract": [],
+      "mutableRegions": [],
+      "derivedFromHtmlSrc": null,
+      "derivationType": "original",
+      "sourcePageId": null,
+      "sourceHtmlSrc": null,
+      "pageType": "information-dense",
+      "businessScenario": "Resource management homepage with dashboard cards, carousel, recommendations, and resource listing",
+      "visualNorthStar": "A warm editorial dashboard that feels like a premium content briefing — spacious card grid with Fraunces serif headings, warm parchment surfaces, and gentle cocoa-brown hierarchy",
+      "compositionPattern": "Hero summary band with dashboard card grid below",
+      "continuityAnchors": ["warm parchment background", "Fraunces serif headings", "2rem radius cards", "border-driven hierarchy"],
+      "libraryRestraintMode": false,
+      "uiKitPath": "c:\\Users\\29155\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\ui_kits\\dashboard\\index.html",
+      "componentPlan": [],
+      "imagePlan": ["hero-banner.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "qualityRisks": ["CJK text rendering", "dense card grid"]
+    }
+  ],
+  "assets": [
+    {
+      "filename": "hero-banner.jpg",
+      "role": "critical-hero",
+      "owningPage": "homepage",
+      "semanticDescription": "Warm editorial hero banner for resource management platform",
+      "status": "planned"
+    }
+  ],
+  "wiringPlan": [],
+  "hiddenInteractionPlan": []
+}
