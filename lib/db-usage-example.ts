@@ -1,4 +1,4 @@
-import { db, redis, minio, initializeDatabases, closeDatabaseConnections } from './db.ts';
+import { db, redis, minio, initializeDatabases, closeDatabaseConnections } from './db';
 
 /**
  * PostgreSQL 使用示例
