@@ -77,7 +77,7 @@ async function minioExample() {
     );
     console.log('Upload result:', uploadResult);
   } catch (error) {
-    console.log('Upload failed (file may not exist):', error.message);
+    console.log('Upload failed (file may not exist):', (error as Error).message);
   }
 
   // 获取文件 URL
@@ -85,7 +85,7 @@ async function minioExample() {
     const urlResult = await minio.getFileUrl(bucketName, 'test-file.txt', 3600);
     console.log('File URL:', urlResult.url);
   } catch (error) {
-    console.log('Get URL failed:', error.message);
+    console.log('Get URL failed:', (error as Error).message);
   }
 
   // 列出文件
@@ -93,7 +93,7 @@ async function minioExample() {
     const listResult = await minio.listFiles(bucketName);
     console.log('Files in bucket:', listResult.files);
   } catch (error) {
-    console.log('List files failed:', error.message);
+    console.log('List files failed:', (error as Error).message);
   }
 
   // 下载文件
@@ -105,7 +105,7 @@ async function minioExample() {
     );
     console.log('Download result:', downloadResult);
   } catch (error) {
-    console.log('Download failed:', error.message);
+    console.log('Download failed:', (error as Error).message);
   }
 
   // 删除文件
@@ -113,7 +113,7 @@ async function minioExample() {
     const deleteResult = await minio.deleteFile(bucketName, 'test-file.txt');
     console.log('Delete result:', deleteResult);
   } catch (error) {
-    console.log('Delete failed:', error.message);
+    console.log('Delete failed:', (error as Error).message);
   }
 }
 
