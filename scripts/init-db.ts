@@ -3,8 +3,8 @@
  * 运行此脚本以初始化 PostgreSQL 表结构
  */
 
-import { initializeDatabases } from '../lib/db.ts';
-import { initializeTables } from '../lib/db-init.ts';
+import { initializeDatabases } from '../lib/db';
+import { initializeTables } from '../lib/db-init';
 
 async function main() {
   try {
