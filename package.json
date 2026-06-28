@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:init": "npx tsx lib/db-init.ts",
+    "db:seed": "npx tsx scripts/seed.ts",
     "db:example": "ts-node --project tsconfig.node.json lib/db-usage-example.ts",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"

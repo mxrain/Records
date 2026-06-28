@@ -30,16 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <style>{`
-          #nprogress .bar {
-            background: #3b352b;
-            height: 2px;
-          }
-          #nprogress .peg {
-            box-shadow: 0 0 8px rgba(59,53,43,0.5), 0 0 4px rgba(59,53,43,0.3);
-          }
-        `}</style>
+      <head suppressHydrationWarning>
       </head>
       <body className={fraunces.className}>
         <GoogleAnalytics />

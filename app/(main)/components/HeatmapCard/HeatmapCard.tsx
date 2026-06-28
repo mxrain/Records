@@ -167,7 +167,7 @@ export default function HeatmapCard() {
     return (
       <div className={styles.heatmapCard}>
         <div className={styles.loadingWrapper}>
-          <Spin tip="Loading..." />
+          <Spin />
         </div>
       </div>
     );

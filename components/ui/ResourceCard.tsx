@@ -73,7 +73,7 @@ const ResourceCard: React.FC<ResourceCardProps> = ({
               </div>
             ) : (
               <Image
-                src={images[0]}
+                src={images?.[0] ?? ''}
                 alt={name}
                 fill
                 className="object-cover rounded-t-lg"

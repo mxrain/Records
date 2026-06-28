@@ -1,6 +1,24 @@
-import { db } from './db';
+import { loadEnvConfig } from '@next/env';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectDir = resolve(__dirname, '..');
+
+loadEnvConfig(projectDir);
+
+let _db: Awaited<typeof import('./db-core')>['db'] | null = null;
+
+async function getDb() {
+  if (!_db) {
+    _db = (await import('./db-core')).db;
+  }
+  return _db;
+}
 
 export async function initializeTables() {
+  const db = await getDb();
   try {
     await db.query(`
       CREATE TABLE IF NOT EXISTS resources (

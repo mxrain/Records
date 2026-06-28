@@ -1,23 +1,20 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import LoadingAnimation from '@/app/components/LoadingAnimation/LoadingAnimation'
 import { usePageTracking } from '@/hooks/usePageTracking'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [isMounted, setIsMounted] = useState(false)
+  const isFirstRender = useRef(true)
 
-  // 添加页面跟踪
   usePageTracking();
 
   useEffect(() => {
-    setIsMounted(true)
-    NProgress.configure({ 
+    NProgress.configure({
       showSpinner: false,
       trickleSpeed: 100,
       minimum: 0.3
@@ -25,27 +22,22 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [])
 
   useEffect(() => {
-    if (!isMounted) return
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
 
-    const handleStart = () => NProgress.start()
-    const handleComplete = () => NProgress.done()
+    NProgress.start()
 
-    handleStart()  // 立即开始进度条
-    
     const timer = setTimeout(() => {
-      handleComplete()
+      NProgress.done()
     }, 500)
 
     return () => {
       clearTimeout(timer)
-      handleComplete()
+      NProgress.done()
     }
-  }, [pathname, searchParams, isMounted])
-
-  // 使用单一的 LoadingAnimation，避免多层 Suspense 嵌套
-  if (!isMounted) {
-    return <LoadingAnimation />
-  }
+  }, [pathname, searchParams])
 
   return children
 }

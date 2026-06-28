@@ -117,11 +117,12 @@ footer {
 
 /* 自定义 NProgress 样式 */
 #nprogress .bar {
-  background: #29d; /* 进度条颜色 */
+  background: #3b352b;
+  height: 2px;
 }
 
 #nprogress .peg {
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d; /* 进度条阴影 */
+  box-shadow: 0 0 8px rgba(59,53,43,0.5), 0 0 4px rgba(59,53,43,0.3);
 }
 
 /* 确保所有主要容器也不会溢出 */
