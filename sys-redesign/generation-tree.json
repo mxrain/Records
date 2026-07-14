@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "nodeId": "gen-project-shell",
+      "kind": "project-shell",
+      "pageIds": ["page-dashboard","page-add-resource","page-resource-list","page-categories","page-list-recommend","page-list-hot","page-list-latest","page-list-top"],
+      "output": "partials/project-shell.html",
+      "status": "generated",
+      "children": ["gen-page-dashboard","gen-page-add-resource","gen-page-resource-list","gen-page-categories","gen-page-list-recommend","gen-page-list-hot","gen-page-list-latest","gen-page-list-top"]
+    },
+    {
+      "nodeId": "gen-page-dashboard",
+      "kind": "page-leaf",
+      "pageIds": ["page-dashboard"],
+      "output": "pages/dashboard.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-add-resource",
+      "kind": "page-leaf",
+      "pageIds": ["page-add-resource"],
+      "output": "pages/add-resource.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-resource-list",
+      "kind": "page-leaf",
+      "pageIds": ["page-resource-list"],
+      "output": "pages/resource-list.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-categories",
+      "kind": "page-leaf",
+      "pageIds": ["page-categories"],
+      "output": "pages/categories.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-list-recommend",
+      "kind": "page-leaf",
+      "pageIds": ["page-list-recommend"],
+      "output": "pages/list-recommend.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-list-hot",
+      "kind": "page-leaf",
+      "pageIds": ["page-list-hot"],
+      "output": "pages/list-hot.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-list-latest",
+      "kind": "page-leaf",
+      "pageIds": ["page-list-latest"],
+      "output": "pages/list-latest.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    },
+    {
+      "nodeId": "gen-page-list-top",
+      "kind": "page-leaf",
+      "pageIds": ["page-list-top"],
+      "output": "pages/list-top.html",
+      "status": "generated",
+      "parent": "gen-project-shell",
+      "children": []
+    }
+  ]
+}

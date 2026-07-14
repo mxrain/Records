@@ -4,6 +4,7 @@ import { resourcesApi } from './api/resourcesApi';
 import { listApi } from './api/listApi';
 import { categoriesApi } from './api/categoriesApi';
 import { tagsApi } from './api/tagsApi';
+import { settingsApi } from './api/settingsApi';
 import categoriesReducer from './features/categories/categoriesSlice';
 import resourcesReducer from './features/resources/resourcesSlice';
 import listReducer from './features/list/listSlice';
@@ -23,6 +24,7 @@ export const store = configureStore({
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [tagsApi.reducerPath]: tagsApi.reducer,
     [iconsApi.reducerPath]: iconsApi.reducer,
+    [settingsApi.reducerPath]: settingsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -30,7 +32,8 @@ export const store = configureStore({
       listApi.middleware,
       categoriesApi.middleware,
       tagsApi.middleware,
-      iconsApi.middleware
+      iconsApi.middleware,
+      settingsApi.middleware
     )
 });
 

@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        gt: ['Fraunces', 'ui-serif', 'serif'],
+      },
       colors: {
         // 语义化颜色
         background: 'hsl(var(--background))',
@@ -120,6 +123,36 @@ const config: Config = {
           '3': 'hsl(var(--chart-3))',
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
+        },
+        // Golden Time 设计系统
+        gt: {
+          background: 'var(--gt-background)',
+          foreground: 'var(--gt-foreground)',
+          card: {
+            DEFAULT: 'var(--gt-card)',
+            foreground: 'var(--gt-card-foreground)',
+          },
+          'muted-foreground': 'var(--gt-muted-foreground)',
+          primary: {
+            DEFAULT: 'var(--gt-primary)',
+            foreground: 'var(--gt-primary-foreground)',
+          },
+          secondary: {
+            DEFAULT: 'var(--gt-secondary)',
+            foreground: 'var(--gt-secondary-foreground)',
+          },
+          muted: 'var(--gt-muted)',
+          accent: {
+            DEFAULT: 'var(--gt-accent)',
+            foreground: 'var(--gt-accent-foreground)',
+          },
+          destructive: {
+            DEFAULT: 'var(--gt-destructive)',
+            foreground: 'var(--gt-destructive-foreground)',
+          },
+          border: 'var(--gt-border)',
+          input: 'var(--gt-input)',
+          ring: 'var(--gt-ring)',
         }
       },
       spacing: {
@@ -164,6 +197,7 @@ const config: Config = {
         '2xl': 'var(--radius-2xl)',
         '3xl': 'var(--radius-3xl)',
         'full': 'var(--radius-full)',
+        'gt': 'var(--gt-radius)',
       },
       boxShadow: {
         'xs': 'var(--shadow-xs)',
@@ -174,6 +208,13 @@ const config: Config = {
         'xl': 'var(--shadow-xl)',
         '2xl': 'var(--shadow-2xl)',
         'inner': 'var(--shadow-inner)',
+        'gt-sm': 'var(--gt-shadow-sm)',
+        'gt': 'var(--gt-shadow)',
+        'gt-md': 'var(--gt-shadow-md)',
+        'gt-lg': 'var(--gt-shadow-lg)',
+      },
+      letterSpacing: {
+        'gt': 'var(--gt-tracking)',
       },
       transitionDuration: {
         'instant': 'var(--transition-instant)',

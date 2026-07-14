@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { Star, Download, MessageSquare, ExternalLink, Copy, Eye, Calendar, Info, Link as LinkIcon, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, Download, MessageSquare, ExternalLink, Copy, Eye, Calendar, Info, Link as LinkIcon, FileText, ChevronLeft, ChevronRight, FileQuestion } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -74,7 +74,13 @@ export default function ResourceDetail({ uuid }: ResourceDetailProps) {
     }
 
     if (isError || !resource) {
-        return <div className="text-center p-4">资源未找到</div>;
+        return (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 px-4 text-gt-muted-foreground">
+                <FileQuestion className="w-16 h-16 opacity-40" aria-hidden="true" />
+                <p className="text-base font-gt tracking-gt m-0 text-center">资源未找到</p>
+                <p className="text-sm font-gt m-0 text-center opacity-70">该资源可能已被删除或链接错误</p>
+            </div>
+        );
     }
 
     const nextImage = () => {

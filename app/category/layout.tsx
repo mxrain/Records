@@ -1,9 +1,6 @@
-'use client'
-
-
 import Header from '@/app/components/Header';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function CategoryLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <Header />

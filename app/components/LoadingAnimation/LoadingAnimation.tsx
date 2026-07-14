@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const LoadingAnimation: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gt-background p-4">
       <div className="max-w-4xl w-full space-y-6">
         {/* 页面标题骨架 */}
         <div className="space-y-2">
@@ -15,9 +15,9 @@ const LoadingAnimation: React.FC = () => {
         {/* 卡片网格骨架 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
-            <Card key={index} className="overflow-hidden">
+            <Card key={index} className="overflow-hidden bg-gt-card text-gt-foreground rounded-gt shadow-gt border-gt-border font-gt tracking-gt">
               <CardHeader className="p-0">
-                <Skeleton className="w-full h-48" />
+                <Skeleton className="w-full h-48 rounded-t-gt" />
               </CardHeader>
               <CardContent className="p-4">
                 <div className="space-y-3">
@@ -37,11 +37,11 @@ const LoadingAnimation: React.FC = () => {
 
         {/* 加载提示 */}
         <div className="text-center py-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-4 gpu-accelerated">
-            <div className="w-16 h-16 border-4 border-gray-200 rounded-full"></div>
-            <div className="absolute w-16 h-16 border-4 border-primary rounded-full border-t-transparent animate-spin will-change-transform"></div>
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-4 gpu-accelerated relative">
+            <div className="w-16 h-16 border-4 border-gt-muted rounded-full"></div>
+            <div className="absolute w-16 h-16 border-4 border-gt-foreground rounded-full border-t-transparent animate-spin will-change-transform"></div>
           </div>
-          <p className="text-gray-600 font-medium">正在加载资源...</p>
+          <p className="text-gt-muted-foreground font-gt tracking-gt">正在加载资源...</p>
         </div>
       </div>
     </div>

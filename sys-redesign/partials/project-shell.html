@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <style id="theme-vars">
+/* Source: structured-spec */
+:root {
+  /* bg */
+  --background: 40 16% 98%;
+  --card: 40 16% 98%;
+  --popover: 40 16% 98%;
+
+  /* text */
+  --foreground: 37.5000 15.6863% 20%;
+  --card-foreground: 37.5000 15.6863% 20%;
+  --popover-foreground: 37.5000 15.6863% 20%;
+  --muted-foreground: 36.0000 19.8413% 49.4118%;
+
+  /* accent */
+  --primary: 37.5000 15.6863% 20%;
+  --primary-foreground: 40 16% 98%;
+  --secondary: 55.0000 24.0000% 49.0196%;
+  --secondary-foreground: 40 16% 98%;
+  --muted: 44.0000 26.3158% 88.8235%;
+  --accent: 40.0000 24.0876% 73.1373%;
+  --accent-foreground: 30 14.0000% 30%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 43.3333 23.0769% 84.7059%;
+  --input: 44.0000 26.3158% 88.8235%;
+  --ring: 37.5000 15.6863% 20%;
+
+  /* chart */
+  --chart-1: 55 20% 80%;
+  --chart-2: 0 15.3374% 31.9608%;
+  --chart-3: 70.5882 10.0592% 66.8627%;
+  --chart-4: 55.0000 24.0000% 49.0196%;
+  --chart-5: 28.9888 91.7526% 61.9608%;
+
+  /* sidebar */
+  --sidebar: 40 16% 98%;
+  --sidebar-foreground: 37.5000 15.6863% 20%;
+  --sidebar-primary: 37.5000 15.6863% 20%;
+  --sidebar-primary-foreground: 40 16% 98%;
+  --sidebar-accent: 40.0000 24.0876% 73.1373%;
+  --sidebar-accent-foreground: 37.5000 15.6863% 20%;
+  --sidebar-border: 43.3333 23.0769% 84.7059%;
+  --sidebar-ring: 37.5000 15.6863% 20%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 50%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 1px 2px -1px hsl(35 15% 50% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 2px 4px -1px hsl(35 15% 50% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 4px 6px -1px hsl(35 15% 50% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00), 0px 8px 10px -1px hsl(35 15% 50% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 50% / 0.00);
+  --tracking-normal: 0.01em;
+  --spacing: 0.3rem;
+}
+
+.dark {
+  /* bg */
+  --background: 12 71.4286% 1.3725%;
+  --card: 12 71.4286% 1.3725%;
+  --popover: 12 71.4286% 1.3725%;
+
+  /* text */
+  --foreground: 41.5385 18.8406% 86.4706%;
+  --card-foreground: 41.5385 18.8406% 86.4706%;
+  --popover-foreground: 41.5385 18.8406% 86.4706%;
+  --muted-foreground: 35 15% 60%;
+
+  /* accent */
+  --primary: 41.5385 18.8406% 86.4706%;
+  --primary-foreground: 12 71.4286% 1.3725%;
+  --secondary: 35 25% 30%;
+  --secondary-foreground: 41.5385 18.8406% 86.4706%;
+  --muted: 35 15% 20%;
+  --accent: 35 25% 40%;
+  --accent-foreground: 41.5385 18.8406% 86.4706%;
+
+  /* status */
+  --destructive: 0 84.2000% 60.2000%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* border */
+  --border: 42.8571 8.4337% 16.2745%;
+  --input: 35 15% 20%;
+  --ring: 35.4545 29.7297% 70.9804%;
+
+  /* chart */
+  --chart-1: 35 25% 60%;
+  --chart-2: 20 20% 40%;
+  --chart-3: 34.5000 60.6061% 87.0588%;
+  --chart-4: 10 10% 50%;
+  --chart-5: 13.7430 78.1659% 55.0980%;
+
+  /* sidebar */
+  --sidebar: 12 71.4286% 1.3725%;
+  --sidebar-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary: 41.5385 18.8406% 86.4706%;
+  --sidebar-primary-foreground: 12 71.4286% 1.3725%;
+  --sidebar-accent: 35 25% 40%;
+  --sidebar-accent-foreground: 41.5385 18.8406% 86.4706%;
+  --sidebar-border: 35 15% 25%;
+  --sidebar-ring: 41.5385 18.8406% 86.4706%;
+
+  --font-sans: Fraunces, ui-serif, serif;
+  --font-serif: Fraunces, ui-serif, serif;
+  --font-mono: monospace;
+  --radius: 2rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0;
+  --shadow-color: hsl(35 15% 5%);
+  --shadow-2xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-xs: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+  --shadow-sm: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 1px 2px -1px hsl(35 15% 5% / 0.00);
+  --shadow-md: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 2px 4px -1px hsl(35 15% 5% / 0.00);
+  --shadow-lg: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 4px 6px -1px hsl(35 15% 5% / 0.00);
+  --shadow-xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00), 0px 8px 10px -1px hsl(35 15% 5% / 0.00);
+  --shadow-2xl: 0px 2px 4px 0px hsl(35 15% 5% / 0.00);
+}
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: var(--golden-background); color: var(--golden-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!--
+        PROJECT SHELL — Shared admin console layout (Golden Time / dl_builtin_golden_time)
+        Leaf page workflow:
+        1. Copy this file to pages/{page-name}.html
+        2. Set data-active="true" on the relevant [data-nav-item] (see data-dom-id list below)
+        3. Fill content between PAGE_CONTENT_START and PAGE_CONTENT_END comments
+        data-dom-id index:
+          sidebar-nav-dashboard | sidebar-nav-add | sidebar-nav-resource-list | sidebar-nav-categories
+          sidebar-nav-list-recommend | sidebar-nav-list-hot | sidebar-nav-list-latest | sidebar-nav-list-top
+      -->
+      <div data-admin-shell data-collapsed="false">
+
+        <!-- ==================== LEFT SIDEBAR ==================== -->
+        <aside data-sidebar style="background: hsl(var(--sidebar)); border-right: 1px solid hsl(var(--sidebar-border)); display: flex; flex-direction: column; min-height: 100vh; overflow: hidden;">
+
+          <!-- Brand header -->
+          <div style="padding: 1.25rem; border-bottom: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span data-icon class="w-7 h-7 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/box.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/box.svg'); background-color: hsl(var(--sidebar-primary));"></span>
+              <span data-brand-text style="font-size: 1.0625rem; font-weight: 600; color: hsl(var(--sidebar-foreground)); white-space: nowrap; letter-spacing: 0.01em;">四次元资源桶</span>
+            </div>
+          </div>
+
+          <!-- Navigation menu -->
+          <nav style="flex: 1; padding: 0.75rem; overflow-y: auto; overflow-x: hidden;" class="no-scrollbar">
+            <div style="display: flex; flex-direction: column; gap: 0.125rem;">
+
+              <!-- 仪表盘 (Dashboard) -->
+              <a data-nav-item data-dom-id="sidebar-nav-dashboard" href="#">
+                <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/house.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/house.svg');"></span>
+                <span data-nav-label>仪表盘</span>
+              </a>
+
+              <!-- 添加资源 (Add Resource) -->
+              <a data-nav-item data-dom-id="sidebar-nav-add" href="#">
+                <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/circle-plus.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/circle-plus.svg');"></span>
+                <span data-nav-label>添加资源</span>
+              </a>
+
+              <!-- 资源列表 (Resource List) -->
+              <a data-nav-item data-dom-id="sidebar-nav-resource-list" href="#">
+                <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/box.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/box.svg');"></span>
+                <span data-nav-label>资源列表</span>
+              </a>
+
+              <!-- 分类管理 (Categories) -->
+              <a data-nav-item data-dom-id="sidebar-nav-categories" href="#">
+                <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/folder.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/folder.svg');"></span>
+                <span data-nav-label>分类管理</span>
+              </a>
+
+              <!-- 列表管理 (List Management) — expandable submenu group -->
+              <div data-submenu-group data-expanded="false" style="display: flex; flex-direction: column; gap: 0.125rem;">
+                <div data-submenu-toggle data-dom-id="sidebar-list-submenu-toggle">
+                  <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/folder-open.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/folder-open.svg');"></span>
+                  <span data-nav-label style="flex: 1;">列表管理</span>
+                  <span data-icon data-chevron class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/chevron-right.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/chevron-right.svg'); background-color: hsl(var(--muted-foreground));"></span>
+                </div>
+                <div data-submenu-body>
+                  <!-- 推荐列表 (Recommend) -->
+                  <a data-nav-item data-nested="true" data-dom-id="sidebar-nav-list-recommend" href="#">
+                    <span data-icon class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/star.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/star.svg');"></span>
+                    <span data-nav-label>推荐列表</span>
+                  </a>
+                  <!-- 热门列表 (Hot) -->
+                  <a data-nav-item data-nested="true" data-dom-id="sidebar-nav-list-hot" href="#">
+                    <span data-icon class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/heart.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/heart.svg');"></span>
+                    <span data-nav-label>热门列表</span>
+                  </a>
+                  <!-- 最新列表 (Latest) -->
+                  <a data-nav-item data-nested="true" data-dom-id="sidebar-nav-list-latest" href="#">
+                    <span data-icon class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/circle-play.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/circle-play.svg');"></span>
+                    <span data-nav-label>最新列表</span>
+                  </a>
+                  <!-- 置顶列表 (Top) -->
+                  <a data-nav-item data-nested="true" data-dom-id="sidebar-nav-list-top" href="#">
+                    <span data-icon class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/arrow-up.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/arrow-up.svg');"></span>
+                    <span data-nav-label>置顶列表</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </nav>
+
+          <!-- Sidebar footer -->
+          <div style="padding: 0.75rem; border-top: 1px solid hsl(var(--sidebar-border)); flex-shrink: 0;">
+            <a data-footer-link href="/">
+              <span data-icon class="w-5 h-5 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/external-link.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/external-link.svg');"></span>
+              <span data-nav-label>返回主页</span>
+            </a>
+          </div>
+
+        </aside>
+
+        <!-- ==================== MAIN AREA ==================== -->
+        <div style="display: flex; flex-direction: column; min-height: 100vh; overflow: hidden;">
+
+          <!-- TOP HEADER BAR -->
+          <header style="height: 64px; background: hsl(var(--card)); border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; padding: 0 1.5rem; gap: 1rem; flex-shrink: 0;">
+
+            <!-- Sidebar collapse toggle -->
+            <button data-collapse-toggle data-dom-id="sidebar-collapse-toggle" data-header-action type="button" aria-label="折叠侧边栏" style="border: 1px solid hsl(var(--border));">
+              <span data-icon class="w-5 h-5" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/chevrons-up-down.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/chevrons-up-down.svg');"></span>
+            </button>
+
+            <!-- Breadcrumb / page title -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; min-width: 0;">
+              <span style="font-size: 1rem; font-weight: 600; color: hsl(var(--foreground)); white-space: nowrap; letter-spacing: 0.01em;">管理后台</span>
+            </div>
+
+            <!-- Center search -->
+            <div style="flex: 1; display: flex; justify-content: center;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%; max-width: 24rem; padding: 0.5rem 0.875rem; border-radius: var(--radius); border: 1px solid hsl(var(--border)); background: hsl(var(--background));">
+                <span data-icon class="w-4 h-4 shrink-0" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/funnel.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/funnel.svg'); background-color: hsl(var(--muted-foreground));"></span>
+                <input type="text" placeholder="搜索资源..." data-search-input>
+              </div>
+            </div>
+
+            <!-- Right action icons -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+              <button data-header-action type="button" aria-label="通知">
+                <span data-icon class="w-5 h-5" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/mail.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/mail.svg');"></span>
+              </button>
+              <button data-header-action type="button" aria-label="帮助">
+                <span data-icon class="w-5 h-5" style="-webkit-mask-image: url('../assets/icons/dl_builtin_golden_time/circle-question-mark.svg'); mask-image: url('../assets/icons/dl_builtin_golden_time/circle-question-mark.svg');"></span>
+              </button>
+              <!-- User avatar -->
+              <div style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: hsl(var(--secondary)); display: flex; align-items: center; justify-content: center; color: hsl(var(--secondary-foreground)); font-size: 0.875rem; font-weight: 600; flex-shrink: 0; letter-spacing: 0.01em;">管</div>
+            </div>
+
+          </header>
+
+          <!-- PAGE CONTENT AREA — leaf pages fill this slot -->
+          <div style="flex: 1; padding: 1.5rem; background: hsl(var(--background)); overflow-y: auto;">
+            <!-- PAGE_CONTENT_START -->
+            <!-- PAGE_CONTENT_END -->
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ==================== SHARED SHELL STYLES ==================== -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700&display=swap');
+
+      [data-admin-shell] {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 100vh;
+        background: hsl(var(--background));
+        font-family: var(--font-sans);
+        transition: grid-template-columns 280ms cubic-bezier(.32,.72,0,1);
+      }
+      [data-admin-shell][data-collapsed="true"] {
+        grid-template-columns: 64px 1fr;
+      }
+      [data-admin-shell][data-collapsed="true"] [data-nav-label],
+      [data-admin-shell][data-collapsed="true"] [data-brand-text],
+      [data-admin-shell][data-collapsed="true"] [data-chevron],
+      [data-admin-shell][data-collapsed="true"] [data-submenu-body] {
+        display: none;
+      }
+      [data-admin-shell][data-collapsed="true"] [data-nav-item],
+      [data-admin-shell][data-collapsed="true"] [data-submenu-toggle] {
+        justify-content: center;
+        padding: 0.625rem;
+      }
+      [data-admin-shell][data-collapsed="true"] [data-footer-link] {
+        justify-content: center;
+        padding: 0.625rem;
+      }
+
+      [data-nav-item] {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 0.875rem;
+        border-radius: var(--radius);
+        color: hsl(var(--sidebar-foreground));
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background-color 150ms cubic-bezier(.2,.8,.2,1), color 150ms cubic-bezier(.2,.8,.2,1);
+        cursor: pointer;
+      }
+      [data-nav-item]:hover {
+        background: hsl(var(--sidebar-accent));
+      }
+      [data-nav-item][data-active="true"] {
+        background: hsl(var(--sidebar-primary));
+        color: hsl(var(--sidebar-primary-foreground));
+      }
+      [data-nav-item][data-nested="true"] {
+        padding-left: 2.75rem;
+        font-size: 0.8125rem;
+      }
+
+      [data-submenu-toggle] {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 0.875rem;
+        border-radius: var(--radius);
+        color: hsl(var(--sidebar-foreground));
+        font-size: 0.875rem;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 150ms cubic-bezier(.2,.8,.2,1);
+      }
+      [data-submenu-toggle]:hover {
+        background: hsl(var(--sidebar-accent));
+      }
+      [data-submenu-toggle] [data-chevron] {
+        transition: transform 200ms cubic-bezier(.2,.8,.2,1);
+      }
+      [data-submenu-group][data-expanded="true"] [data-submenu-toggle] [data-chevron] {
+        transform: rotate(90deg);
+      }
+      [data-submenu-body] {
+        overflow: hidden;
+        max-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        transition: max-height 280ms cubic-bezier(.3,0,0,1);
+      }
+      [data-submenu-group][data-expanded="true"] [data-submenu-body] {
+        max-height: 400px;
+      }
+
+      [data-footer-link] {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 0.875rem;
+        border-radius: var(--radius);
+        color: hsl(var(--sidebar-foreground));
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background-color 150ms cubic-bezier(.2,.8,.2,1);
+      }
+      [data-footer-link]:hover {
+        background: hsl(var(--sidebar-accent));
+      }
+
+      [data-header-action] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--radius);
+        border: 1px solid hsl(var(--border));
+        background: transparent;
+        color: hsl(var(--foreground));
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background-color 150ms cubic-bezier(.2,.8,.2,1), transform 150ms cubic-bezier(.2,.8,.2,1);
+      }
+      [data-header-action]:hover {
+        background: hsl(var(--accent));
+        transform: translateY(-1px);
+      }
+      [data-header-action]:active {
+        transform: translateY(0);
+      }
+      [data-header-action]:focus-visible {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+      }
+
+      [data-search-input] {
+        flex: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        color: hsl(var(--foreground));
+        font-size: 0.875rem;
+        font-family: var(--font-sans);
+        letter-spacing: var(--tracking-normal);
+        min-width: 0;
+      }
+      [data-search-input]::placeholder {
+        color: hsl(var(--muted-foreground));
+      }
+      [data-search-input]:focus {
+        outline: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
+      }
+    </style>
+
+    <script>lucide.createIcons();</script>
+
+    <!-- ==================== SHARED SHELL JS ==================== -->
+    <script>
+      // Sidebar collapse / expand toggle
+      (function () {
+        var toggle = document.querySelector('[data-collapse-toggle]');
+        if (toggle) {
+          toggle.addEventListener('click', function () {
+            var shell = document.querySelector('[data-admin-shell]');
+            if (!shell) return;
+            var isCollapsed = shell.getAttribute('data-collapsed') === 'true';
+            shell.setAttribute('data-collapsed', isCollapsed ? 'false' : 'true');
+          });
+        }
+
+        // Submenu expand / collapse
+        var submenuToggle = document.querySelector('[data-submenu-toggle]');
+        if (submenuToggle) {
+          submenuToggle.addEventListener('click', function () {
+            var group = this.closest('[data-submenu-group]');
+            if (!group) return;
+            var isExpanded = group.getAttribute('data-expanded') === 'true';
+            group.setAttribute('data-expanded', isExpanded ? 'false' : 'true');
+          });
+        }
+      })();
+    </script>
+</body>
+</html>

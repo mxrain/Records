@@ -1,117 +1,179 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
-import { addTab, removeTab, setActiveTab, clearAllTabs } from '../../store/features/tabs/tabsSlice';
-import { X, XCircle } from 'lucide-react';
-import { RootState } from '../../store/store';
+'use client'
 
-interface Tab {
-  path: string;
-  title: string;
+import React, { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { X } from 'lucide-react'
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
+import { addTab, removeTab, setActiveTab } from '@/app/store/features/tabs/tabsSlice'
+
+interface HeaderProps {
+  collapsed: boolean
+  onToggleCollapse: () => void
+  onToggleMobile: () => void
 }
 
-const Header: React.FC = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const dispatch = useDispatch();
-  const { tabs, activeTab } = useSelector((state: RootState) => state.tabs);
-  const [isMounted, setIsMounted] = useState(false);
+// 路径到中文标题的映射（与设计稿页面标题一致）
+const TITLE_MAP: Record<string, string> = {
+  '/sys/dashboard': '仪表盘',
+  '/sys/add': '添加资源',
+  '/sys/categories': '分类管理',
+  '/sys/list/recommend': '推荐列表',
+  '/sys/list/hot': '热门列表',
+  '/sys/list/latest': '最新列表',
+  '/sys/list/top': '置顶列表',
+  '/sys/settings': '系统设置',
+  '/sys/storage': '对象存储',
+  '/sys/api': 'API',
+  '/sys/skill': 'Skill',
+  '/sys/mcp': 'MCP',
+}
+
+const Header: React.FC<HeaderProps> = () => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const dispatch = useAppDispatch()
+  const { tabs, activeTab } = useAppSelector((state) => state.tabs)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
-  React.useEffect(() => {
-    if (pathname) {
-      if (pathname.startsWith('/sys/') && pathname !== '/sys') {
-        const currentTab = tabs.find((tab: Tab) => tab.path === pathname);
-        if (!currentTab) {
-          dispatch(addTab({ path: pathname, title: getTabTitle(pathname) }));
-        } else {
-          dispatch(setActiveTab(pathname));
-        }
+  // 路由变化时同步添加 tab
+  useEffect(() => {
+    if (!isMounted || !pathname) return
+    const title = TITLE_MAP[pathname]
+    if (title) {
+      dispatch(addTab({ path: pathname, title }))
+    }
+  }, [pathname, isMounted, dispatch])
+
+  const handleTabClick = (path: string) => {
+    dispatch(setActiveTab(path))
+    router.push(path)
+  }
+
+  const handleTabClose = (e: React.MouseEvent, path: string) => {
+    e.stopPropagation()
+    dispatch(removeTab(path))
+    // 如果关闭的是当前激活的 tab，切换到剩余的最后一个
+    if (activeTab === path) {
+      const remaining = tabs.filter((t) => t.path !== path)
+      if (remaining.length > 0) {
+        router.push(remaining[remaining.length - 1].path)
       }
     }
-  }, [pathname, dispatch, tabs]);
+  }
 
-  const getTabTitle = (path: string): string => {
-    const pathSegments = path.split('/');
-    const lastSegment = pathSegments[pathSegments.length - 1];
-    
-    const titleMap: { [key: string]: string } = {
-      'sys': '系统',
-      'add': '添加',
-      'dashboard': '仪表盘',
-      'categories': '分类树',
-      'resource': '资源列表',
-      'recommend': '推荐',
-      'hot': '热门',
-      'latest': '最新',
-      'top': '置顶'
-    };
-
-    return titleMap[lastSegment] || lastSegment;
-  };
-
-  const closeTab = (path: string) => {
-    dispatch(removeTab(path));
-    if (pathname === path) {
-      if (tabs.length > 1) {
-        const newTabs = tabs.filter((tab: Tab) => tab.path !== path);
-        router.push(newTabs[newTabs.length - 1].path);
-      } else {
-        router.push('/sys/add');
-      }
-    }
-  };
-
-  const closeAllTabs = () => {
-    dispatch(clearAllTabs());
-    router.push('/sys/add');
-  };
-
-  if (!isMounted || !tabs || tabs.length === 0) {
-    return <header className="bg-white shadow flex-shrink-0 sticky top-0 z-10"><nav className="p-1"></nav></header>;
+  if (!isMounted) {
+    return (
+      <header
+        style={{
+          height: 68,
+          background: 'hsl(var(--card))',
+          borderBottom: '1px solid hsl(var(--border))',
+          flexShrink: 0,
+        }}
+      />
+    )
   }
 
   return (
-    <header className="bg-white shadow flex-shrink-0 sticky top-0 z-10">
-      <nav className="flex flex-col sm:flex-row items-start sm:items-center justify-between overflow-x-auto p-1">
-        <div className="flex flex-wrap">
-          {tabs.map((tab: Tab) => (
-            <div key={tab.path} className="flex items-center flex-shrink-0 m-0.5">
+    <header
+      style={{
+        height: 68,
+        background: 'hsl(var(--card))',
+        borderBottom: '1px solid hsl(var(--border))',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 0.75rem',
+        gap: '0.5rem',
+        flexShrink: 0,
+        position: 'sticky',
+        top: 0,
+        zIndex: 20,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Tabs 标签页栏 */}
+      <div
+        className="sys-tabs-bar flex items-center gap-1"
+        style={{ flex: 1, minWidth: 0, height: '100%', overflowX: 'auto', overflowY: 'hidden' }}
+      >
+        {tabs.length === 0 && (
+          <span
+            className="sys-tabs-empty"
+            style={{
+              color: 'hsl(var(--muted-foreground))',
+              fontSize: '0.8125rem',
+              padding: '0 0.5rem',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            暂无打开的页面
+          </span>
+        )}
+        {tabs.map((tab) => {
+          const isActive = tab.path === activeTab
+          return (
+            <div
+              key={tab.path}
+              className="sys-tab-item"
+              data-active={isActive ? 'true' : 'false'}
+              onClick={() => handleTabClick(tab.path)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+                padding: '0.375rem 0.75rem',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                fontSize: '0.8125rem',
+                fontWeight: isActive ? 600 : 500,
+                color: isActive
+                  ? 'hsl(var(--foreground))'
+                  : 'hsl(var(--muted-foreground))',
+                background: isActive
+                  ? 'hsl(var(--secondary))'
+                  : 'transparent',
+                border: '1px solid',
+                borderColor: isActive
+                  ? 'hsl(var(--border))'
+                  : 'transparent',
+                transition: 'all 150ms cubic-bezier(.2,.8,.2,1)',
+                flexShrink: 0,
+              }}
+            >
+              <span>{tab.title}</span>
               <button
-                onClick={() => {
-                  dispatch(setActiveTab(tab.path));
-                  router.push(tab.path);
+                type="button"
+                className="sys-tab-close"
+                onClick={(e) => handleTabClose(e, tab.path)}
+                aria-label={`关闭 ${tab.title}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 16,
+                  height: 16,
+                  borderRadius: '0.25rem',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'hsl(var(--muted-foreground))',
+                  cursor: 'pointer',
+                  padding: 0,
+                  flexShrink: 0,
                 }}
-                className={`px-1.5 py-0.5 text-xs sm:text-sm rounded-md flex items-center border border-transparent ${
-                  activeTab === tab.path ? 'bg-gray-200' : 'bg-gray-100'
-                }`}
               >
-                <span className="mr-0.5 sm:mr-1">{tab.title}</span>
-                <X
-                  size={12}
-                  className="text-gray-500 hover:text-gray-700 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeTab(tab.path);
-                  }}
-                />
+                <X size={12} aria-hidden="true" />
               </button>
             </div>
-          ))}
-        </div>
-        <button
-          onClick={closeAllTabs}
-          className="px-1.5 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 flex items-center mt-1 sm:mt-0 whitespace-nowrap"
-        >
-          <XCircle size={14} className="mr-0.5" />
-          关闭所有
-        </button>
-      </nav>
+          )
+        })}
+      </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

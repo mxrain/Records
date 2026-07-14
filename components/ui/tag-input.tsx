@@ -9,7 +9,7 @@ interface TagOption {
 }
 
 interface TagInputProps {
-  options: Record<string, Record<string, string[]>>;
+  options: Record<string, any>;
   value: string[];
   onChange: (selected: string[]) => void;
 }
@@ -30,16 +30,28 @@ export function TagInput({ options, value, onChange }: TagInputProps) {
 
   const flattenedOptions: TagOption[] = React.useMemo(() => {
     const result: TagOption[] = [];
-    Object.entries(options).forEach(([category, subcategories]) => {
-      Object.entries(subcategories).forEach(([subcategory, tags]) => {
-        tags.forEach((tag) => {
-          result.push({
-            category,
-            subcategory,
-            label: tag,
-          });
+    Object.entries(options).forEach(([key, val]) => {
+      // 适配扁平结构 { id: { name: "显示名" } }
+      if (val && typeof val === 'object' && !Array.isArray(val)) {
+        const name = (val as Record<string, any>).name;
+        if (typeof name === 'string') {
+          result.push({ category: '', subcategory: '', label: name });
+          return;
+        }
+        // 适配嵌套结构 { category: { subcategory: [tags] } }
+        Object.entries(val as Record<string, any>).forEach(([subcategory, tags]) => {
+          if (Array.isArray(tags)) {
+            tags.forEach((tag: string) => {
+              result.push({ category: key, subcategory, label: tag });
+            });
+          }
         });
-      });
+      } else if (Array.isArray(val)) {
+        // 适配 { category: [tags] }
+        val.forEach((tag: string) => {
+          result.push({ category: key, subcategory: '', label: tag });
+        });
+      }
     });
     return result;
   }, [options]);
@@ -93,7 +105,7 @@ export function TagInput({ options, value, onChange }: TagInputProps) {
                         selected ? 'font-medium' : 'font-normal'
                       }`}
                     >
-                      {option.category} - {option.subcategory} - {option.label}
+                      {option.label}
                     </span>
                     {selected ? (
                       <span

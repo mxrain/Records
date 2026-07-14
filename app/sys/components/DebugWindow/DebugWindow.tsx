@@ -4,8 +4,7 @@ import { RootState } from '../../../store/store'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import DataTable from '@/app/components/ui/DataTable'
-import './DebugWindow.module.css' // 样式导入
+import DataTable from '@/components/ui/data-table'
 import Draggable from 'react-draggable' // 确保已导入
 
 const DebugWindow: React.FC = () => {
@@ -57,7 +56,7 @@ const DebugWindow: React.FC = () => {
     <>
       {collapsed ? (
         <Button
-          className="debug-toggle-button"
+          className="fixed bottom-5 right-5 z-[1001]"
           onClick={showDebugWindow}
         >
           显示调试窗口
@@ -65,7 +64,7 @@ const DebugWindow: React.FC = () => {
       ) : (
         <Draggable handle=".drag-handle">
           <div
-            className={`debug-window-container ${collapsed ? 'collapsed' : ''}`}
+            className={`fixed bottom-5 right-5 h-[600px] max-w-[90%] min-w-[300px] bg-white border border-[#ddd] rounded-lg transition-[width,height] duration-300 z-[1000] shadow-[0_4px_6px_rgba(0,0,0,0.1)] ${collapsed ? 'hidden' : ''}`}
             style={{ width, height }} // 应用宽度和高度
           >
             <Card className="h-full bg-white border overflow-auto p-4 shadow-lg">
@@ -84,12 +83,12 @@ const DebugWindow: React.FC = () => {
             {!collapsed && (
               <div
                 ref={resizerRef}
-                className="resizer"
+                className="absolute bottom-0 right-0 w-2.5 h-2.5 cursor-nwse-resize bg-[#ddd] z-10 hover:bg-[#bbb]"
                 onMouseDown={startResizing}
               />
             )}
             <Button
-              className="debug-hide-button"
+              className="absolute top-2.5 right-2.5"
               onClick={hideDebugWindow}
             >
               关闭调试窗口

@@ -1,0 +1,395 @@
+{
+  "project": {
+    "name": "管理后台重设计",
+    "operation": "create",
+    "deviceType": "desktop",
+    "operatingMode": "library-bound",
+    "designRead": "admin console / internal operators / warm editorial premium / high density / avoid cold corporate grid",
+    "designDials": {
+      "layoutVariance": 2,
+      "motionIntensity": 1,
+      "visualDensity": 4
+    },
+    "generationTree": {
+      "root": {
+        "nodeId": "gen-project-shell",
+        "kind": "project-shell",
+        "pageIds": ["page-dashboard","page-add-resource","page-resource-list","page-categories","page-list-recommend","page-list-hot","page-list-latest","page-list-top"],
+        "output": "partials/project-shell.html",
+        "sharedRegions": ["sidebar","header","main-frame","brand-treatment","typography-scale","radius-scale","shadow-model","color-system"],
+        "privateRegions": [],
+        "mutableSlots": ["activeNavItem","pageTitle","pageBreadcrumb"],
+        "status": "planned",
+        "children": [
+          { "nodeId": "gen-page-dashboard", "kind": "page-leaf", "pageIds": ["page-dashboard"], "output": "pages/dashboard.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-add-resource", "kind": "page-leaf", "pageIds": ["page-add-resource"], "output": "pages/add-resource.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-resource-list", "kind": "page-leaf", "pageIds": ["page-resource-list"], "output": "pages/resource-list.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-categories", "kind": "page-leaf", "pageIds": ["page-categories"], "output": "pages/categories.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-list-recommend", "kind": "page-leaf", "pageIds": ["page-list-recommend"], "output": "pages/list-recommend.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-list-hot", "kind": "page-leaf", "pageIds": ["page-list-hot"], "output": "pages/list-hot.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-list-latest", "kind": "page-leaf", "pageIds": ["page-list-latest"], "output": "pages/list-latest.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] },
+          { "nodeId": "gen-page-list-top", "kind": "page-leaf", "pageIds": ["page-list-top"], "output": "pages/list-top.html", "sharedRegions": [], "privateRegions": ["main-content"], "mutableSlots": ["activeNavItem","pageTitle"], "status": "planned", "children": [] }
+        ]
+      }
+    }
+  },
+  "designSource": {
+    "operatingMode": "library-bound",
+    "libraryIdentity": {
+      "name": "Golden Time",
+      "id": "dl_builtin_golden_time",
+      "version": null,
+      "scope": "built-in-global",
+      "path": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time",
+      "versionSource": "metadata.json"
+    },
+    "brandPrefix": "golden",
+    "cssFilePath": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\colors_and_type.css",
+    "designDecisionSummary": "Warm parchment background #fbfaf9, dark cocoa foreground #3b352b, Fraunces serif font, 2rem radius, nearly invisible shadows (opacity 0), border-driven hierarchy #e1dccf, warm secondary #9b965f, muted accent #cbc0aa",
+    "actualTokenNameReference": [
+      { "semanticPurpose": "Page background", "tokenName": "--background" },
+      { "semanticPurpose": "Card surface", "tokenName": "--card" },
+      { "semanticPurpose": "Popover surface", "tokenName": "--popover" },
+      { "semanticPurpose": "Primary text", "tokenName": "--foreground" },
+      { "semanticPurpose": "Card text", "tokenName": "--card-foreground" },
+      { "semanticPurpose": "Popover text", "tokenName": "--popover-foreground" },
+      { "semanticPurpose": "Muted text", "tokenName": "--muted-foreground" },
+      { "semanticPurpose": "Primary action", "tokenName": "--primary" },
+      { "semanticPurpose": "Primary action text", "tokenName": "--primary-foreground" },
+      { "semanticPurpose": "Secondary action", "tokenName": "--secondary" },
+      { "semanticPurpose": "Secondary action text", "tokenName": "--secondary-foreground" },
+      { "semanticPurpose": "Muted surface", "tokenName": "--muted" },
+      { "semanticPurpose": "Accent highlight", "tokenName": "--accent" },
+      { "semanticPurpose": "Accent text", "tokenName": "--accent-foreground" },
+      { "semanticPurpose": "Destructive", "tokenName": "--destructive" },
+      { "semanticPurpose": "Destructive text", "tokenName": "--destructive-foreground" },
+      { "semanticPurpose": "Border", "tokenName": "--border" },
+      { "semanticPurpose": "Input border", "tokenName": "--input" },
+      { "semanticPurpose": "Focus ring", "tokenName": "--ring" },
+      { "semanticPurpose": "Global radius", "tokenName": "--radius" },
+      { "semanticPurpose": "Base spacing", "tokenName": "--spacing" },
+      { "semanticPurpose": "Letter spacing", "tokenName": "--tracking-normal" },
+      { "semanticPurpose": "Sans font", "tokenName": "--font-sans" },
+      { "semanticPurpose": "Serif font", "tokenName": "--font-serif" },
+      { "semanticPurpose": "Chart color 1", "tokenName": "--chart-1" },
+      { "semanticPurpose": "Chart color 2", "tokenName": "--chart-2" },
+      { "semanticPurpose": "Chart color 3", "tokenName": "--chart-3" },
+      { "semanticPurpose": "Chart color 4", "tokenName": "--chart-4" },
+      { "semanticPurpose": "Chart color 5", "tokenName": "--chart-5" },
+      { "semanticPurpose": "Sidebar bg", "tokenName": "--sidebar" },
+      { "semanticPurpose": "Sidebar text", "tokenName": "--sidebar-foreground" },
+      { "semanticPurpose": "Sidebar primary", "tokenName": "--sidebar-primary" },
+      { "semanticPurpose": "Sidebar accent", "tokenName": "--sidebar-accent" },
+      { "semanticPurpose": "Sidebar border", "tokenName": "--sidebar-border" }
+    ],
+    "iconAssets": {
+      "source": "assets/icons",
+      "projectIconDir": "assets/icons/dl_builtin_golden_time",
+      "libraryKey": "dl_builtin_golden_time",
+      "renderMethod": "css-mask",
+      "pathTemplate": "../assets/icons/dl_builtin_golden_time/{name}.svg",
+      "availableNames": ["arrow-down","arrow-left","arrow-right","arrow-up","box","check","chevron-down","chevron-left","chevron-right","chevron-up","chevrons-down-up","chevrons-up-down","circle-alert","circle-check","circle-minus","circle-pause","circle-play","circle-plus","circle-question-mark","external-link","file","folder-open","folder","funnel","grip","heart","house","mail","map-pin","message-circle-more","mouse-pointer-click","pen-line","send-horizontal","star","tag","thumbs-down","thumbs-up","trash-2","triangle-alert","user"],
+      "totalCount": 40,
+      "coloringRule": "currentColor by default; override with Library token when needed"
+    },
+    "componentPlan": [
+      { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+      { "slug": "input", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json" },
+      { "slug": "button", "contractKind": "skill-guidance", "contractFile": null },
+      { "slug": "sidebar-navigation", "contractKind": "skill-guidance", "contractFile": null },
+      { "slug": "data-table", "contractKind": "skill-guidance", "contractFile": null },
+      { "slug": "chart-panel", "contractKind": "skill-guidance", "contractFile": null }
+    ],
+    "styleConstraints": {
+      "radiusMax": "32px",
+      "spacingBase": "4.8px",
+      "fontSizeBody": "16px",
+      "controlH": "42px"
+    },
+    "themeMode": "light",
+    "productContext": {
+      "kitType": "dashboard",
+      "productType": "resource management admin console"
+    },
+    "forbiddenInventedComponents": "none",
+    "allowedComponents": "unrestricted"
+  },
+  "pages": [
+    {
+      "nodeId": "page-dashboard",
+      "slug": "dashboard",
+      "title": "仪表盘",
+      "htmlSrc": "pages/dashboard.html",
+      "pageIndex": 1,
+      "pageType": "information-dense",
+      "businessScenario": "Admin dashboard overview with KPI stats, recent activity, quick actions, and resource summary charts",
+      "visualNorthStar": "A warm editorial command center that feels like a premium operations briefing — spacious KPI cards in Fraunces serif, calm parchment surfaces, with chart panels that tell a concise data story",
+      "compositionPattern": "Hero summary band with KPI card row + chart panel pair + recent activity feed",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+        { "slug": "chart-panel", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null }
+      ],
+      "imagePlan": ["dashboard-hero.jpg"],
+      "chartsRequired": true,
+      "miniProgramStyle": false,
+      "soulElement": "KPI stat cards with warm golden accent numbers and 'last synced 3m ago' microcopy that implies real-time data freshness"
+    },
+    {
+      "nodeId": "page-add-resource",
+      "slug": "add-resource",
+      "title": "添加资源",
+      "htmlSrc": "pages/add-resource.html",
+      "pageIndex": 2,
+      "pageType": "task-driven",
+      "businessScenario": "Resource CRUD table with toolbar, add/edit form dialog, bulk operations, column visibility toggle, and inline actions",
+      "visualNorthStar": "A refined editorial data table that feels like browsing a curated catalog — warm card-framed table with quiet borders, generous row spacing, and a calm toolbar above",
+      "compositionPattern": "Toolbar row + data table with warm-toned row hover + floating action button on mobile",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "data-table", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "input", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json" },
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" }
+      ],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Table rows with editorial tag pills showing resource categories, and a 'last edited' column with relative timestamps that make the table feel alive"
+    },
+    {
+      "nodeId": "page-resource-list",
+      "slug": "resource-list",
+      "title": "资源列表",
+      "htmlSrc": "pages/resource-list.html",
+      "pageIndex": 3,
+      "pageType": "information-dense",
+      "businessScenario": "Resource browsing view with card/grid toggle, search bar, filter sidebar, and pagination",
+      "visualNorthStar": "A warm editorial resource gallery that feels like browsing a premium library collection — spacious card grid with Fraunces serif titles, warm thumbnail imagery, and quiet filter controls",
+      "compositionPattern": "Filter topbar + search + card grid with editorial resource cards + pagination",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+        { "slug": "input", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json" },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null }
+      ],
+      "imagePlan": ["resource-thumb-design.jpg","resource-thumb-dev.jpg","resource-thumb-creative.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Resource cards with warm-toned cover images and editorial category tag pills, revealing description and source links on hover"
+    },
+    {
+      "nodeId": "page-categories",
+      "slug": "categories",
+      "title": "分类管理",
+      "htmlSrc": "pages/categories.html",
+      "pageIndex": 4,
+      "pageType": "task-driven",
+      "businessScenario": "Interactive tree table for category management with drag-and-drop reordering, inline edit, add/delete, and nested hierarchy",
+      "visualNorthStar": "A warm editorial tree management surface that feels like organizing a curated collection — clean tree table with generous row spacing, warm accent on expand/collapse, and calm inline editing",
+      "compositionPattern": "Toolbar + tree table with expandable rows + inline action buttons + category banner illustration",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "data-table", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "input", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\input.json" }
+      ],
+      "imagePlan": ["category-banner.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Tree table rows with warm folder icons and golden accent on expand chevrons, showing resource count badges that feel like collection inventory"
+    },
+    {
+      "nodeId": "page-list-recommend",
+      "slug": "list-recommend",
+      "title": "推荐列表",
+      "htmlSrc": "pages/list-recommend.html",
+      "pageIndex": 5,
+      "pageType": "information-dense",
+      "businessScenario": "Recommended resources ranked list with editorial cards, recommendation score, and management controls",
+      "visualNorthStar": "A warm editorial recommendation gallery that feels like a curated reading list — spacious cards with warm cover imagery, recommendation badges, and gentle reorder controls",
+      "compositionPattern": "Filter bar + ranked card list with drag handles + recommendation score badges",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null }
+      ],
+      "imagePlan": ["resource-thumb-design.jpg","resource-thumb-creative.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Ranked cards with warm golden recommendation score badges and drag handles that feel like rearranging a curated display"
+    },
+    {
+      "nodeId": "page-list-hot",
+      "slug": "list-hot",
+      "title": "热门列表",
+      "htmlSrc": "pages/list-hot.html",
+      "pageIndex": 6,
+      "pageType": "information-dense",
+      "businessScenario": "Hot resources ranked by engagement metrics with view counts, like counts, and trend indicators",
+      "visualNorthStar": "A warm editorial hotlist that feels like a weekly briefing of what is trending — clean ranked rows with warm engagement metrics, trend arrows, and quiet stat columns",
+      "compositionPattern": "Summary band + ranked table with engagement metrics + trend sparkline column",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "data-table", "contractKind": "skill-guidance", "contractFile": null },
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" }
+      ],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Ranked rows with warm golden view-count numbers and small trend indicators that make the hotlist feel like a live engagement dashboard"
+    },
+    {
+      "nodeId": "page-list-latest",
+      "slug": "list-latest",
+      "title": "最新列表",
+      "htmlSrc": "pages/list-latest.html",
+      "pageIndex": 7,
+      "pageType": "information-dense",
+      "businessScenario": "Latest resources timeline list with chronological ordering, time stamps, and quick-add-to-list controls",
+      "visualNorthStar": "A warm editorial timeline of freshly added resources that feels like reading a morning digest — clean chronological cards with relative timestamps, calm separators, and gentle new-item highlights",
+      "compositionPattern": "Timeline header + chronological card list with time separators + quick action buttons",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null }
+      ],
+      "imagePlan": ["resource-thumb-dev.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Timeline cards with 'added 2 hours ago' relative timestamps and a subtle warm accent on newest items that makes the feed feel live"
+    },
+    {
+      "nodeId": "page-list-top",
+      "slug": "list-top",
+      "title": "置顶列表",
+      "htmlSrc": "pages/list-top.html",
+      "pageIndex": 8,
+      "pageType": "information-dense",
+      "businessScenario": "Pinned/top resources management list with drag-to-reorder, pin toggle, and priority indicators",
+      "visualNorthStar": "A warm editorial pinned resources board that feels like a curated showcase wall — spacious pinned cards with warm star accents, drag handles, and quiet priority badges",
+      "compositionPattern": "Summary band + pinned card grid with drag handles + pin toggle controls",
+      "continuityAnchors": {
+        "colorSystem": "warm cocoa primary #3b352b, parchment canvas #fbfaf9, golden secondary #9b965f, muted accent #cbc0aa",
+        "shapeSystem": "2rem radius on all cards and buttons, soft borders at #e1dccf",
+        "typographySystem": "Fraunces serif for all text, 0.01em tracking, generous spacing",
+        "spacingSystem": "0.3rem base spacing unit, generous internal padding on all containers",
+        "componentLanguage": "warm neutral card surfaces, soft hover transitions, editorial tag pills",
+        "surfaceAndDepth": "nearly invisible shadows (opacity 0), borders and surface tone define hierarchy",
+        "imageryAndIconography": "css-mask icons from library, warm-toned imagery",
+        "interactionTone": "restrained hover transitions (-1px translate), subtle background shifts"
+      },
+      "componentPlan": [
+        { "slug": "card", "contractKind": "legacy-json", "contractFile": "c:\\Users\\62744\\.trae-cn\\design_libraries\\dl_builtin_golden_time\\components\\card.json" },
+        { "slug": "button", "contractKind": "skill-guidance", "contractFile": null }
+      ],
+      "imagePlan": ["resource-thumb-creative.jpg","empty-state.jpg"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "soulElement": "Pinned cards with warm golden star icons and drag handles that feel like arranging a featured showcase wall"
+    }
+  ],
+  "assets": [
+    { "filename": "dashboard-hero.jpg", "role": "critical-hero", "owningPage": "dashboard", "semanticDescription": "Warm editorial hero banner for admin dashboard overview", "status": "planned" },
+    { "filename": "resource-thumb-design.jpg", "role": "supporting-content", "owningPage": "resource-list", "semanticDescription": "Design tools resource card thumbnail", "status": "planned" },
+    { "filename": "resource-thumb-dev.jpg", "role": "supporting-content", "owningPage": "resource-list", "semanticDescription": "Dev frameworks resource card thumbnail", "status": "planned" },
+    { "filename": "resource-thumb-creative.jpg", "role": "supporting-content", "owningPage": "resource-list", "semanticDescription": "Creative assets resource card thumbnail", "status": "planned" },
+    { "filename": "category-banner.jpg", "role": "supporting-content", "owningPage": "categories", "semanticDescription": "Category management banner illustration", "status": "planned" },
+    { "filename": "empty-state.jpg", "role": "supporting-content", "owningPage": "list-top", "semanticDescription": "Warm editorial empty state illustration", "status": "planned" }
+  ],
+  "wiringPlan": [
+    { "fromPageId": "page-dashboard", "toPageId": "page-add-resource", "domId": "cta-add-resource", "hideEdge": false, "transitionLabel": "添加资源" },
+    { "fromPageId": "page-add-resource", "toPageId": "page-resource-list", "domId": "cta-resource-list", "hideEdge": false, "transitionLabel": "查看资源列表" },
+    { "fromPageId": "page-resource-list", "toPageId": "page-categories", "domId": "cta-categories", "hideEdge": false, "transitionLabel": "分类管理" },
+    { "fromPageId": "page-categories", "toPageId": "page-list-recommend", "domId": "cta-list-recommend", "hideEdge": false, "transitionLabel": "推荐列表" },
+    { "fromPageId": "page-list-recommend", "toPageId": "page-list-hot", "domId": "cta-list-hot", "hideEdge": false, "transitionLabel": "热门列表" },
+    { "fromPageId": "page-list-hot", "toPageId": "page-list-latest", "domId": "cta-list-latest", "hideEdge": false, "transitionLabel": "最新列表" },
+    { "fromPageId": "page-list-latest", "toPageId": "page-list-top", "domId": "cta-list-top", "hideEdge": false, "transitionLabel": "置顶列表" }
+  ],
+  "hiddenInteractionPlan": [
+    { "fromPageId": "page-dashboard", "toPageId": "page-add-resource", "domId": "sidebar-nav-add", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-resource-list", "domId": "sidebar-nav-resource-list", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-categories", "domId": "sidebar-nav-categories", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-list-recommend", "domId": "sidebar-nav-list-recommend", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-list-hot", "domId": "sidebar-nav-list-hot", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-list-latest", "domId": "sidebar-nav-list-latest", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-dashboard", "toPageId": "page-list-top", "domId": "sidebar-nav-list-top", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-add-resource", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-add-resource", "toPageId": "page-resource-list", "domId": "sidebar-nav-resource-list", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-add-resource", "toPageId": "page-categories", "domId": "sidebar-nav-categories", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-resource-list", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-resource-list", "toPageId": "page-add-resource", "domId": "sidebar-nav-add", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-resource-list", "toPageId": "page-categories", "domId": "sidebar-nav-categories", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-categories", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-categories", "toPageId": "page-add-resource", "domId": "sidebar-nav-add", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-categories", "toPageId": "page-resource-list", "domId": "sidebar-nav-resource-list", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-list-recommend", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-list-hot", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-list-latest", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" },
+    { "fromPageId": "page-list-top", "toPageId": "page-dashboard", "domId": "sidebar-nav-dashboard", "hideEdge": true, "transitionLabel": "侧边栏导航" }
+  ]
+}

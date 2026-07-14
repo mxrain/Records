@@ -1,5 +1,6 @@
 import { loadEnvConfig } from '@next/env';
 import { randomUUID } from 'crypto';
+import { createClient } from 'redis';
 
 loadEnvConfig(process.cwd());
 
@@ -13,6 +14,23 @@ async function getDb() {
   return _db;
 }
 
+async function clearRedisCache() {
+  if (!process.env.REDIS_URL) {
+    console.log('  Redis not configured, skipping cache clear');
+    return;
+  }
+  try {
+    const client = createClient({ url: process.env.REDIS_URL });
+    await client.connect();
+    await client.del('db:categories');
+    await client.del('db:resources');
+    console.log('  ✓ Cleared Redis cache (categories, resources)');
+    await client.disconnect();
+  } catch (e) {
+    console.log('  ⚠ Redis cache clear skipped:', (e as Error).message);
+  }
+}
+
 function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -20,6 +38,10 @@ function rand(min: number, max: number) {
 async function seedCategories() {
   const db = await getDb();
   console.log('Seeding categories...');
+
+  // 清除旧数据（修正数组格式问题）
+  await db.query('DELETE FROM categories');
+  console.log('  Cleared existing categories');
 
   const categories = [
     {
@@ -29,10 +51,10 @@ async function seedCategories() {
       description: '各类编程语言、框架和开发工具资源',
       sort_order: 1,
       children: [
-        { name: '前端开发', slug: 'frontend', icon: 'Layout', description: 'HTML/CSS/JS 及前端框架', children: [] },
-        { name: '后端开发', slug: 'backend', icon: 'Server', description: 'Node.js/Python/Go 等后端技术', children: [] },
-        { name: '移动开发', slug: 'mobile', icon: 'Smartphone', description: 'iOS/Android/跨平台移动开发', children: [] },
-        { name: 'DevOps', slug: 'devops', icon: 'Terminal', description: 'CI/CD、容器化和运维工具', children: [] },
+        { name: '前端开发', slug: 'frontend', icon: 'Layout', description: 'HTML/CSS/JS 及前端框架' },
+        { name: '后端开发', slug: 'backend', icon: 'Server', description: 'Node.js/Python/Go 等后端技术' },
+        { name: '移动开发', slug: 'mobile', icon: 'Smartphone', description: 'iOS/Android/跨平台移动开发' },
+        { name: 'DevOps', slug: 'devops', icon: 'Terminal', description: 'CI/CD、容器化和运维工具' },
       ],
     },
     {
@@ -42,9 +64,9 @@ async function seedCategories() {
       description: 'UI/UX 设计素材、图标和字体',
       sort_order: 2,
       children: [
-        { name: 'UI 套件', slug: 'ui-kits', icon: 'Component', description: 'Figma/Sketch UI Kit', children: [] },
-        { name: '图标资源', slug: 'icons', icon: 'Star', description: 'SVG 图标集和图标字体', children: [] },
-        { name: '字体资源', slug: 'fonts', icon: 'Type', description: '中英文字体资源', children: [] },
+        { name: 'UI 套件', slug: 'ui-kits', icon: 'Component', description: 'Figma/Sketch UI Kit' },
+        { name: '图标资源', slug: 'icons', icon: 'Star', description: 'SVG 图标集和图标字体' },
+        { name: '字体资源', slug: 'fonts', icon: 'Type', description: '中英文字体资源' },
       ],
     },
     {
@@ -54,9 +76,9 @@ async function seedCategories() {
       description: '提升工作效率的各种工具',
       sort_order: 3,
       children: [
-        { name: '办公效率', slug: 'office', icon: 'Briefcase', description: 'Office 套件及替代品', children: [] },
-        { name: '笔记工具', slug: 'note', icon: 'FileText', description: 'Notion/Obsidian 等笔记工具', children: [] },
-        { name: '自动化', slug: 'automation', icon: 'Zap', description: '自动化工作流和脚本', children: [] },
+        { name: '办公效率', slug: 'office', icon: 'Briefcase', description: 'Office 套件及替代品' },
+        { name: '笔记工具', slug: 'note', icon: 'FileText', description: 'Notion/Obsidian 等笔记工具' },
+        { name: '自动化', slug: 'automation', icon: 'Zap', description: '自动化工作流和脚本' },
       ],
     },
     {
@@ -66,9 +88,9 @@ async function seedCategories() {
       description: '在线课程、教程和书籍',
       sort_order: 4,
       children: [
-        { name: '视频课程', slug: 'courses', icon: 'PlayCircle', description: '视频教程和在线课程', children: [] },
-        { name: '电子书籍', slug: 'books', icon: 'BookOpen', description: '技术书籍和文档', children: [] },
-        { name: '技术文档', slug: 'docs', icon: 'ScrollText', description: 'API 文档和参考手册', children: [] },
+        { name: '视频课程', slug: 'courses', icon: 'PlayCircle', description: '视频教程和在线课程' },
+        { name: '电子书籍', slug: 'books', icon: 'BookOpen', description: '技术书籍和文档' },
+        { name: '技术文档', slug: 'docs', icon: 'ScrollText', description: 'API 文档和参考手册' },
       ],
     },
     {
@@ -78,22 +100,32 @@ async function seedCategories() {
       description: 'AI 模型、工具和数据集',
       sort_order: 5,
       children: [
-        { name: 'AI 模型', slug: 'models', icon: 'Cpu', description: 'LLM/Stable Diffusion 等模型', children: [] },
-        { name: 'AI 工具', slug: 'ai-tools', icon: 'Wand2', description: 'ChatGPT/Copilot 等 AI 工具', children: [] },
-        { name: '数据集', slug: 'datasets', icon: 'Database', description: '训练和测试数据集', children: [] },
+        { name: 'AI 模型', slug: 'models', icon: 'Cpu', description: 'LLM/Stable Diffusion 等模型' },
+        { name: 'AI 工具', slug: 'ai-tools', icon: 'Wand2', description: 'ChatGPT/Copilot 等 AI 工具' },
+        { name: '数据集', slug: 'datasets', icon: 'Database', description: '训练和测试数据集' },
       ],
     },
   ];
 
-  for (const cat of categories) {
-    const exists = await db.query('SELECT id FROM categories WHERE slug = $1', [cat.slug]);
-    if (exists.rows.length > 0) {
-      console.log(`  ⏭ Skip: ${cat.name} (already exists)`);
-      continue;
+  // 将 children 数组转为以 slug 为 key 的对象，并添加 link 字段
+  function childrenToObject(children: any[]) {
+    const obj: Record<string, any> = {};
+    for (const child of children) {
+      obj[child.slug] = {
+        name: child.name,
+        slug: child.slug,
+        icon: child.icon || '',
+        link: `/${child.slug}`,
+      };
     }
+    return obj;
+  }
+
+  for (const cat of categories) {
+    const childrenObj = childrenToObject(cat.children);
     await db.query(
       `INSERT INTO categories (name, slug, icon, description, children, sort_order) VALUES ($1, $2, $3, $4, $5, $6)`,
-      [cat.name, cat.slug, cat.icon, cat.description, JSON.stringify(cat.children), cat.sort_order]
+      [cat.name, cat.slug, cat.icon, cat.description, JSON.stringify(childrenObj), cat.sort_order]
     );
     console.log(`  ✓ ${cat.name}`);
   }
@@ -382,6 +414,7 @@ async function seedMediaFiles() {
 async function main() {
   console.log('🌱 Starting database seed...\n');
 
+  await clearRedisCache();
   await seedCategories();
   const count = await seedResources();
   await seedMediaFiles();

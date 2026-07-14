@@ -63,7 +63,7 @@ function getAllowedOrigin(request: Request): string {
  * @returns JWT Token字符串
  */
 function generateToken(payload: TokenPayload, expiresIn: string) {
-  return jwt.sign(payload, getJwtSecret(), { expiresIn }); // 生成Token
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: expiresIn as any }); // 生成Token
 }
 
 /**
@@ -178,18 +178,23 @@ export async function POST(request: Request) {
     token = reqToken;
     refreshToken = reqRefreshToken;
 
-    // 检查是否提供了人机验证token
-    if (!turnstileToken) {
-      // 返回400错误，缺少必要参数
-      return NextResponse.json({ error: '缺少 turnstileToken 参数' }, { status: 400 });
-    }
+    // 开发环境跳过 Turnstile 人机验证
+    const isTurnstileEnabled = process.env.NODE_ENV === 'production';
 
-    // 验证人机验证token
-    const turnstileValid = await verifyTurnstile(turnstileToken);
-    if (!turnstileValid) {
-      console.log('Turnstile验证失败，token:', turnstileToken);
-      // 返回400错误，人机验证失败
-      return NextResponse.json({ error: '人机验证失败' }, { status: 400 });
+    // 检查是否提供了人机验证token（仅生产环境要求）
+    if (isTurnstileEnabled) {
+      if (!turnstileToken) {
+        // 返回400错误，缺少必要参数
+        return NextResponse.json({ error: '缺少 turnstileToken 参数' }, { status: 400 });
+      }
+
+      // 验证人机验证token
+      const turnstileValid = await verifyTurnstile(turnstileToken);
+      if (!turnstileValid) {
+        console.log('Turnstile验证失败，token:', turnstileToken);
+        // 返回400错误，人机验证失败
+        return NextResponse.json({ error: '人机验证失败' }, { status: 400 });
+      }
     }
 
     // 处理refreshToken验证

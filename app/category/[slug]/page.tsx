@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState, use } from 'react';
-import ResourceCard from '@/components/ui/ResourceCard';
+import ResourceCard from '@/components/ui/resource-card';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Resource } from '@/app/sys/add/types';
 import Link from 'next/link';

@@ -40,6 +40,9 @@ const Button = ({ type, className, children, disabled }: {
   </button>
 );
 
+// 开发环境跳过 Turnstile 人机验证
+const isTurnstileEnabled = process.env.NODE_ENV === 'production';
+
 export default function SimpleLogin() {
   const { toast } = useToast();
   const [password, setPassword] = useState("");
@@ -50,7 +53,7 @@ export default function SimpleLogin() {
 
   // 清除错误提示
   useEffect(() => {
-    if (password && turnstileToken) {
+    if (password && (!isTurnstileEnabled || turnstileToken)) {
       const toasts = document.querySelectorAll('[data-sonner-toast]');
       toasts.forEach(toast => toast.remove());
     }
@@ -68,7 +71,7 @@ export default function SimpleLogin() {
       return;
     }
     
-    if (!turnstileToken) {
+    if (isTurnstileEnabled && !turnstileToken) {
       toast({
         title: "请完成人机验证",
         variant: "destructive",
@@ -135,14 +138,16 @@ export default function SimpleLogin() {
               />
             </div>
 
-            {/* 人机验证占位区域 */}
-            <Turnstile
+            {/* 人机验证占位区域（开发环境不渲染） */}
+            {isTurnstileEnabled && (
+              <Turnstile
                 key={turnstileKey} // 使用key强制刷新
                 sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''}
                 onSuccess={(token) => {
                   setTurnstileToken(token);
                 }}
               />
+            )}
           </CardContent>
 
           <CardFooter>
