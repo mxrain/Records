@@ -4,6 +4,10 @@ import { NextResponse } from 'next/server';
 import * as jwt from 'jsonwebtoken';
 // Cookie操作
 import { cookies } from 'next/headers';
+// 限流与 IP 提取
+import { rateLimit, getClientIp } from '@/lib/auth/ratelimit';
+// 常量时间比较(防时序攻击)
+import { timingSafeEqual } from 'crypto';
 
 // JWT payload 类型定义
 interface TokenPayload {
@@ -78,6 +82,20 @@ function verifyToken(token: string) {
   } catch {
     return false;
   }
+}
+
+/**
+ * 常量时间密码比较(防时序攻击)
+ */
+function safeEqualPassword(input: string, expected: string): boolean {
+  const a = Buffer.from(input);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) {
+    // 长度不同也要做一次假比较以保持时间恒定
+    timingSafeEqual(b, b);
+    return false;
+  }
+  return timingSafeEqual(a, b);
 }
 
 /**
@@ -191,7 +209,6 @@ export async function POST(request: Request) {
       // 验证人机验证token
       const turnstileValid = await verifyTurnstile(turnstileToken);
       if (!turnstileValid) {
-        console.log('Turnstile验证失败，token:', turnstileToken);
         // 返回400错误，人机验证失败
         return NextResponse.json({ error: '人机验证失败' }, { status: 400 });
       }
@@ -226,14 +243,24 @@ export async function POST(request: Request) {
     } 
     // 处理密码验证
     else if (password) {
+      // 速率限制:每 IP 每 60 秒最多 5 次登录尝试(防暴力破解)
+      const ip = getClientIp(request);
+      const limitResult = await rateLimit(`login:${ip}`, 5, 60);
+      if (!limitResult.ok) {
+        return NextResponse.json(
+          { error: '尝试过于频繁,请稍后再试' },
+          { status: 429, headers: { 'Retry-After': String(limitResult.retryAfter) } }
+        );
+      }
       const passwordEnvKey = process.env.AUTH_PASSWORD_ENV_KEY || 'ADMIN_PASSWORD';
-      if (password !== process.env[passwordEnvKey]) {
+      const expected = process.env[passwordEnvKey];
+      if (!expected || !safeEqualPassword(String(password), String(expected))) {
         // 密码不匹配，不泄露环境变量信息
         return NextResponse.json({
           error: '密码错误'
         }, { status: 400 });
       }
-    } 
+    }
     // 没有提供任何验证参数
     else {
       return NextResponse.json({ error: '缺少 password, token 或 refreshToken 参数' }, { status: 400 });

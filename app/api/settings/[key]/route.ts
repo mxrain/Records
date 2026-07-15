@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSetting, getSettingMeta, updateSetting } from '@/lib/data/settings';
+import { requireAuth } from '@/lib/auth/guard';
 
 /**
  * GET /api/settings/[key]
@@ -25,12 +26,16 @@ export async function GET(
 /**
  * PUT /api/settings/[key]
  * body: { value: any, description?: string }
- * 更新单个配置(后台鉴权后调用,鉴权由 proxy.ts 统一处理)
+ * 更新单个配置(后台鉴权后调用)
  */
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ key: string }> }
 ) {
+  // 鉴权:proxy.ts 不拦截 /api/*,需自行校验
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
+
   try {
     const { key } = await params;
     const body = await req.json();

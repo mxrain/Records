@@ -49,12 +49,24 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // 为 API 路由设置 CORS 头
+  // 为 API 路由设置 CORS 头(基于白名单回显 Origin,而非通配符 *)
   const response = NextResponse.next()
   if (pathname.startsWith('/api')) {
-    response.headers.set('Access-Control-Allow-Origin', '*')
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    const origin = req.headers.get('origin')
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    // 开发环境放行 localhost
+    const isDevAllowed =
+      process.env.NODE_ENV !== 'production' &&
+      (origin?.includes('localhost') || origin?.includes('127.0.0.1'))
+    if (origin && (allowedOrigins.includes(origin) || isDevAllowed)) {
+      response.headers.set('Access-Control-Allow-Origin', origin)
+      response.headers.set('Vary', 'Origin')
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+    }
   }
 
   return response

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getResourceByUuid, upsertResource, deleteResource } from '@/lib/data/resources';
 import type { Resource } from '@/lib/data/resources';
+import { requireAuth } from '@/lib/auth/guard';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -25,6 +26,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
+
   const { id } = await params;
   if (!id) {
     return NextResponse.json({ error: '缺少资源 ID' }, { status: 400 });
@@ -41,6 +45,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
+
   const { id } = await params;
   if (!id) {
     return NextResponse.json({ error: '缺少资源 ID' }, { status: 400 });
@@ -63,6 +70,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
+
   const { id } = await params;
   if (!id) {
     return NextResponse.json({ error: '缺少资源 ID' }, { status: 400 });

@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth/guard';
 const githubToken = process.env.GITHUB_TOKEN;
 const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
 const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
 export async function POST(request: Request) {
+    // 鉴权:防止任意人向 GitHub 仓库写文件
+    const authErr = requireAuth(request);
+    if (authErr) return authErr;
 
     try {
         const { path, content } = await request.json();

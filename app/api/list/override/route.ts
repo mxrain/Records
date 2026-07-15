@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { saveListOverride, getListOverride, ListOverride } from '@/lib/data/list';
+import { requireAuth } from '@/lib/auth/guard';
 
 // 合法类型白名单
 const ALLOWED_TYPES = ['hot', 'latest'] as const;
@@ -34,6 +35,8 @@ export async function GET(request: Request) {
  * 保存某个 SQL 派生列表的覆盖配置
  */
 export async function POST(request: Request) {
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
   try {
     const body = await request.json();
     const { type, pinned, excluded, limit } = body || {};

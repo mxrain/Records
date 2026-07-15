@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth/guard';
 
 interface UpdateFileRequest {
   path: string;
@@ -20,6 +21,10 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
 export async function POST(request: Request) {
+  // 鉴权:防止任意人覆盖 GitHub 仓库文件
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
+
   try {
     // 验证环境变量
     if (!githubToken || !owner || !repo) {

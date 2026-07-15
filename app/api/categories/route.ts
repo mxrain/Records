@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCategories, addCategory, updateCategory, deleteCategory, moveCategory } from '@/lib/data/categories';
+import { requireAuth } from '@/lib/auth/guard';
 
 // 获取全部分类
 export async function GET() {
@@ -16,6 +17,8 @@ export async function GET() {
 // body: { path: string[], name: string, icon?: string, link?: string }
 // path 为父路径(空数组表示根级)
 export async function POST(req: Request) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
   try {
     const body = await req.json();
     const { path = [], name, icon = '', link = '' } = body;
@@ -39,6 +42,8 @@ export async function POST(req: Request) {
 // 更新分类(改名/图标/链接)
 // body: { path: string[], name: string, icon?: string, link?: string }
 export async function PUT(req: Request) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
   try {
     const body = await req.json();
     const { path, name, icon = '', link = '' } = body;
@@ -62,6 +67,8 @@ export async function PUT(req: Request) {
 // 删除分类
 // body: { path: string[] }
 export async function DELETE(req: Request) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
   try {
     const body = await req.json();
     const { path } = body;
@@ -82,6 +89,8 @@ export async function DELETE(req: Request) {
 // 移动分类(拖拽排序)
 // body: { sourcePath: string[], targetPath: string[], position: 'before'|'after'|'inside' }
 export async function PATCH(req: Request) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
   try {
     const body = await req.json();
     const { sourcePath, targetPath, position } = body;

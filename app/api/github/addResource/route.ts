@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth/guard';
 
 interface AddFileRequest {
   uuid: string;
@@ -6,6 +7,10 @@ interface AddFileRequest {
 }
 
 export async function POST(request: Request) {
+  // 鉴权:防止任意人改 db/resources.json
+  const authErr = requireAuth(request);
+  if (authErr) return authErr;
+
   try {
     const body: AddFileRequest = await request.json();
     const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
