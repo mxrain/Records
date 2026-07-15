@@ -3,7 +3,7 @@ import { RootState } from '@/app/store/store';
 
 // 首先定义 ChangeRecord 类型
 export interface ChangeRecord {
-  action: 'add' | 'edit' | 'delete' | 'bulk';
+  action: 'add' | 'edit' | 'delete' | 'bulk' | 'move';
   uuid?: string;  // 对于 add/edit/delete 操作需要
   data?: any;     // 对于 add/edit/bulk 操作需要
 }
