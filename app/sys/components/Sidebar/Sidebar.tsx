@@ -23,6 +23,7 @@ import {
   Code2,
   Sparkles,
   Plug,
+  KeyRound,
 } from 'lucide-react'
 import ChangeHistoryDrawer from './components/ChangeHistoryDrawer'
 import { useAppSelector } from '@/app/store/hooks'
@@ -70,6 +71,7 @@ const NAV_ENTRIES: NavEntry[] = [
     icon: Code2,
     items: [
       { href: '/sys/api', label: 'API', icon: Code2 },
+      { href: '/sys/apikeys', label: 'API Keys', icon: KeyRound },
       { href: '/sys/skill', label: 'Skill', icon: Sparkles },
       { href: '/sys/mcp', label: 'MCP', icon: Plug },
     ],
@@ -100,7 +102,12 @@ export default function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
 
   // 根据当前路径判断"接口"子菜单是否默认展开
   const isInApiSubmenu = useMemo(
-    () => pathname?.startsWith('/sys/api') || pathname?.startsWith('/sys/skill') || pathname?.startsWith('/sys/mcp') || false,
+    () =>
+      pathname?.startsWith('/sys/api') ||
+      pathname?.startsWith('/sys/apikeys') ||
+      pathname?.startsWith('/sys/skill') ||
+      pathname?.startsWith('/sys/mcp') ||
+      false,
     [pathname]
   )
   const [apiExpanded, setApiExpanded] = useState<boolean>(isInApiSubmenu)

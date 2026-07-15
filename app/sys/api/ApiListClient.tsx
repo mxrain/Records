@@ -12,11 +12,9 @@ import {
   Github,
   ShieldCheck,
   ChevronDown,
-  KeyRound,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { ApiSide, ApiRouteInfo, ApiParam } from './page';
-import ApiKeysManager from './ApiKeysManager';
 
 const METHOD_COLORS: Record<string, { bg: string; fg: string }> = {
   GET: { bg: '#16a34a1a', fg: '#16a34a' },
@@ -37,7 +35,6 @@ const SIDE_META: Record<ApiSide, { label: string; icon: React.ElementType; color
 const SIDE_ORDER: ApiSide[] = ['frontend', 'backend', 'github', 'auth'];
 
 export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
-  const [activeTab, setActiveTab] = useState<'docs' | 'apikeys'>('docs');
   const [search, setSearch] = useState('');
   const [methodFilter, setMethodFilter] = useState<string | 'ALL'>('ALL');
   const [sideFilter, setSideFilter] = useState<ApiSide | 'ALL'>('ALL');
@@ -157,25 +154,6 @@ export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
   return (
     <div className="min-h-full h-auto">
       <main className="overflow-y-auto" style={{ padding: '1.5rem 2rem' }}>
-        {/* 顶部 Tab 切换 */}
-        <div style={{ maxWidth: '56rem', margin: '0 auto 1.25rem', display: 'flex', gap: '0.25rem', borderBottom: '1px solid hsl(var(--border))' }}>
-          <TabButton
-            label="接口文档"
-            icon={Code2}
-            active={activeTab === 'docs'}
-            onClick={() => setActiveTab('docs')}
-          />
-          <TabButton
-            label="API Keys"
-            icon={KeyRound}
-            active={activeTab === 'apikeys'}
-            onClick={() => setActiveTab('apikeys')}
-          />
-        </div>
-
-        {activeTab === 'apikeys' ? (
-          <ApiKeysManager />
-        ) : (
         <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
           {/* 分类筛选条 */}
           <div
@@ -387,47 +365,8 @@ export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
             </div>
           )}
         </div>
-        )}
       </main>
     </div>
-  );
-}
-
-/* ============ Tab 切换按钮 ============ */
-function TabButton({
-  label,
-  icon: Icon,
-  active,
-  onClick,
-}: {
-  label: string;
-  icon: React.ElementType;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.375rem',
-        padding: '0.625rem 0.875rem',
-        background: 'transparent',
-        border: 'none',
-        borderBottom: active ? '2px solid hsl(var(--primary))' : '2px solid transparent',
-        color: active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
-        fontSize: '0.875rem',
-        fontWeight: active ? 600 : 500,
-        cursor: 'pointer',
-        marginBottom: '-1px',
-        transition: 'all 150ms',
-      }}
-    >
-      <Icon size={15} aria-hidden="true" />
-      {label}
-    </button>
   );
 }
 
