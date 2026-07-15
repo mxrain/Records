@@ -12,9 +12,11 @@ import {
   Github,
   ShieldCheck,
   ChevronDown,
+  KeyRound,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { ApiSide, ApiRouteInfo, ApiParam } from './page';
+import ApiKeysManager from './ApiKeysManager';
 
 const METHOD_COLORS: Record<string, { bg: string; fg: string }> = {
   GET: { bg: '#16a34a1a', fg: '#16a34a' },
@@ -35,6 +37,7 @@ const SIDE_META: Record<ApiSide, { label: string; icon: React.ElementType; color
 const SIDE_ORDER: ApiSide[] = ['frontend', 'backend', 'github', 'auth'];
 
 export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
+  const [activeTab, setActiveTab] = useState<'docs' | 'apikeys'>('docs');
   const [search, setSearch] = useState('');
   const [methodFilter, setMethodFilter] = useState<string | 'ALL'>('ALL');
   const [sideFilter, setSideFilter] = useState<ApiSide | 'ALL'>('ALL');
@@ -151,133 +154,60 @@ export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
     }
   };
 
-  // 当前选中的 side 标题(用于主面板)
-  const activeMeta = sideFilter === 'ALL' ? null : SIDE_META[sideFilter];
-
   return (
-    <div className="flex min-h-full h-auto">
-      {/* 子侧边栏 */}
-      <aside
-        style={{
-          width: 240,
-          flexShrink: 0,
-          borderRight: '1px solid hsl(var(--border))',
-          background: 'hsl(var(--card))',
-          padding: '1.25rem 0.75rem',
-          overflowY: 'auto',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0 0.75rem',
-            marginBottom: '1rem',
-          }}
-        >
-          <Code2 size={18} aria-hidden="true" style={{ color: 'hsl(var(--muted-foreground))' }} />
-          <span
+    <div className="min-h-full h-auto">
+      <main className="overflow-y-auto" style={{ padding: '1.5rem 2rem' }}>
+        {/* 顶部 Tab 切换 */}
+        <div style={{ maxWidth: '56rem', margin: '0 auto 1.25rem', display: 'flex', gap: '0.25rem', borderBottom: '1px solid hsl(var(--border))' }}>
+          <TabButton
+            label="接口文档"
+            icon={Code2}
+            active={activeTab === 'docs'}
+            onClick={() => setActiveTab('docs')}
+          />
+          <TabButton
+            label="API Keys"
+            icon={KeyRound}
+            active={activeTab === 'apikeys'}
+            onClick={() => setActiveTab('apikeys')}
+          />
+        </div>
+
+        {activeTab === 'apikeys' ? (
+          <ApiKeysManager />
+        ) : (
+        <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
+          {/* 分类筛选条 */}
+          <div
             style={{
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'hsl(var(--muted-foreground))',
+              display: 'flex',
+              gap: '0.375rem',
+              marginBottom: '0.875rem',
+              flexWrap: 'wrap',
             }}
           >
-            接口
-          </span>
-        </div>
-        {/* 统计概览 */}
-        <div
-          style={{
-            padding: '0.5rem 0.75rem',
-            marginBottom: '0.75rem',
-            borderRadius: '0.5rem',
-            background: 'hsl(var(--muted))',
-            fontSize: '0.6875rem',
-            color: 'hsl(var(--muted-foreground))',
-            lineHeight: 1.5,
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>路由总数</span>
-            <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{routes.length}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-            <span>分类数</span>
-            <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{SIDE_ORDER.length}</span>
-          </div>
-        </div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          {/* 全部 */}
-          <SideNavItem
-            label="全部"
-            count={routes.length}
-            active={sideFilter === 'ALL'}
-            onClick={() => setSideFilter('ALL')}
-            icon={Code2}
-            color="#475569"
-          />
-          {SIDE_ORDER.map((s) => {
-            const meta = SIDE_META[s];
-            return (
-              <SideNavItem
-                key={s}
-                label={meta.label}
-                count={sideCounts[s] || 0}
-                active={sideFilter === s}
-                onClick={() => setSideFilter(s)}
-                icon={meta.icon}
-                color={meta.color}
-                desc={meta.desc}
-              />
-            );
-          })}
-        </nav>
-      </aside>
-
-      {/* 主面板 */}
-      <main className="flex-grow overflow-y-auto" style={{ padding: '1.5rem 2rem' }}>
-        <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
-          {/* 头部 */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <h1
-              style={{
-                fontSize: '1.375rem',
-                fontWeight: 600,
-                color: 'hsl(var(--foreground))',
-                margin: 0,
-                letterSpacing: '-0.01em',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
-            >
-              {activeMeta ? (
-                <>
-                  <activeMeta.icon size={22} aria-hidden="true" style={{ color: activeMeta.color }} />
-                  {activeMeta.label}
-                </>
-              ) : (
-                <>
-                  <Code2 size={22} aria-hidden="true" />
-                  全部 API
-                </>
-              )}
-            </h1>
-            <p
-              style={{
-                marginTop: '0.375rem',
-                fontSize: '0.8125rem',
-                color: 'hsl(var(--muted-foreground))',
-              }}
-            >
-              {activeMeta ? activeMeta.desc : '自动扫描 app/api 目录生成,按前台 / 后台 / GitHub / 认证 分类'}
-              {' · '}
-              {filtered.length} 个路由
-            </p>
+            <SideChip
+              label="全部"
+              count={routes.length}
+              active={sideFilter === 'ALL'}
+              onClick={() => setSideFilter('ALL')}
+              icon={Code2}
+              color="#475569"
+            />
+            {SIDE_ORDER.map((s) => {
+              const meta = SIDE_META[s];
+              return (
+                <SideChip
+                  key={s}
+                  label={meta.label}
+                  count={sideCounts[s] || 0}
+                  active={sideFilter === s}
+                  onClick={() => setSideFilter(s)}
+                  icon={meta.icon}
+                  color={meta.color}
+                />
+              );
+            })}
           </div>
 
           {/* 搜索 + 方法过滤 */}
@@ -457,8 +387,47 @@ export default function ApiListClient({ routes }: { routes: ApiRouteInfo[] }) {
             </div>
           )}
         </div>
+        )}
       </main>
     </div>
+  );
+}
+
+/* ============ Tab 切换按钮 ============ */
+function TabButton({
+  label,
+  icon: Icon,
+  active,
+  onClick,
+}: {
+  label: string;
+  icon: React.ElementType;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.375rem',
+        padding: '0.625rem 0.875rem',
+        background: 'transparent',
+        border: 'none',
+        borderBottom: active ? '2px solid hsl(var(--primary))' : '2px solid transparent',
+        color: active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
+        fontSize: '0.875rem',
+        fontWeight: active ? 600 : 500,
+        cursor: 'pointer',
+        marginBottom: '-1px',
+        transition: 'all 150ms',
+      }}
+    >
+      <Icon size={15} aria-hidden="true" />
+      {label}
+    </button>
   );
 }
 
@@ -870,15 +839,14 @@ function MethodChip({
   );
 }
 
-/* ============ 侧边栏导航项 ============ */
-function SideNavItem({
+/* ============ 分类筛选 chip ============ */
+function SideChip({
   label,
   count,
   active,
   onClick,
   icon: Icon,
   color,
-  desc,
 }: {
   label: string;
   count: number;
@@ -886,61 +854,42 @@ function SideNavItem({
   onClick: () => void;
   icon: React.ElementType;
   color: string;
-  desc?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.625rem',
-        padding: '0.625rem 0.75rem',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.375rem',
+        padding: '0.375rem 0.75rem',
         borderRadius: '0.5rem',
         border: '1px solid',
-        borderColor: active ? 'hsl(var(--border))' : 'transparent',
-        background: active ? 'hsl(var(--secondary))' : 'transparent',
-        color: active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
+        borderColor: active ? color : 'hsl(var(--border))',
+        background: active ? `${color}1a` : 'hsl(var(--card))',
+        color: active ? color : 'hsl(var(--muted-foreground))',
+        fontSize: '0.8125rem',
+        fontWeight: active ? 600 : 500,
         cursor: 'pointer',
-        textAlign: 'left',
         transition: 'all 150ms cubic-bezier(.2,.8,.2,1)',
+        lineHeight: 1.2,
       }}
     >
-      <Icon
-        size={16}
-        className="shrink-0 mt-[2px]"
-        aria-hidden="true"
-        style={{ color: active ? color : undefined }}
-      />
-      <span style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', minWidth: 0, flex: 1 }}>
-        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.875rem', fontWeight: active ? 600 : 500 }}>{label}</span>
-          <span
-            style={{
-              fontSize: '0.6875rem',
-              padding: '0.0625rem 0.375rem',
-              borderRadius: '0.625rem',
-              background: active ? color : 'hsl(var(--muted))',
-              color: active ? '#fff' : 'hsl(var(--muted-foreground))',
-              fontWeight: 600,
-              flexShrink: 0,
-            }}
-          >
-            {count}
-          </span>
-        </span>
-        {desc && (
-          <span
-            style={{
-              fontSize: '0.6875rem',
-              color: 'hsl(var(--muted-foreground))',
-              lineHeight: 1.3,
-            }}
-          >
-            {desc}
-          </span>
-        )}
+      <Icon size={14} aria-hidden="true" style={{ color: active ? color : 'currentColor' }} />
+      <span>{label}</span>
+      <span
+        style={{
+          fontSize: '0.6875rem',
+          fontWeight: 600,
+          padding: '0.0625rem 0.375rem',
+          borderRadius: '0.625rem',
+          background: active ? color : 'hsl(var(--muted))',
+          color: active ? '#fff' : 'hsl(var(--muted-foreground))',
+          flexShrink: 0,
+        }}
+      >
+        {count}
       </span>
     </button>
   );

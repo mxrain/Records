@@ -140,3 +140,12 @@ export const skillFileSchema = z.object({
   name: z.string().min(1).max(100),
   content: z.string().max(2_000_000), // 2MB 上限
 });
+
+// ========== /api/apikeys ==========
+export const createApiKeySchema = z.object({
+  name: z.string().min(1).max(100, '名称不能超过 100 字符'),
+});
+
+export const deleteApiKeySchema = z.object({
+  id: z.string().min(1).max(50),
+});
