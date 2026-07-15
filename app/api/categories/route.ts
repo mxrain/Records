@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getCategories, addCategory, updateCategory, deleteCategory, moveCategory } from '@/lib/data/categories';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import {
+  createCategorySchema,
+  updateCategorySchema,
+  deleteCategorySchema,
+  moveCategorySchema,
+} from '@/lib/validation/schemas';
 
 // 获取全部分类
 export async function GET() {
@@ -17,18 +24,14 @@ export async function GET() {
 // body: { path: string[], name: string, icon?: string, link?: string }
 // path 为父路径(空数组表示根级)
 export async function POST(req: Request) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
   try {
     const body = await req.json();
-    const { path = [], name, icon = '', link = '' } = body;
-    if (!name || typeof name !== 'string') {
-      return NextResponse.json({ error: '分类名称不能为空' }, { status: 400 });
-    }
-    if (!Array.isArray(path)) {
-      return NextResponse.json({ error: 'path 必须是数组' }, { status: 400 });
-    }
-    await addCategory(path, name, icon, link);
+    const parsed = validateBody(createCategorySchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { path, name, icon, link } = parsed;
+    await addCategory(path ?? [], name, icon ?? '', link ?? '');
     return NextResponse.json({ success: true, path, name });
   } catch (error) {
     console.error('新增分类失败:', error);
@@ -42,18 +45,14 @@ export async function POST(req: Request) {
 // 更新分类(改名/图标/链接)
 // body: { path: string[], name: string, icon?: string, link?: string }
 export async function PUT(req: Request) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
   try {
     const body = await req.json();
-    const { path, name, icon = '', link = '' } = body;
-    if (!Array.isArray(path) || path.length === 0) {
-      return NextResponse.json({ error: 'path 不能为空' }, { status: 400 });
-    }
-    if (!name || typeof name !== 'string') {
-      return NextResponse.json({ error: '分类名称不能为空' }, { status: 400 });
-    }
-    await updateCategory(path, name, icon, link);
+    const parsed = validateBody(updateCategorySchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { path, name, icon, link } = parsed;
+    await updateCategory(path, name, icon ?? '', link ?? '');
     return NextResponse.json({ success: true, path, name });
   } catch (error) {
     console.error('更新分类失败:', error);
@@ -67,14 +66,13 @@ export async function PUT(req: Request) {
 // 删除分类
 // body: { path: string[] }
 export async function DELETE(req: Request) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
   try {
     const body = await req.json();
-    const { path } = body;
-    if (!Array.isArray(path) || path.length === 0) {
-      return NextResponse.json({ error: 'path 不能为空' }, { status: 400 });
-    }
+    const parsed = validateBody(deleteCategorySchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { path } = parsed;
     await deleteCategory(path);
     return NextResponse.json({ success: true, path });
   } catch (error) {
@@ -89,20 +87,13 @@ export async function DELETE(req: Request) {
 // 移动分类(拖拽排序)
 // body: { sourcePath: string[], targetPath: string[], position: 'before'|'after'|'inside' }
 export async function PATCH(req: Request) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
   try {
     const body = await req.json();
-    const { sourcePath, targetPath, position } = body;
-    if (!Array.isArray(sourcePath) || sourcePath.length === 0) {
-      return NextResponse.json({ error: 'sourcePath 不能为空' }, { status: 400 });
-    }
-    if (!Array.isArray(targetPath) || targetPath.length === 0) {
-      return NextResponse.json({ error: 'targetPath 不能为空' }, { status: 400 });
-    }
-    if (!['before', 'after', 'inside'].includes(position)) {
-      return NextResponse.json({ error: 'position 必须是 before/after/inside' }, { status: 400 });
-    }
+    const parsed = validateBody(moveCategorySchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { sourcePath, targetPath, position } = parsed;
     await moveCategory(sourcePath, targetPath, position);
     return NextResponse.json({ success: true, sourcePath, targetPath, position });
   } catch (error) {

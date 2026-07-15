@@ -22,10 +22,22 @@ const ExternalLinkRedirect: React.FC<ExternalLinkRedirectProps> = ({ href }) => 
   const [showConfetti, setShowConfetti] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
+  // 安全校验:仅允许 http/https 协议,拒绝 javascript:/data:/vbscript: 等危险协议(防 XSS)
+  const safeHref = (() => {
+    try {
+      const u = new URL(href, window.location.origin);
+      if (u.protocol === 'http:' || u.protocol === 'https:') return href;
+      return null;
+    } catch {
+      return null;
+    }
+  })();
+
   useEffect(() => {
+    if (!safeHref) return;
     const timer = setTimeout(() => {
       if (typeof window !== 'undefined') {
-        window.location.href = href;
+        window.location.href = safeHref;
       }
     }, 3000);
 
@@ -37,14 +49,32 @@ const ExternalLinkRedirect: React.FC<ExternalLinkRedirectProps> = ({ href }) => 
       clearTimeout(timer);
       clearInterval(interval);
     };
-  }, [href]);
+  }, [safeHref]);
 
   const handleImmediateRedirect = () => {
+    if (!safeHref) return;
     setShowConfetti(true);
     setTimeout(() => {
-      window.location.href = href;
+      window.location.href = safeHref;
     }, 1000);
   };
+
+  if (!safeHref) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
+        <div className="w-full max-w-md px-4">
+          <div className="bg-white rounded-lg shadow-lg border border-red-200 p-6 text-center">
+            <p className="text-red-600 font-semibold mb-2">无效的链接</p>
+            <p className="text-sm text-gray-600 mb-4">该链接协议不被允许,已阻止跳转以保障安全。</p>
+            <Button variant="outline" onClick={() => router.back()} className="border-black text-black hover:bg-gray-100">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              返回上一页
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const confettiParticles = useMemo(() => 
     Array.from({ length: 50 }, (_, i) => ({

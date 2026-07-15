@@ -1,24 +1,21 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { githubCreateFileSchema } from '@/lib/validation/schemas';
 const githubToken = process.env.GITHUB_TOKEN;
 const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
 const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
 export async function POST(request: Request) {
     // 鉴权:防止任意人向 GitHub 仓库写文件
-    const authErr = requireAuth(request);
+    const authErr = await requireAuth(request);
     if (authErr) return authErr;
 
     try {
-        const { path, content } = await request.json();
-
-        // 验证必要参数
-        if (!path || !content) {
-            return NextResponse.json(
-                { error: '缺少必要参数' },
-                { status: 400 }
-            );
-        }
+        const body = await request.json();
+        const parsed = validateBody(githubCreateFileSchema, body);
+        if (parsed instanceof NextResponse) return parsed;
+        const { path, content } = parsed;
 
         // 确保 content 是 base64 编码格式
         let base64Content = content;

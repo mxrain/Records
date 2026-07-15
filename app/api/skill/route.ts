@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import jwt from 'jsonwebtoken';
+import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { skillFileSchema } from '@/lib/validation/schemas';
 
 // Skill 文件目录:项目根目录,列出 .md 控制文件
 const SKILL_DIR = process.cwd();
@@ -9,26 +11,10 @@ const SKILL_DIR = process.cwd();
 // 允许管理的 skill 文件白名单
 const ALLOWED_FILES = ['AGENTS.md', 'CLAUDE.md', 'README.md', 'DATABASE_SETUP.md', 'SKILL.md'];
 
-// 鉴权:校验 token cookie
-function authenticate(req: Request): boolean {
-  const cookie = req.headers.get('cookie') || '';
-  const match = cookie.match(/token=([^;]+)/);
-  if (!match) return false;
-  try {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) return false;
-    jwt.verify(match[1], secret);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 // GET:列出所有 skill 文件及其元信息
 export async function GET(req: Request) {
-  if (!authenticate(req)) {
-    return NextResponse.json({ error: '未授权' }, { status: 401 });
-  }
+  const authErr = await requireAuth(req);
+  if (authErr) return authErr;
   try {
     const files = ALLOWED_FILES.map((name) => {
       const filePath = path.join(SKILL_DIR, name);
@@ -69,16 +55,15 @@ export async function GET(req: Request) {
 // PUT:保存指定 skill 文件
 // body: { name: string, content: string }
 export async function PUT(req: Request) {
-  if (!authenticate(req)) {
-    return NextResponse.json({ error: '未授权' }, { status: 401 });
-  }
+  const authErr = await requireAuth(req);
+  if (authErr) return authErr;
   try {
-    const { name, content } = await req.json();
-    if (!name || !ALLOWED_FILES.includes(name)) {
+    const body = await req.json();
+    const parsed = validateBody(skillFileSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { name, content } = parsed;
+    if (!ALLOWED_FILES.includes(name)) {
       return NextResponse.json({ error: '不支持的文件' }, { status: 400 });
-    }
-    if (typeof content !== 'string') {
-      return NextResponse.json({ error: '内容必须是字符串' }, { status: 400 });
     }
     const filePath = path.join(SKILL_DIR, name);
     fs.writeFileSync(filePath, content, 'utf8');

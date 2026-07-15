@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getResourceByUuid, upsertResource, deleteResource } from '@/lib/data/resources';
 import type { Resource } from '@/lib/data/resources';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { createResourceSchema, patchResourceSchema } from '@/lib/validation/schemas';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -26,7 +28,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
 
   const { id } = await params;
@@ -35,8 +37,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   }
 
   try {
-    const body: Resource = await request.json();
-    await upsertResource(id, body);
+    const body = await request.json();
+    const parsed = validateBody(createResourceSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    await upsertResource(id, parsed as unknown as Resource);
     return NextResponse.json({ success: true, uuid: id });
   } catch (error) {
     console.error('创建资源时出错:', error);
@@ -45,7 +49,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
 
   const { id } = await params;
@@ -54,13 +58,15 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 
   try {
-    const body: Partial<Resource> = await request.json();
+    const body = await request.json();
+    const parsed = validateBody(patchResourceSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
     const existing = await getResourceByUuid(id);
     if (!existing) {
       return NextResponse.json({ error: '资源不存在' }, { status: 404 });
     }
 
-    const updated: Resource = { ...existing, ...body };
+    const updated: Resource = { ...existing, ...parsed } as Resource;
     await upsertResource(id, updated);
     return NextResponse.json({ success: true, uuid: id });
   } catch (error) {
@@ -70,7 +76,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
 
   const { id } = await params;

@@ -1,3 +1,5 @@
+import 'server-only';
+
 // 配置接口定义
 export interface AuthConfig {
   enabled: boolean

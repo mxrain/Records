@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { githubAddResourceSchema } from '@/lib/validation/schemas';
 
 interface AddFileRequest {
   uuid: string;
@@ -8,11 +10,13 @@ interface AddFileRequest {
 
 export async function POST(request: Request) {
   // 鉴权:防止任意人改 db/resources.json
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
 
   try {
-    const body: AddFileRequest = await request.json();
+    const body = await request.json();
+    const parsed = validateBody(githubAddResourceSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
     const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
     const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
     const token = process.env.GITHUB_TOKEN;
@@ -20,7 +24,7 @@ export async function POST(request: Request) {
     if (!token) {
       return NextResponse.json({ error: 'GitHub token 未配置' }, { status: 500 });
     }
-    const { uuid, data } = body;
+    const { uuid, data } = parsed;
     
     // 构建文件路径
     const path = 'db/resources.json';

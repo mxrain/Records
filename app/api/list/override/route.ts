@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { saveListOverride, getListOverride, ListOverride } from '@/lib/data/list';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { listOverrideSchema } from '@/lib/validation/schemas';
 
 // 合法类型白名单
 const ALLOWED_TYPES = ['hot', 'latest'] as const;
@@ -35,22 +37,19 @@ export async function GET(request: Request) {
  * 保存某个 SQL 派生列表的覆盖配置
  */
 export async function POST(request: Request) {
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
   try {
     const body = await request.json();
-    const { type, pinned, excluded, limit } = body || {};
-
-    if (!isAllowedType(type)) {
-      return NextResponse.json({ error: '类型不合法,仅支持 hot / latest' }, { status: 400 });
-    }
+    const parsed = validateBody(listOverrideSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { type, pinned, excluded, limit } = parsed;
 
     const override: ListOverride = {
-      pinned: Array.isArray(pinned) ? pinned.filter((u: unknown) => typeof u === 'string') : [],
-      excluded: Array.isArray(excluded) ? excluded.filter((u: unknown) => typeof u === 'string') : [],
-      limit: typeof limit === 'number' && limit > 0 ? Math.min(limit, 100) : 20,
+      pinned: pinned ?? [],
+      excluded: excluded ?? [],
+      limit: limit ?? 20,
     };
-
     await saveListOverride(type, override);
     return NextResponse.json({ success: true, type, override });
   } catch (error) {

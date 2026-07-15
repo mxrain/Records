@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSetting, getSettingMeta, updateSetting } from '@/lib/data/settings';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { updateSettingSchema } from '@/lib/validation/schemas';
 
 /**
  * GET /api/settings/[key]
@@ -33,17 +35,15 @@ export async function PUT(
   { params }: { params: Promise<{ key: string }> }
 ) {
   // 鉴权:proxy.ts 不拦截 /api/*,需自行校验
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
 
   try {
     const { key } = await params;
     const body = await req.json();
-    const { value, description } = body || {};
-
-    if (value === undefined) {
-      return NextResponse.json({ error: '缺少 value 字段' }, { status: 400 });
-    }
+    const parsed = validateBody(updateSettingSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { value, description } = parsed;
 
     if (description !== undefined) {
       const { upsertSetting } = await import('@/lib/data/settings');

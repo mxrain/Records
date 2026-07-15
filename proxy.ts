@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import * as jwt from 'jsonwebtoken'
-import { defaultAuthConfig as authConfig } from '@/lib/auth/config'
+import { defaultAuthConfig as authConfig, validateAuthConfig } from '@/lib/auth/config'
+
+// 启动时校验认证配置完整性(模块级,仅执行一次)
+// 用 try-catch 包裹:配置缺失只记录错误,不中断请求处理(避免整体崩溃)
+try {
+  validateAuthConfig(authConfig)
+} catch (err) {
+  console.error('[auth] 认证配置校验失败:', err instanceof Error ? err.message : err)
+}
 
 /**
  * 直接校验 JWT Token 有效性（避免自 fetch /api/verify 带来的额外开销）

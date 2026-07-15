@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { githubUpdateFileSchema } from '@/lib/validation/schemas';
 
 interface UpdateFileRequest {
   path: string;
@@ -22,7 +24,7 @@ const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
 export async function POST(request: Request) {
   // 鉴权:防止任意人覆盖 GitHub 仓库文件
-  const authErr = requireAuth(request);
+  const authErr = await requireAuth(request);
   if (authErr) return authErr;
 
   try {
@@ -34,27 +36,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const body: UpdateFileRequest = await request.json();
-    const { path, content, sha, commitMessage } = body;
-
-    // 验证请求参数
-    if (!path || !content || !sha) {
-      return NextResponse.json(
-        { 
-          error: '缺少必要的请求参数',
-          details: '需要提供 path, content 和 sha'
-        },
-        { status: 400 }
-      );
-    }
-
-    // 验证路径格式
-    if (path.includes('..') || path.startsWith('/')) {
-      return NextResponse.json(
-        { error: '无效的文件路径格式' },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const parsed = validateBody(githubUpdateFileSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { path, content, sha, commitMessage } = parsed;
 
     // 确保 content 是 base64 编码格式
     let base64Content: string;
@@ -66,7 +51,7 @@ export async function POST(request: Request) {
       }
       // 验证 base64 格式
       const decodedContent = Buffer.from(base64Content, 'base64');
-      
+
       // 检查文件大小
       if (decodedContent.length > MAX_FILE_SIZE) {
         return NextResponse.json(
@@ -86,7 +71,7 @@ export async function POST(request: Request) {
     // 构建提交信息
     const timestamp = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
     const defaultMessage = `更新: ${path} [${timestamp}]`;
-    
+
     const payload = {
       message: commitMessage || defaultMessage,
       content: base64Content,

@@ -8,6 +8,13 @@ import { cookies } from 'next/headers';
 import { rateLimit, getClientIp } from '@/lib/auth/ratelimit';
 // 常量时间比较(防时序攻击)
 import { timingSafeEqual } from 'crypto';
+// Token 服务(规范化 payload + 撤销支持)
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from '@/lib/auth/tokens';
 
 // JWT payload 类型定义
 interface TokenPayload {
@@ -61,27 +68,23 @@ function getAllowedOrigin(request: Request): string {
 }
 
 /**
- * 生成JWT Token
- * @param payload 负载数据
- * @param expiresIn 过期时间
- * @returns JWT Token字符串
+ * 生成JWT Token(已改用 lib/auth/tokens 中的 signAccessToken/signRefreshToken)
+ * 保留此函数仅为兼容,内部委托给 token 服务
  */
 function generateToken(payload: TokenPayload, expiresIn: string) {
-  return jwt.sign(payload, getJwtSecret(), { expiresIn: expiresIn as any }); // 生成Token
+  // expiresIn '7d' 视为 access,其他视为 refresh
+  if (expiresIn === '7d') {
+    return signAccessToken(payload.userId || 'admin', '7d');
+  }
+  return signRefreshToken(payload.userId || 'admin', expiresIn);
 }
 
 /**
- * 验证JWT Token有效性
- * @param token 要验证的Token
- * @returns 是否有效
+ * 验证JWT Token有效性(异步,含黑名单检查)
  */
-function verifyToken(token: string) {
-  try {
-    jwt.verify(token, getJwtSecret());  // 验证Token
-    return true;
-  } catch {
-    return false;
-  }
+async function verifyToken(token: string): Promise<boolean> {
+  const payload = await verifyAccessToken(token);
+  return payload !== null;
 }
 
 /**
@@ -107,17 +110,18 @@ export async function GET(request: Request) {
   // 从cookie中获取token
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value as string | undefined;
-  
+
   // 检查token是否存在
   if (!token) {
     // 返回401未授权错误
     return NextResponse.json({ error: 'Token不存在' }, { status: 401 });
   }
-  
+
   // 验证token有效性并返回结果
-  return token && verifyToken(token)
-    ? NextResponse.json({ valid: true }, { status: 200 })  // 验证成功
-    : NextResponse.json({ error: 'Token无效' }, { status: 401 });  // 验证失败
+  const valid = await verifyToken(token);
+  return valid
+    ? NextResponse.json({ valid: true }, { status: 200 })
+    : NextResponse.json({ error: 'Token无效' }, { status: 401 });
 }
 
 /**
@@ -216,31 +220,28 @@ export async function POST(request: Request) {
 
     // 处理refreshToken验证
     if (refreshToken) {
-      try {
-        // 验证refreshToken有效性
-        jwt.verify(refreshToken, getJwtRefreshSecret());
-        // 解码refreshToken获取payload
-        const payload = jwt.decode(refreshToken) as TokenPayload | null;
-        // 生成新的token
-        const newToken = generateToken({ userId: payload?.userId }, '7d');
-        // 返回新token
-        return NextResponse.json({ success: true, token: newToken }, { status: 200 });
-      } catch {
-        // refreshToken验证失败
+      // 验证refreshToken有效性(含黑名单检查)
+      const rtPayload = await verifyRefreshToken(refreshToken);
+      if (!rtPayload) {
         return NextResponse.json({ error: 'RefreshToken无效' }, { status: 401 });
       }
-    } 
+      // 生成新的token
+      const newToken = signAccessToken(rtPayload.sub, '7d');
+      // 返回新token
+      return NextResponse.json({ success: true, token: newToken }, { status: 200 });
+    }
     // 处理token验证
     else if (token) {
-      if (verifyToken(token)) {
+      const valid = await verifyToken(token);
+      if (valid) {
         // token验证通过，生成新token
-        const newToken = generateToken({ timestamp: Date.now() }, '7d');
+        const newToken = signAccessToken('admin', '7d');
         return NextResponse.json({ success: true, token: newToken }, { status: 200 });
       } else {
         // token验证失败
         return NextResponse.json({ error: 'Token无效' }, { status: 401 });
       }
-    } 
+    }
     // 处理密码验证
     else if (password) {
       // 速率限制:每 IP 每 60 秒最多 5 次登录尝试(防暴力破解)

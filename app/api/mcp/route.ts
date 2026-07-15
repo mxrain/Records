@@ -1,21 +1,8 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 import { getAllSettings, upsertSetting } from '@/lib/data/settings';
-
-// 鉴权
-function authenticate(req: Request): boolean {
-  const cookie = req.headers.get('cookie') || '';
-  const match = cookie.match(/token=([^;]+)/);
-  if (!match) return false;
-  try {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) return false;
-    jwt.verify(match[1], secret);
-    return true;
-  } catch {
-    return false;
-  }
-}
+import { requireAuth } from '@/lib/auth/guard';
+import { validateBody } from '@/lib/validation/validate';
+import { mcpServiceSchema, deleteMcpSchema } from '@/lib/validation/schemas';
 
 export interface McpService {
   name: string;          // 服务名(唯一)
@@ -29,9 +16,8 @@ export interface McpService {
 
 // GET:列出所有 MCP 服务
 export async function GET(req: Request) {
-  if (!authenticate(req)) {
-    return NextResponse.json({ error: '未授权' }, { status: 401 });
-  }
+  const authErr = await requireAuth(req);
+  if (authErr) return authErr;
   try {
     const settings = await getAllSettings();
     const services = (settings.mcp_services as McpService[]) || [];
@@ -45,17 +31,13 @@ export async function GET(req: Request) {
 // POST:新增/更新 MCP 服务
 // body: McpService
 export async function POST(req: Request) {
-  if (!authenticate(req)) {
-    return NextResponse.json({ error: '未授权' }, { status: 401 });
-  }
+  const authErr = await requireAuth(req);
+  if (authErr) return authErr;
   try {
-    const service = await req.json() as McpService;
-    if (!service.name || typeof service.name !== 'string') {
-      return NextResponse.json({ error: '服务名不能为空' }, { status: 400 });
-    }
-    if (!service.command) {
-      return NextResponse.json({ error: '启动命令不能为空' }, { status: 400 });
-    }
+    const body = await req.json();
+    const parsed = validateBody(mcpServiceSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const service = parsed as McpService;
     const settings = await getAllSettings();
     const services = (settings.mcp_services as McpService[]) || [];
     const idx = services.findIndex((s) => s.name === service.name);
@@ -78,14 +60,13 @@ export async function POST(req: Request) {
 // DELETE:删除指定 MCP 服务
 // body: { name: string }
 export async function DELETE(req: Request) {
-  if (!authenticate(req)) {
-    return NextResponse.json({ error: '未授权' }, { status: 401 });
-  }
+  const authErr = await requireAuth(req);
+  if (authErr) return authErr;
   try {
-    const { name } = await req.json();
-    if (!name) {
-      return NextResponse.json({ error: 'name 不能为空' }, { status: 400 });
-    }
+    const body = await req.json();
+    const parsed = validateBody(deleteMcpSchema, body);
+    if (parsed instanceof NextResponse) return parsed;
+    const { name } = parsed;
     const settings = await getAllSettings();
     const services = (settings.mcp_services as McpService[]) || [];
     const filtered = services.filter((s) => s.name !== name);
