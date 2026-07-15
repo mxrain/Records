@@ -25,17 +25,27 @@ export default function ApiKeysManager() {
   const [revokingId, setRevokingId] = useState<string | null>(null);
   const [justCreated, setJustCreated] = useState<CreatedKey | null>(null);
   const [copied, setCopied] = useState(false);
+  // 错误信息直接展示在 UI 上(不只靠 toast,避免被忽略)
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const loadKeys = useCallback(async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await fetch('/api/apikeys');
-      if (!res.ok) throw new Error('加载失败');
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg = `${data.error || '加载失败'} (HTTP ${res.status})`;
+        setLoadError(msg);
+        throw new Error(msg);
+      }
       setKeys(data.keys || []);
     } catch (e) {
-      toast({ title: '加载失败', description: (e as Error).message, variant: 'destructive' });
+      const msg = (e as Error).message || '加载失败';
+      setLoadError(msg);
+      toast({ title: '加载失败', description: msg, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -47,8 +57,11 @@ export default function ApiKeysManager() {
 
   const handleCreate = async () => {
     const name = newName.trim();
+    setCreateError(null);
     if (!name) {
-      toast({ title: '请输入名称', variant: 'destructive' });
+      const msg = '请输入名称';
+      setCreateError(msg);
+      toast({ title: msg, variant: 'destructive' });
       return;
     }
     setCreating(true);
@@ -59,13 +72,19 @@ export default function ApiKeysManager() {
         body: JSON.stringify({ name }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || '签发失败');
+      if (!res.ok) {
+        const msg = `${data.error || '签发失败'} (HTTP ${res.status})`;
+        setCreateError(msg);
+        throw new Error(msg);
+      }
       setJustCreated({ plaintext: data.key, meta: data.meta });
       setNewName('');
       await loadKeys();
       toast({ title: '签发成功', description: '请立即复制保存,明文仅显示一次' });
     } catch (e) {
-      toast({ title: '签发失败', description: (e as Error).message, variant: 'destructive' });
+      const msg = (e as Error).message || '签发失败';
+      setCreateError(msg);
+      toast({ title: '签发失败', description: msg, variant: 'destructive' });
     } finally {
       setCreating(false);
     }
@@ -177,6 +196,25 @@ export default function ApiKeysManager() {
             签发
           </button>
         </div>
+        {createError && (
+          <div
+            style={{
+              marginTop: '0.625rem',
+              padding: '0.5rem 0.75rem',
+              borderRadius: '0.375rem',
+              background: '#dc26261a',
+              border: '1px solid #dc2626',
+              fontSize: '0.8125rem',
+              color: '#dc2626',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+            }}
+          >
+            <AlertCircle size={14} aria-hidden="true" style={{ flexShrink: 0 }} />
+            {createError}
+          </div>
+        )}
       </div>
 
       {/* 刚签发的明文(只显示一次) */}
@@ -286,6 +324,32 @@ export default function ApiKeysManager() {
           <div style={{ padding: '2rem', textAlign: 'center', color: 'hsl(var(--muted-foreground))', fontSize: '0.875rem' }}>
             <Loader2 size={16} className="animate-spin" aria-hidden="true" style={{ display: 'inline-block', marginRight: '0.5rem', verticalAlign: 'middle' }} />
             加载中...
+          </div>
+        ) : loadError ? (
+          <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+            <AlertCircle size={20} aria-hidden="true" style={{ color: '#dc2626', marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '0.875rem', color: '#dc2626', fontWeight: 600, marginBottom: '0.25rem' }}>
+              加载失败
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', marginBottom: '0.75rem' }}>
+              {loadError}
+            </div>
+            <button
+              type="button"
+              onClick={loadKeys}
+              style={{
+                padding: '0.375rem 0.875rem',
+                borderRadius: '0.375rem',
+                border: '1px solid hsl(var(--border))',
+                background: 'hsl(var(--card))',
+                color: 'hsl(var(--foreground))',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              重试
+            </button>
           </div>
         ) : keys.length === 0 ? (
           <div style={{ padding: '2rem', textAlign: 'center', color: 'hsl(var(--muted-foreground))', fontSize: '0.875rem' }}>
