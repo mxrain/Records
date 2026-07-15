@@ -211,7 +211,7 @@ export default function SettingsPage() {
                   transition: 'all 150ms cubic-bezier(.2,.8,.2,1)',
                 }}
               >
-                <Icon size={16} className="shrink-0 mt-[2px]" aria-hidden="true" />
+                <Icon size={16} className="shrink-0 mt-[2px]" aria-hidden />
                 <span style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', minWidth: 0 }}>
                   <span style={{ fontSize: '0.875rem', fontWeight: active ? 600 : 500 }}>{item.label}</span>
                   <span
