@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { KeyRound, Plus, Trash2, Copy, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { KeyRound, Plus, Trash2, Copy, Check, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ApiKeyItem {
@@ -28,6 +28,11 @@ export default function ApiKeysManager() {
   // 错误信息直接展示在 UI 上(不只靠 toast,避免被忽略)
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+  // 已揭示的 Key 明文:id → plaintext
+  const [revealed, setRevealed] = useState<Record<string, string>>({});
+  const [revealingId, setRevealingId] = useState<string | null>(null);
+  // 已复制状态(按 Key id 区分)
+  const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const loadKeys = useCallback(async () => {
@@ -107,6 +112,39 @@ export default function ApiKeysManager() {
       toast({ title: '吊销失败', description: (e as Error).message, variant: 'destructive' });
     } finally {
       setRevokingId(null);
+    }
+  };
+
+  const handleToggleReveal = async (id: string) => {
+    // 已揭示 → 隐藏
+    if (revealed[id]) {
+      const next = { ...revealed };
+      delete next[id];
+      setRevealed(next);
+      return;
+    }
+    // 未揭示 → 请求明文
+    setRevealingId(id);
+    try {
+      const res = await fetch(`/api/apikeys/${id}/reveal`);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      setRevealed((prev) => ({ ...prev, [id]: data.plaintext }));
+    } catch (e) {
+      toast({ title: '查看失败', description: (e as Error).message, variant: 'destructive' });
+    } finally {
+      setRevealingId(null);
+    }
+  };
+
+  const handleCopyKey = async (id: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKeyId(id);
+      setTimeout(() => setCopiedKeyId(null), 1500);
+      toast({ title: '已复制' });
+    } catch {
+      toast({ title: '复制失败', variant: 'destructive' });
     }
   };
 
@@ -357,78 +395,155 @@ export default function ApiKeysManager() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {keys.map((k, idx) => (
-              <div
-                key={k.id}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0, 1fr) auto',
-                  gap: '0.75rem',
-                  padding: '0.875rem 1rem',
-                  alignItems: 'center',
-                  borderBottom: idx < keys.length - 1 ? '1px solid hsl(var(--border))' : 'none',
-                }}
-              >
-                <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
-                      {k.name}
-                    </span>
-                    <code
+            {keys.map((k, idx) => {
+              const isRevealed = !!revealed[k.id];
+              const isRevealing = revealingId === k.id;
+              return (
+                <div
+                  key={k.id}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '0.875rem 1rem',
+                    borderBottom: idx < keys.length - 1 ? '1px solid hsl(var(--border))' : 'none',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+                    <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
+                          {k.name}
+                        </span>
+                        <code
+                          style={{
+                            fontSize: '0.6875rem',
+                            padding: '0.125rem 0.5rem',
+                            borderRadius: '0.375rem',
+                            background: 'hsl(var(--muted))',
+                            color: 'hsl(var(--muted-foreground))',
+                            fontFamily: 'ui-monospace, monospace',
+                          }}
+                        >
+                          {k.prefix}…
+                        </code>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.6875rem',
+                          color: 'hsl(var(--muted-foreground))',
+                          display: 'flex',
+                          gap: '0.75rem',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        <span>创建: {formatDate(k.createdAt)}</span>
+                        <span>最后使用: {formatDate(k.lastUsedAt)}</span>
+                      </div>
+                    </div>
+                    {/* 眼睛 toggle 按钮 */}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleReveal(k.id)}
+                      disabled={isRevealing}
                       style={{
-                        fontSize: '0.6875rem',
-                        padding: '0.125rem 0.5rem',
+                        padding: '0.375rem 0.5rem',
                         borderRadius: '0.375rem',
-                        background: 'hsl(var(--muted))',
+                        border: '1px solid hsl(var(--border))',
+                        background: 'hsl(var(--card))',
                         color: 'hsl(var(--muted-foreground))',
-                        fontFamily: 'ui-monospace, monospace',
+                        cursor: isRevealing ? 'not-allowed' : 'pointer',
+                        opacity: isRevealing ? 0.6 : 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      aria-label={isRevealed ? `隐藏 ${k.name} 明文` : `显示 ${k.name} 明文`}
+                      title={isRevealed ? '隐藏明文' : '显示明文'}
+                    >
+                      {isRevealing ? (
+                        <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                      ) : isRevealed ? (
+                        <EyeOff size={14} aria-hidden="true" />
+                      ) : (
+                        <Eye size={14} aria-hidden="true" />
+                      )}
+                    </button>
+                    {/* 复制按钮(仅在已揭示时显示) */}
+                    {isRevealed && (
+                      <button
+                        type="button"
+                        onClick={() => handleCopyKey(k.id, revealed[k.id])}
+                        style={{
+                          padding: '0.375rem 0.5rem',
+                          borderRadius: '0.375rem',
+                          border: '1px solid hsl(var(--border))',
+                          background: 'hsl(var(--card))',
+                          color: 'hsl(var(--foreground))',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        aria-label="复制明文"
+                        title="复制明文"
+                      >
+                        {copiedKeyId === k.id ? (
+                          <Check size={14} aria-hidden="true" style={{ color: '#16a34a' }} />
+                        ) : (
+                          <Copy size={14} aria-hidden="true" />
+                        )}
+                      </button>
+                    )}
+                    {/* 吊销按钮 */}
+                    <button
+                      type="button"
+                      onClick={() => handleRevoke(k.id, k.name)}
+                      disabled={revokingId === k.id}
+                      style={{
+                        padding: '0.375rem 0.625rem',
+                        borderRadius: '0.375rem',
+                        border: '1px solid hsl(var(--border))',
+                        background: 'hsl(var(--card))',
+                        color: '#dc2626',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        cursor: revokingId === k.id ? 'not-allowed' : 'pointer',
+                        opacity: revokingId === k.id ? 0.6 : 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                      }}
+                      aria-label={`吊销 ${k.name}`}
+                    >
+                      {revokingId === k.id ? (
+                        <Loader2 size={12} className="animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Trash2 size={12} aria-hidden="true" />
+                      )}
+                      吊销
+                    </button>
+                  </div>
+                  {/* 完整明文展示区(仅揭示时显示) */}
+                  {isRevealed && (
+                    <div
+                      style={{
+                        padding: '0.5rem 0.75rem',
+                        borderRadius: '0.375rem',
+                        background: 'hsl(var(--muted) / 0.5)',
+                        border: '1px solid hsl(var(--border))',
+                        fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                        fontSize: '0.8125rem',
+                        color: 'hsl(var(--foreground))',
+                        wordBreak: 'break-all',
                       }}
                     >
-                      {k.prefix}…
-                    </code>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '0.6875rem',
-                      color: 'hsl(var(--muted-foreground))',
-                      display: 'flex',
-                      gap: '0.75rem',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <span>创建: {formatDate(k.createdAt)}</span>
-                    <span>最后使用: {formatDate(k.lastUsedAt)}</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRevoke(k.id, k.name)}
-                  disabled={revokingId === k.id}
-                  style={{
-                    padding: '0.375rem 0.625rem',
-                    borderRadius: '0.375rem',
-                    border: '1px solid hsl(var(--border))',
-                    background: 'hsl(var(--card))',
-                    color: '#dc2626',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    cursor: revokingId === k.id ? 'not-allowed' : 'pointer',
-                    opacity: revokingId === k.id ? 0.6 : 1,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                  }}
-                  aria-label={`吊销 ${k.name}`}
-                >
-                  {revokingId === k.id ? (
-                    <Loader2 size={12} className="animate-spin" aria-hidden="true" />
-                  ) : (
-                    <Trash2 size={12} aria-hidden="true" />
+                      {revealed[k.id]}
+                    </div>
                   )}
-                  吊销
-                </button>
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

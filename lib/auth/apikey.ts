@@ -1,5 +1,5 @@
 import 'server-only';
-import { randomBytes, createHash } from 'crypto';
+import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
 import { redis } from '@/lib/cache/redis';
 import { rateLimit } from '@/lib/auth/ratelimit';
 
@@ -7,15 +7,17 @@ import { rateLimit } from '@/lib/auth/ratelimit';
  * API Key 服务
  *
  * 设计要点:
- * - Key 明文格式 `rak_<32hex>`,只在签发时返回一次,后续仅存哈希
- * - 哈希算法 SHA-256,Redis 中只存哈希,无法反推明文
+ * - Key 明文格式 `rak_<48hex>`,签发时返回一次
+ * - 哈希算法 SHA-256,Redis 中存哈希用于校验
+ * - 明文用 AES-256-GCM 加密后存 Redis(密钥来自 JWT_SECRET 派生),支持后续再次展示
  * - 每次调用更新 lastUsedAt(惰性写入,不阻塞请求)
  * - 限速 60 次/60s,基于已有 rateLimit 工具
  * - Redis 不可用时:校验 fail-open(放行),限速 fail-open(放行)
  *
  * Redis 键结构:
- *   apikey:hash:<sha256>  → JSON ApiKeyMeta(包含 id/name/createdAt/lastUsedAt)
- *   apikey:index          → JSON 数组,仅含元信息(无 hash),用于列表展示
+ *   apikey:hash:<sha256>   → JSON ApiKeyMeta(包含 id/name/createdAt/lastUsedAt/encKey)
+ *   apikey:index           → JSON 数组,仅含元信息(无 hash/encKey),用于列表展示
+ *   apikey:idhash:<id>     → <sha256>,用于吊销时反查 hash
  */
 
 const PREFIX = 'rak_';
@@ -25,12 +27,16 @@ const HASH_KEY_PREFIX = 'apikey:hash:';
 const RATE_LIMIT_PER_MIN = 60;
 const RATE_LIMIT_WINDOW_SEC = 60;
 
+// AES-256-GCM 加密用密钥(从 JWT_SECRET 派生 32 字节)
+const ENC_KEY = deriveEncKey();
+
 export interface ApiKeyMeta {
-  id: string;            // 短 ID(kxxx),用于列表展示与删除
-  name: string;          // 用户定义的名称
-  prefix: string;        // 明文前 8 位,用于辨识(rak_xxxx...)
-  hash: string;          // SHA-256 哈希
-  createdAt: string;     // ISO 时间
+  id: string;
+  name: string;
+  prefix: string;        // 明文前缀(rak_xxxxxxxx)
+  hash: string;          // SHA-256 哈希(校验用)
+  encKey: string;        // 加密后的明文(base64:iv:ciphertext:tag)
+  createdAt: string;
   lastUsedAt: string | null;
 }
 
@@ -56,15 +62,14 @@ export async function createApiKey(name: string): Promise<{ plaintext: string; m
   const meta: ApiKeyMeta = {
     id,
     name,
-    prefix: plaintext.slice(0, PREFIX.length + 8), // rak_xxxxxxxx
+    prefix: plaintext.slice(0, PREFIX.length + 8),
     hash,
+    encKey: encryptPlaintext(plaintext),
     createdAt: now,
     lastUsedAt: null,
   };
 
-  // 存哈希索引(校验用)
   await redis.set(`${HASH_KEY_PREFIX}${hash}`, JSON.stringify(meta));
-  // 追加到列表索引
   await appendToList(meta);
 
   return {
@@ -74,10 +79,26 @@ export async function createApiKey(name: string): Promise<{ plaintext: string; m
 }
 
 /**
+ * 按 ID 获取 API Key 明文(用于前端"再次查看")
+ * 需要 requireAuth 已通过
+ */
+export async function revealApiKey(id: string): Promise<string | null> {
+  try {
+    const hash = await redis.get(`apikey:idhash:${id}`);
+    if (!hash) return null;
+    const raw = await redis.get(`${HASH_KEY_PREFIX}${hash}`);
+    if (!raw) return null;
+    const meta = JSON.parse(raw) as ApiKeyMeta;
+    if (!meta.encKey) return null;
+    return decryptPlaintext(meta.encKey);
+  } catch (err) {
+    console.error('揭示 API Key 明文失败:', err);
+    return null;
+  }
+}
+
+/**
  * 校验 API Key 明文,通过则返回元信息并异步更新 lastUsedAt
- * 失败返回 null
- *
- * 注意:此函数不做限速,限速由调用方用 checkApiKeyRateLimit 单独执行
  */
 export async function verifyApiKey(plaintext: string): Promise<ApiKeyMeta | null> {
   if (!plaintext.startsWith(PREFIX)) return null;
@@ -93,25 +114,20 @@ export async function verifyApiKey(plaintext: string): Promise<ApiKeyMeta | null
     return null;
   }
 
-  // 异步更新 lastUsedAt(不阻塞请求,允许丢失)
   void touchLastUsed(meta);
-
   return meta;
 }
 
 /**
- * 单独执行限速检查,返回 ok/false
- * 与 verifyApiKey 解耦,guard 可决定是否阻断
+ * 限速检查
  */
 export async function checkApiKeyRateLimit(keyId: string): Promise<{ ok: boolean; retryAfter?: number }> {
   const result = await rateLimit(`apikey:${keyId}`, RATE_LIMIT_PER_MIN, RATE_LIMIT_WINDOW_SEC);
-  return result.ok
-    ? { ok: true }
-    : { ok: false, retryAfter: result.retryAfter };
+  return result.ok ? { ok: true } : { ok: false, retryAfter: result.retryAfter };
 }
 
 /**
- * 列出所有 API Key(不含哈希)
+ * 列出所有 API Key(不含哈希/明文)
  */
 export async function listApiKeys(): Promise<ApiKeyListItem[]> {
   try {
@@ -134,12 +150,6 @@ export async function revokeApiKey(id: string): Promise<boolean> {
     const target = list.find((k) => k.id === id);
     if (!target) return false;
 
-    // 列表中只存 prefix,需要反查 hash 索引删除
-    // 由于列表项不含 hash,遍历 hash 索引不可行(没扫描接口)
-    // 解决方案:存列表时同时存 id → hash 的映射
-    // 但这样改动较大;折中方案:索引列表里也存 hash,但 listApiKeys 返回时剔除
-    // 实际上目前 createApiKey 时,索引项只存 {id,name,prefix,createdAt,lastUsedAt}
-    // 要删除 hash 索引必须知道 hash,因此用第二个索引 apikey:idhash:<id> → <hash>
     const hash = await redis.get(`apikey:idhash:${id}`);
     if (hash) {
       await redis.del(`${HASH_KEY_PREFIX}${hash}`);
@@ -161,6 +171,39 @@ function hashKey(plaintext: string): string {
   return createHash('sha256').update(plaintext).digest('hex');
 }
 
+/**
+ * 从 JWT_SECRET 派生 32 字节密钥用于 AES-256
+ */
+function deriveEncKey(): Buffer {
+  const secret = process.env.JWT_SECRET || 'fallback-dev-key-do-not-use-in-prod';
+  return createHash('sha256').update(`apikey-enc:${secret}`).digest();
+}
+
+/**
+ * AES-256-GCM 加密明文
+ * 返回 base64(iv):base64(ciphertext):base64(tag)
+ */
+function encryptPlaintext(plaintext: string): string {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', ENC_KEY, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `${iv.toString('base64')}:${ciphertext.toString('base64')}:${tag.toString('base64')}`;
+}
+
+/**
+ * AES-256-GCM 解密
+ */
+function decryptPlaintext(encKey: string): string {
+  const [ivB64, ctB64, tagB64] = encKey.split(':');
+  const iv = Buffer.from(ivB64, 'base64');
+  const ciphertext = Buffer.from(ctB64, 'base64');
+  const tag = Buffer.from(tagB64, 'base64');
+  const decipher = createDecipheriv('aes-256-gcm', ENC_KEY, iv);
+  decipher.setAuthTag(tag);
+  return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('utf8');
+}
+
 async function appendToList(meta: ApiKeyMeta): Promise<void> {
   const list = await listApiKeys();
   const item: ApiKeyListItem = {
@@ -172,7 +215,6 @@ async function appendToList(meta: ApiKeyMeta): Promise<void> {
   };
   list.push(item);
   await redis.set(INDEX_KEY, JSON.stringify(list));
-  // 同时存 id → hash 反向索引,用于吊销
   await redis.set(`apikey:idhash:${meta.id}`, meta.hash);
 }
 
@@ -182,7 +224,6 @@ async function touchLastUsed(meta: ApiKeyMeta): Promise<void> {
     meta.lastUsedAt = now;
     await redis.set(`${HASH_KEY_PREFIX}${meta.hash}`, JSON.stringify(meta));
 
-    // 同步更新列表项
     const list = await listApiKeys();
     const idx = list.findIndex((k) => k.id === meta.id);
     if (idx >= 0) {
@@ -190,6 +231,6 @@ async function touchLastUsed(meta: ApiKeyMeta): Promise<void> {
       await redis.set(INDEX_KEY, JSON.stringify(list));
     }
   } catch {
-    // lastUsedAt 更新失败不影响请求,静默忽略
+    // 静默忽略
   }
 }
