@@ -79,9 +79,8 @@ export async function proxy(req: NextRequest) {
   return response
 }
 
-// 使用 nodejs runtime 以便直接访问 Redis 检查 token 黑名单
+// Next.js 16 的 proxy 默认就是 nodejs runtime,无需也无法在此处声明 runtime
 // 匹配所有路由,排除静态资源和 favicon
 export const config = {
-  runtime: 'nodejs',
   matcher: '/((?!_next/static|favicon.ico).*)',
 }

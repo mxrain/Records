@@ -26,9 +26,11 @@ const API_KEY_HEADER = 'x-api-key';
 
 export async function requireAuth(req: Request): Promise<NextResponse | null> {
   // 1. 优先尝试 Cookie 中的 JWT(同源后台前端)
+  // 注意:正则必须锚定 cookie 名边界,否则 `token=...` 会误匹配 `refreshToken=...` 中的子串
+  // 导致把 refreshToken 当作 access token 校验,必然失败
   const cookieHeader = req.headers.get('cookie') || '';
-  const cookieMatch = cookieHeader.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
-  const cookieToken = cookieMatch?.[1];
+  const cookieMatch = cookieHeader.match(new RegExp(`(?:^|;\\s*)${COOKIE_NAME}=([^;]+)`));
+  const cookieToken = cookieMatch?.[1]?.trim();
 
   if (cookieToken) {
     const payload = await verifyAccessToken(cookieToken);
