@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth/guard';
 
 
 export async function GET(request: NextRequest) {
+    const authErr = await requireAuth(request);
+    if (authErr) return authErr;
+
     try {
         
         return NextResponse.json({ user: "test" });
@@ -15,6 +19,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const authErr = await requireAuth(request);
+    if (authErr) return authErr;
+
     try {
         const data = await request.json();
         const { username } = data;

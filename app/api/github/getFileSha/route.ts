@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth/guard';
 
 const githubToken = process.env.GITHUB_TOKEN;
 const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
@@ -7,6 +8,10 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  // 此端点可被用于路径枚举侦察,必须鉴权
+  const authErr = await requireAuth(request);
+  if (authErr) return authErr;
+
   try {
     // 验证环境变量
     if (!githubToken || !owner || !repo) {
@@ -31,12 +36,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 验证路径格式
-    if (path.includes('..') || path.startsWith('/')) {
+    // 验证路径格式:禁止目录穿越(同时检查反斜杠,Windows 风格路径也能绕过仅检查 .. 的校验)
+    if (path.includes('..') || path.startsWith('/') || path.includes('\\')) {
       return NextResponse.json(
         { 
           error: '无效的文件路径格式',
-          details: '文件路径不能包含 .. 或以 / 开头'
+          details: '文件路径不能包含 .. 或 \\ 或以 / 开头'
         },
         { status: 400 }
       );

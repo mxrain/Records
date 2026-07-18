@@ -95,24 +95,26 @@ export async function getCategories(): Promise<CategoriesMap> {
 }
 
 export async function saveCategories(categories: CategoriesMap): Promise<void> {
-  for (const [slug, data] of Object.entries(categories)) {
-    const name = slug;
-    const icon = data.icon || '';
-    const children = data.items || {};
-    await db.query(
-      `INSERT INTO categories (name, slug, icon, children, updated_at)
-       VALUES ($1, $2, $3, $4, NOW())
-       ON CONFLICT (slug) DO UPDATE SET
-         name = $1, icon = $3, children = $4, updated_at = NOW()`,
-      [name, slug, icon, JSON.stringify(children)]
-    );
-  }
+  await db.withTransaction(async (tx) => {
+    for (const [slug, data] of Object.entries(categories)) {
+      const name = slug;
+      const icon = data.icon || '';
+      const children = data.items || {};
+      await tx.query(
+        `INSERT INTO categories (name, slug, icon, children, updated_at)
+         VALUES ($1, $2, $3, $4, NOW())
+         ON CONFLICT (slug) DO UPDATE SET
+           name = $1, icon = $3, children = $4, updated_at = NOW()`,
+        [name, slug, icon, JSON.stringify(children)]
+      );
+    }
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', 'categories', JSON.stringify(categories)]
-  );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', 'categories', JSON.stringify(categories)]
+    );
+  });
 
   await invalidateCache();
 }
@@ -194,60 +196,68 @@ export async function addCategory(
   // 根级新增
   if (path.length === 0) {
     const slug = name;
-    await db.query(
-      `INSERT INTO categories (name, slug, icon, children, sort_order, updated_at)
-       VALUES ($1, $2, $3, '[]'::jsonb, (SELECT COALESCE(MAX(sort_order),0)+1 FROM categories), NOW())
-       ON CONFLICT (slug) DO UPDATE SET
-         name = $1, icon = $3, updated_at = NOW()`,
-      [name, slug, icon]
-    );
-    await db.query(
-      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('add', 'categories', $1)`,
-      [JSON.stringify({ path: [], name, icon, link })]
-    );
+    await db.withTransaction(async (tx) => {
+      await tx.query(
+        `INSERT INTO categories (name, slug, icon, children, sort_order, updated_at)
+         VALUES ($1, $2, $3, '[]'::jsonb, (SELECT COALESCE(MAX(sort_order),0)+1 FROM categories), NOW())
+         ON CONFLICT (slug) DO UPDATE SET
+           name = $1, icon = $3, updated_at = NOW()`,
+        [name, slug, icon]
+      );
+      await tx.query(
+        `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('add', 'categories', $1)`,
+        [JSON.stringify({ path: [], name, icon, link })]
+      );
+    });
     await invalidateCache();
     return;
   }
 
   // 子级新增:定位父节点并写入 children
   const rootName = path[0];
-  const rootRes = await db.query('SELECT slug, children FROM categories WHERE name = $1', [rootName]);
-  if (rootRes.rows.length === 0) throw new Error(`父分类 "${rootName}" 不存在`);
-  const rootRow = rootRes.rows[0];
 
-  let children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
+  // 事务 + FOR UPDATE 行锁,防止并发读-改-写丢失更新
+  await db.withTransaction(async (tx) => {
+    // 锁定根分类行,直到事务结束
+    const rootRes = await tx.query('SELECT slug, children FROM categories WHERE name = $1 FOR UPDATE', [rootName]);
+    if (rootRes.rows.length === 0) throw new Error(`父分类 "${rootName}" 不存在`);
+    const rootRow = rootRes.rows[0];
 
-  // 沿 path 下钻到目标父层
-  let cursor: any[] = children;
-  for (let i = 1; i < path.length; i++) {
-    const nameAtDepth = path[i];
-    const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
-    if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
-    if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
-    cursor = cursor[idx].children;
-  }
+    let children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
 
-  // 避免重名
-  if (cursor.some((c) => (c.name || c.slug) === name)) {
-    throw new Error(`分类 "${name}" 已存在`);
-  }
+    // 沿 path 下钻到目标父层
+    let cursor: any[] = children;
+    for (let i = 1; i < path.length; i++) {
+      const nameAtDepth = path[i];
+      const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
+      if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
+      if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
+      cursor = cursor[idx].children;
+    }
 
-  cursor.push({
-    name,
-    slug: name,
-    icon,
-    link: link || `/${name}`,
-    children: [],
+    // 避免重名
+    if (cursor.some((c) => (c.name || c.slug) === name)) {
+      throw new Error(`分类 "${name}" 已存在`);
+    }
+
+    cursor.push({
+      name,
+      slug: name,
+      icon,
+      link: link || `/${name}`,
+      children: [],
+    });
+
+    await tx.query(
+      'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
+      [JSON.stringify(children), rootRow.slug]
+    );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('add', 'categories', $1)`,
+      [JSON.stringify({ path, name, icon, link })]
+    );
   });
 
-  await db.query(
-    'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
-    [JSON.stringify(children), rootRow.slug]
-  );
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('add', 'categories', $1)`,
-    [JSON.stringify({ path, name, icon, link })]
-  );
   await invalidateCache();
 }
 
@@ -263,56 +273,64 @@ export async function updateCategory(
 
   // 根级更新
   if (path.length === 1) {
-    const oldRes = await db.query('SELECT slug FROM categories WHERE name = $1', [oldName]);
-    if (oldRes.rows.length === 0) throw new Error(`分类 "${oldName}" 不存在`);
-    const slug = oldRes.rows[0].slug;
-    // 改名时 slug 也跟随改变(保持 name = slug 约定)
-    const newSlug = name;
-    await db.query(
-      `UPDATE categories SET name = $1, slug = $2, icon = $3, updated_at = NOW()
-       WHERE slug = $4`,
-      [name, newSlug, icon, slug]
-    );
-    await db.query(
-      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('edit', 'categories', $1)`,
-      [JSON.stringify({ path, oldName, name, icon, link })]
-    );
+    await db.withTransaction(async (tx) => {
+      // 锁定要修改的行
+      const oldRes = await tx.query('SELECT slug FROM categories WHERE name = $1 FOR UPDATE', [oldName]);
+      if (oldRes.rows.length === 0) throw new Error(`分类 "${oldName}" 不存在`);
+      const slug = oldRes.rows[0].slug;
+      // 改名时 slug 也跟随改变(保持 name = slug 约定)
+      const newSlug = name;
+      await tx.query(
+        `UPDATE categories SET name = $1, slug = $2, icon = $3, updated_at = NOW()
+         WHERE slug = $4`,
+        [name, newSlug, icon, slug]
+      );
+      await tx.query(
+        `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('edit', 'categories', $1)`,
+        [JSON.stringify({ path, oldName, name, icon, link })]
+      );
+    });
     await invalidateCache();
     return;
   }
 
   // 子级更新
   const rootName = path[0];
-  const rootRes = await db.query('SELECT slug, children FROM categories WHERE name = $1', [rootName]);
-  if (rootRes.rows.length === 0) throw new Error(`根分类 "${rootName}" 不存在`);
-  const rootRow = rootRes.rows[0];
-  const children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
 
-  // 下钻到父层
-  let cursor: any[] = children;
-  for (let i = 1; i < path.length - 1; i++) {
-    const nameAtDepth = path[i];
-    const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
-    if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
-    if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
-    cursor = cursor[idx].children;
-  }
+  await db.withTransaction(async (tx) => {
+    // 锁定根分类行,防止并发修改
+    const rootRes = await tx.query('SELECT slug, children FROM categories WHERE name = $1 FOR UPDATE', [rootName]);
+    if (rootRes.rows.length === 0) throw new Error(`根分类 "${rootName}" 不存在`);
+    const rootRow = rootRes.rows[0];
+    const children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
 
-  const targetIdx = cursor.findIndex((c) => (c.name || c.slug) === oldName);
-  if (targetIdx === -1) throw new Error(`分类 "${oldName}" 不存在`);
-  cursor[targetIdx].name = name;
-  cursor[targetIdx].slug = name;
-  cursor[targetIdx].icon = icon;
-  if (link) cursor[targetIdx].link = link;
+    // 下钻到父层
+    let cursor: any[] = children;
+    for (let i = 1; i < path.length - 1; i++) {
+      const nameAtDepth = path[i];
+      const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
+      if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
+      if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
+      cursor = cursor[idx].children;
+    }
 
-  await db.query(
-    'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
-    [JSON.stringify(children), rootRow.slug]
-  );
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('edit', 'categories', $1)`,
-    [JSON.stringify({ path, oldName, name, icon, link })]
-  );
+    const targetIdx = cursor.findIndex((c) => (c.name || c.slug) === oldName);
+    if (targetIdx === -1) throw new Error(`分类 "${oldName}" 不存在`);
+    cursor[targetIdx].name = name;
+    cursor[targetIdx].slug = name;
+    cursor[targetIdx].icon = icon;
+    if (link) cursor[targetIdx].link = link;
+
+    await tx.query(
+      'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
+      [JSON.stringify(children), rootRow.slug]
+    );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('edit', 'categories', $1)`,
+      [JSON.stringify({ path, oldName, name, icon, link })]
+    );
+  });
+
   await invalidateCache();
 }
 
@@ -323,44 +341,54 @@ export async function deleteCategory(path: string[]): Promise<void> {
 
   // 根级删除
   if (path.length === 1) {
-    await db.query('DELETE FROM categories WHERE name = $1', [targetName]);
-    await db.query(
-      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('delete', 'categories', $1)`,
-      [JSON.stringify({ path, name: targetName })]
-    );
+    await db.withTransaction(async (tx) => {
+      // 锁定 + 读取(便于在审计日志中保存快照)
+      const existing = await tx.query('SELECT children FROM categories WHERE name = $1 FOR UPDATE', [targetName]);
+      if (existing.rows.length === 0) throw new Error(`分类 "${targetName}" 不存在`);
+      await tx.query('DELETE FROM categories WHERE name = $1', [targetName]);
+      await tx.query(
+        `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('delete', 'categories', $1)`,
+        [JSON.stringify({ path, name: targetName, before: existing.rows[0].children })]
+      );
+    });
     await invalidateCache();
     return;
   }
 
   // 子级删除
   const rootName = path[0];
-  const rootRes = await db.query('SELECT slug, children FROM categories WHERE name = $1', [rootName]);
-  if (rootRes.rows.length === 0) throw new Error(`根分类 "${rootName}" 不存在`);
-  const rootRow = rootRes.rows[0];
-  const children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
 
-  // 下钻到父层
-  let cursor: any[] = children;
-  for (let i = 1; i < path.length - 1; i++) {
-    const nameAtDepth = path[i];
-    const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
-    if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
-    if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
-    cursor = cursor[idx].children;
-  }
+  await db.withTransaction(async (tx) => {
+    // 锁定根分类行
+    const rootRes = await tx.query('SELECT slug, children FROM categories WHERE name = $1 FOR UPDATE', [rootName]);
+    if (rootRes.rows.length === 0) throw new Error(`根分类 "${rootName}" 不存在`);
+    const rootRow = rootRes.rows[0];
+    const children: any[] = Array.isArray(rootRow.children) ? rootRow.children : [];
 
-  const targetIdx = cursor.findIndex((c) => (c.name || c.slug) === targetName);
-  if (targetIdx === -1) throw new Error(`分类 "${targetName}" 不存在`);
-  cursor.splice(targetIdx, 1);
+    // 下钻到父层
+    let cursor: any[] = children;
+    for (let i = 1; i < path.length - 1; i++) {
+      const nameAtDepth = path[i];
+      const idx = cursor.findIndex((c) => (c.name || c.slug) === nameAtDepth);
+      if (idx === -1) throw new Error(`父分类 "${nameAtDepth}" 不存在`);
+      if (!Array.isArray(cursor[idx].children)) cursor[idx].children = [];
+      cursor = cursor[idx].children;
+    }
 
-  await db.query(
-    'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
-    [JSON.stringify(children), rootRow.slug]
-  );
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('delete', 'categories', $1)`,
-    [JSON.stringify({ path, name: targetName })]
-  );
+    const targetIdx = cursor.findIndex((c) => (c.name || c.slug) === targetName);
+    if (targetIdx === -1) throw new Error(`分类 "${targetName}" 不存在`);
+    const removed = cursor.splice(targetIdx, 1)[0];
+
+    await tx.query(
+      'UPDATE categories SET children = $1::jsonb, updated_at = NOW() WHERE slug = $2',
+      [JSON.stringify(children), rootRow.slug]
+    );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('delete', 'categories', $1)`,
+      [JSON.stringify({ path, name: targetName, before: removed })]
+    );
+  });
+
   await invalidateCache();
 }
 
@@ -388,128 +416,125 @@ export async function moveCategory(
     throw new Error('不能移动到自身的子分类中');
   }
 
-  // ===== 1. 读取全部分类行 =====
-  const allRows = (await db.query('SELECT slug, name, icon, children, sort_order FROM categories ORDER BY sort_order')).rows;
+  // 整个 move 操作必须在单事务内完成:锁定所有根行 → 内存树操作 → 写回 → 审计日志
+  // 这样跨多行 UPDATE/INSERT/DELETE 不会出现半完成状态
+  await db.withTransaction(async (tx) => {
+    // ===== 1. 读取并锁定全部分类行(FOR UPDATE 防止并发 move/edit) =====
+    const allRows = (await tx.query('SELECT slug, name, icon, children, sort_order FROM categories ORDER BY sort_order FOR UPDATE')).rows;
 
-  // ===== 2. 在内存树中操作 =====
-  // 构建根列表(数组格式),便于统一处理
-  type Node = {
-    name: string;
-    slug: string;
-    icon: string;
-    link?: string;
-    children: Node[];
-    _isRoot?: boolean;
-  };
-
-  function toNode(row: any): Node {
-    const childrenRaw = Array.isArray(row.children) ? row.children : [];
-    return {
-      name: row.name,
-      slug: row.slug,
-      icon: row.icon || '',
-      link: row.link,
-      children: childrenRaw.map((c: any) => ({
-        name: c.name || c.slug,
-        slug: c.slug || c.name,
-        icon: c.icon || '',
-        link: c.link,
-        children: Array.isArray(c.children) ? c.children.map(toNode) : [],
-      })),
+    // ===== 2. 在内存树中操作 =====
+    type Node = {
+      name: string;
+      slug: string;
+      icon: string;
+      link?: string;
+      children: Node[];
     };
-  }
 
-  const rootNodes: Node[] = allRows.map(toNode);
-
-  // 在树中根据 path 查找节点及其父级 children 数组
-  function findNodeAndParent(path: string[]): { node: Node; parentChildren: Node[] | null } | null {
-    const rootName = path[0];
-    const rootIdx = rootNodes.findIndex((n) => n.name === rootName);
-    if (rootIdx === -1) return null;
-    if (path.length === 1) {
-      return { node: rootNodes[rootIdx], parentChildren: null };
+    function toNode(row: any): Node {
+      const childrenRaw = Array.isArray(row.children) ? row.children : [];
+      return {
+        name: row.name,
+        slug: row.slug,
+        icon: row.icon || '',
+        link: row.link,
+        children: childrenRaw.map((c: any) => ({
+          name: c.name || c.slug,
+          slug: c.slug || c.name,
+          icon: c.icon || '',
+          link: c.link,
+          children: Array.isArray(c.children) ? c.children.map(toNode) : [],
+        })),
+      };
     }
-    let current = rootNodes[rootIdx];
-    for (let i = 1; i < path.length - 1; i++) {
-      const idx = current.children.findIndex((c) => c.name === path[i]);
-      if (idx === -1) return null;
-      current = current.children[idx];
+
+    const rootNodes: Node[] = allRows.map(toNode);
+
+    function findNodeAndParent(path: string[]): { node: Node; parentChildren: Node[] | null } | null {
+      const rootName = path[0];
+      const rootIdx = rootNodes.findIndex((n) => n.name === rootName);
+      if (rootIdx === -1) return null;
+      if (path.length === 1) {
+        return { node: rootNodes[rootIdx], parentChildren: null };
+      }
+      let current = rootNodes[rootIdx];
+      for (let i = 1; i < path.length - 1; i++) {
+        const idx = current.children.findIndex((c) => c.name === path[i]);
+        if (idx === -1) return null;
+        current = current.children[idx];
+      }
+      const targetIdx = current.children.findIndex((c) => c.name === path[path.length - 1]);
+      if (targetIdx === -1) return null;
+      return { node: current.children[targetIdx], parentChildren: current.children };
     }
-    const targetIdx = current.children.findIndex((c) => c.name === path[path.length - 1]);
-    if (targetIdx === -1) return null;
-    return { node: current.children[targetIdx], parentChildren: current.children };
-  }
 
-  // 3. 从原位置移除 source
-  const sourceInfo = findNodeAndParent(sourcePath);
-  if (!sourceInfo) throw new Error(`源分类 "${sourceName}" 不存在`);
-  const movedNode = sourceInfo.node;
-  if (sourceInfo.parentChildren === null) {
-    // 根级
-    const idx = rootNodes.findIndex((n) => n.name === sourceName);
-    rootNodes.splice(idx, 1);
-  } else {
-    const idx = sourceInfo.parentChildren.findIndex((c) => c.name === sourceName);
-    sourceInfo.parentChildren.splice(idx, 1);
-  }
-
-  // 4. 插入到目标位置
-  if (position === 'inside') {
-    // 作为 target 的子级
-    const targetInfo = findNodeAndParent(targetPath);
-    if (!targetInfo) throw new Error(`目标分类 "${targetName}" 不存在`);
-    if (!targetInfo.node.children) targetInfo.node.children = [];
-    targetInfo.node.children.push(movedNode);
-  } else {
-    // before/after:与 target 同级
-    const targetInfo = findNodeAndParent(targetPath);
-    if (!targetInfo) throw new Error(`目标分类 "${targetName}" 不存在`);
-    const siblings = targetInfo.parentChildren === null ? rootNodes : targetInfo.parentChildren;
-    const targetIdx = siblings.findIndex((c) => c.name === targetName);
-    if (targetIdx === -1) throw new Error(`目标分类 "${targetName}" 不存在`);
-    const insertIdx = position === 'before' ? targetIdx : targetIdx + 1;
-    siblings.splice(insertIdx, 0, movedNode);
-  }
-
-  // ===== 5. 把内存树写回数据库 =====
-  // 根节点:UPDATE 或 INSERT
-  const existingSlugs = new Set(allRows.map((r: any) => r.slug));
-
-  for (const root of rootNodes) {
-    const childrenJson = JSON.stringify(root.children.map((c) => ({
-      name: c.name,
-      slug: c.slug,
-      icon: c.icon,
-      link: c.link || `/${c.slug}`,
-      children: c.children,
-    })));
-
-    if (existingSlugs.has(root.slug)) {
-      await db.query(
-        'UPDATE categories SET name = $1, icon = $2, children = $3::jsonb, updated_at = NOW() WHERE slug = $4',
-        [root.name, root.icon, childrenJson, root.slug]
-      );
+    // 3. 从原位置移除 source
+    const sourceInfo = findNodeAndParent(sourcePath);
+    if (!sourceInfo) throw new Error(`源分类 "${sourceName}" 不存在`);
+    const movedNode = sourceInfo.node;
+    if (sourceInfo.parentChildren === null) {
+      const idx = rootNodes.findIndex((n) => n.name === sourceName);
+      rootNodes.splice(idx, 1);
     } else {
-      await db.query(
-        `INSERT INTO categories (name, slug, icon, children, sort_order, updated_at)
-         VALUES ($1, $2, $3, $4::jsonb, (SELECT COALESCE(MAX(sort_order),0)+1 FROM categories), NOW())`,
-        [root.name, root.slug, root.icon, childrenJson]
-      );
+      const idx = sourceInfo.parentChildren.findIndex((c) => c.name === sourceName);
+      sourceInfo.parentChildren.splice(idx, 1);
     }
-  }
 
-  // 删除已不存在的根分类(source 被移到子级时,原根行可能仍存在但 children 变了)
-  // 注意:如果 source 原来是根级,现在变成了某根的子级,其根行需要删除
-  const currentRootSlugs = new Set(rootNodes.map((n) => n.slug));
-  for (const row of allRows) {
-    if (!currentRootSlugs.has((row as any).slug)) {
-      await db.query('DELETE FROM categories WHERE slug = $1', [(row as any).slug]);
+    // 4. 插入到目标位置
+    if (position === 'inside') {
+      const targetInfo = findNodeAndParent(targetPath);
+      if (!targetInfo) throw new Error(`目标分类 "${targetName}" 不存在`);
+      if (!targetInfo.node.children) targetInfo.node.children = [];
+      targetInfo.node.children.push(movedNode);
+    } else {
+      const targetInfo = findNodeAndParent(targetPath);
+      if (!targetInfo) throw new Error(`目标分类 "${targetName}" 不存在`);
+      const siblings = targetInfo.parentChildren === null ? rootNodes : targetInfo.parentChildren;
+      const targetIdx = siblings.findIndex((c) => c.name === targetName);
+      if (targetIdx === -1) throw new Error(`目标分类 "${targetName}" 不存在`);
+      const insertIdx = position === 'before' ? targetIdx : targetIdx + 1;
+      siblings.splice(insertIdx, 0, movedNode);
     }
-  }
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('move', 'categories', $1)`,
-    [JSON.stringify({ sourcePath, targetPath, position })]
-  );
+    // ===== 5. 把内存树写回数据库(同一事务,同锁) =====
+    const existingSlugs = new Set(allRows.map((r: any) => r.slug));
+
+    for (const root of rootNodes) {
+      const childrenJson = JSON.stringify(root.children.map((c) => ({
+        name: c.name,
+        slug: c.slug,
+        icon: c.icon,
+        link: c.link || `/${c.slug}`,
+        children: c.children,
+      })));
+
+      if (existingSlugs.has(root.slug)) {
+        await tx.query(
+          'UPDATE categories SET name = $1, icon = $2, children = $3::jsonb, updated_at = NOW() WHERE slug = $4',
+          [root.name, root.icon, childrenJson, root.slug]
+        );
+      } else {
+        await tx.query(
+          `INSERT INTO categories (name, slug, icon, children, sort_order, updated_at)
+           VALUES ($1, $2, $3, $4::jsonb, (SELECT COALESCE(MAX(sort_order),0)+1 FROM categories), NOW())`,
+          [root.name, root.slug, root.icon, childrenJson]
+        );
+      }
+    }
+
+    // 删除已不存在的根分类
+    const currentRootSlugs = new Set(rootNodes.map((n) => n.slug));
+    for (const row of allRows) {
+      if (!currentRootSlugs.has((row as any).slug)) {
+        await tx.query('DELETE FROM categories WHERE slug = $1', [(row as any).slug]);
+      }
+    }
+
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ('move', 'categories', $1)`,
+      [JSON.stringify({ sourcePath, targetPath, position })]
+    );
+  });
+
   await invalidateCache();
 }

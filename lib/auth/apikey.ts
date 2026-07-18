@@ -28,7 +28,14 @@ const RATE_LIMIT_PER_MIN = 60;
 const RATE_LIMIT_WINDOW_SEC = 60;
 
 // AES-256-GCM 加密用密钥(从 JWT_SECRET 派生 32 字节)
-const ENC_KEY = deriveEncKey();
+// 惰性求值:JWT_SECRET 缺失时在真正使用时才抛错,避免模块加载阶段就崩溃
+let _ENC_KEY: Buffer | null = null;
+function getEncKey(): Buffer {
+  if (_ENC_KEY === null) {
+    _ENC_KEY = deriveEncKey();
+  }
+  return _ENC_KEY;
+}
 
 export interface ApiKeyMeta {
   id: string;
@@ -173,9 +180,13 @@ function hashKey(plaintext: string): string {
 
 /**
  * 从 JWT_SECRET 派生 32 字节密钥用于 AES-256
+ * JWT_SECRET 缺失时直接抛错,避免静默使用弱 fallback 密钥导致 API Key 明文可被解密
  */
 function deriveEncKey(): Buffer {
-  const secret = process.env.JWT_SECRET || 'fallback-dev-key-do-not-use-in-prod';
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET 环境变量未配置,无法派生 API Key 加密密钥');
+  }
   return createHash('sha256').update(`apikey-enc:${secret}`).digest();
 }
 
@@ -185,7 +196,7 @@ function deriveEncKey(): Buffer {
  */
 function encryptPlaintext(plaintext: string): string {
   const iv = randomBytes(12);
-  const cipher = createCipheriv('aes-256-gcm', ENC_KEY, iv);
+  const cipher = createCipheriv('aes-256-gcm', getEncKey(), iv);
   const ciphertext = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
   const tag = cipher.getAuthTag();
   return `${iv.toString('base64')}:${ciphertext.toString('base64')}:${tag.toString('base64')}`;
@@ -199,7 +210,7 @@ function decryptPlaintext(encKey: string): string {
   const iv = Buffer.from(ivB64, 'base64');
   const ciphertext = Buffer.from(ctB64, 'base64');
   const tag = Buffer.from(tagB64, 'base64');
-  const decipher = createDecipheriv('aes-256-gcm', ENC_KEY, iv);
+  const decipher = createDecipheriv('aes-256-gcm', getEncKey(), iv);
   decipher.setAuthTag(tag);
   return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('utf8');
 }

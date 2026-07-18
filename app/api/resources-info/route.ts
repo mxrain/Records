@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getResourceByUuid } from '@/lib/data/resources';
+import { requireAuth } from '@/lib/auth/guard';
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get('uuid');
@@ -20,6 +21,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // POST 为冗余写接口(与 GET 功能相同),必须鉴权防止未授权数据探测
+  const authErr = await requireAuth(request);
+  if (authErr) return authErr;
+
   try {
     const { uuid } = await request.json();
     if (!uuid) {

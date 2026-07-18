@@ -90,43 +90,54 @@ export async function upsertResource(uuid: string, data: Resource): Promise<void
     other_information: data.other_information,
   };
 
-  await db.query(
-    `INSERT INTO resources (uuid, title, category, images, tags, source_links, json_data, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
-     ON CONFLICT (uuid) DO UPDATE SET
-       title = $2, category = $3, images = $4, tags = $5, source_links = $6,
-       json_data = $7, sync_status = 'pending', updated_at = NOW()`,
-    [
-      uuid,
-      data.name,
-      data.category,
-      JSON.stringify(data.images),
-      JSON.stringify(data.tags),
-      JSON.stringify(data.source_links),
-      JSON.stringify(jsonData),
-    ]
-  );
+  // 业务表写入与审计日志必须在同一事务内,避免半写状态
+  await db.withTransaction(async (tx) => {
+    await tx.query(
+      `INSERT INTO resources (uuid, title, category, images, tags, source_links, json_data, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+       ON CONFLICT (uuid) DO UPDATE SET
+         title = $2, category = $3, images = $4, tags = $5, source_links = $6,
+         json_data = $7, sync_status = 'pending', updated_at = NOW()`,
+      [
+        uuid,
+        data.name,
+        data.category,
+        JSON.stringify(data.images),
+        JSON.stringify(data.tags),
+        JSON.stringify(data.source_links),
+        JSON.stringify(jsonData),
+      ]
+    );
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', uuid, JSON.stringify(jsonData)]
-  );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', uuid, JSON.stringify(jsonData)]
+    );
+  });
 
   await invalidateCache();
 }
 
 export async function deleteResource(uuid: string): Promise<boolean> {
-  const result = await db.query('DELETE FROM resources WHERE uuid = $1 RETURNING uuid', [uuid]);
-  if (result.rowCount && result.rowCount > 0) {
-    await db.query(
-      `INSERT INTO change_logs (action, resource_uuid) VALUES ($1, $2)`,
-      ['delete', uuid]
+  // 先在事务内读取并删除,同时写入审计日志(含删除前数据快照,便于恢复)
+  const deleted = await db.withTransaction(async (tx) => {
+    const existing = await tx.query('SELECT json_data FROM resources WHERE uuid = $1', [uuid]);
+    if (existing.rowCount === 0) return false;
+
+    await tx.query('DELETE FROM resources WHERE uuid = $1', [uuid]);
+    // 保存删除前的完整数据快照,避免误删无法恢复
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data) VALUES ($1, $2, $3)`,
+      ['delete', uuid, JSON.stringify({ before: existing.rows[0].json_data })]
     );
-    await invalidateCache();
     return true;
+  });
+
+  if (deleted) {
+    await invalidateCache();
   }
-  return false;
+  return deleted;
 }
 
 export async function hasResource(uuid: string): Promise<boolean> {

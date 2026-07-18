@@ -206,22 +206,26 @@ export async function getList(): Promise<ListData> {
  */
 export async function saveList(data: ListData): Promise<void> {
   const types = ['recommend', 'top', 'carousel'] as const;
-  for (const type of types) {
-    const uuids = type === 'carousel' ? data.carousel : data[type].map(item => item.uuid);
-    await db.query(
-      `INSERT INTO list_config (list_type, resource_uuids, config, updated_at)
-       VALUES ($1, $2, '{}'::jsonb, NOW())
-       ON CONFLICT (list_type) DO UPDATE SET
-         resource_uuids = $2, updated_at = NOW()`,
-      [type, JSON.stringify(uuids)]
-    );
-  }
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', 'list', JSON.stringify(data)]
-  );
+  // 所有类型写入与审计日志必须在同一事务内
+  await db.withTransaction(async (tx) => {
+    for (const type of types) {
+      const uuids = type === 'carousel' ? data.carousel : data[type].map(item => item.uuid);
+      await tx.query(
+        `INSERT INTO list_config (list_type, resource_uuids, config, updated_at)
+         VALUES ($1, $2, '{}'::jsonb, NOW())
+         ON CONFLICT (list_type) DO UPDATE SET
+           resource_uuids = $2, updated_at = NOW()`,
+        [type, JSON.stringify(uuids)]
+      );
+    }
+
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', 'list', JSON.stringify(data)]
+    );
+  });
 
   await invalidateCache();
 }
@@ -237,19 +241,21 @@ export async function saveListOverride(type: SqlDerivedType, override: ListOverr
     limit: override.limit || DEFAULT_OVERRIDE.limit,
   };
 
-  await db.query(
-    `INSERT INTO list_config (list_type, resource_uuids, config, updated_at)
-     VALUES ($1, '[]'::jsonb, $2::jsonb, NOW())
-     ON CONFLICT (list_type) DO UPDATE SET
-       config = $2::jsonb, updated_at = NOW()`,
-    [type, JSON.stringify(config)]
-  );
+  await db.withTransaction(async (tx) => {
+    await tx.query(
+      `INSERT INTO list_config (list_type, resource_uuids, config, updated_at)
+       VALUES ($1, '[]'::jsonb, $2::jsonb, NOW())
+       ON CONFLICT (list_type) DO UPDATE SET
+         config = $2::jsonb, updated_at = NOW()`,
+      [type, JSON.stringify(config)]
+    );
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', `list:${type}:override`, JSON.stringify(config)]
-  );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', `list:${type}:override`, JSON.stringify(config)]
+    );
+  });
 
   await invalidateCache();
 }

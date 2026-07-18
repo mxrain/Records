@@ -131,13 +131,13 @@
    圆角系统
    ======================================== */
   --radius-none: 0;
-  --radius-sm: 0.125rem;   /* 2px */
-  --radius-base: 0.25rem;  /* 4px */
-  --radius-md: 0.375rem;   /* 6px */
-  --radius-lg: 0.5rem;     /* 8px */
-  --radius-xl: 0.75rem;    /* 12px */
-  --radius-2xl: 1rem;      /* 16px */
-  --radius-3xl: 1.5rem;    /* 24px */
+  --radius-sm: 0.2rem;     /* 统一圆角 */
+  --radius-base: 0.2rem;   /* 统一圆角 */
+  --radius-md: 0.2rem;     /* 统一圆角 */
+  --radius-lg: 0.2rem;     /* 统一圆角 */
+  --radius-xl: 0.2rem;     /* 统一圆角 */
+  --radius-2xl: 0.2rem;    /* 统一圆角 */
+  --radius-3xl: 0.2rem;    /* 统一圆角 */
   --radius-full: 9999px;
   
   /* ========================================
@@ -287,7 +287,7 @@
   --gt-border: #e1dccf;
   --gt-input: #eae6db;
   --gt-ring: #3b352b;
-  --gt-radius: 2rem;
+  --gt-radius: 0.2rem;
   --gt-spacing: 0.3rem;
   --gt-tracking: 0.01em;
   --gt-shadow-sm: 0 1px 3px 0 rgba(59,53,43,0.04), 0 1px 2px -1px rgba(59,53,43,0.04);

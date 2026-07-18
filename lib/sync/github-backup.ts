@@ -145,35 +145,44 @@ export async function syncAllToGitHub(): Promise<{ resources: boolean; categorie
 }
 
 export async function syncPendingChanges(): Promise<number> {
-  const result = await db.query(
-    `SELECT id, action, resource_uuid, data FROM change_logs WHERE synced = false ORDER BY id LIMIT 50`
-  );
+  // 使用 FOR UPDATE SKIP LOCKED 锁定正在处理的行,防止并发触发重复备份:
+  // - 两个并发调用只会拿到互斥的行集,不会重复处理同一批 change_logs
+  // - 备份成功后才在同一事务内标记 synced=true,失败则行锁释放,下次重试
+  // - 注意:GitHub fetch 是网络 IO,放在事务内会延长锁持有时间,
+  //   但 change_logs 行级锁粒度小,且每批最多 50 条,影响可控
+  return await db.withTransaction(async (tx) => {
+    const result = await tx.query(
+      `SELECT id, action, resource_uuid, data FROM change_logs
+       WHERE synced = false ORDER BY id LIMIT 50 FOR UPDATE SKIP LOCKED`
+    );
 
-  const logs: BackupAction[] = result.rows;
-  if (logs.length === 0) return 0;
+    const logs: BackupAction[] = result.rows;
+    if (logs.length === 0) return 0;
 
-  let synced = 0;
-  for (const log of logs) {
-    let ok = false;
-    switch (log.action) {
-      case 'edit':
-      case 'delete':
-        ok = await backupResources();
-        break;
-      case 'categories':
-        ok = await backupCategories();
-        break;
-      case 'list':
-        ok = await backupList();
-        break;
+    let synced = 0;
+    for (const log of logs) {
+      let ok = false;
+      switch (log.action) {
+        case 'edit':
+        case 'delete':
+          ok = await backupResources();
+          break;
+        case 'categories':
+          ok = await backupCategories();
+          break;
+        case 'list':
+          ok = await backupList();
+          break;
+      }
+
+      if (ok) {
+        await tx.query('UPDATE change_logs SET synced = true WHERE id = $1', [log.id]);
+        synced++;
+      }
+      // 失败时不标记 synced=true,行锁释放后下次 syncPendingChanges 会重新处理
     }
 
-    if (ok) {
-      await db.query('UPDATE change_logs SET synced = true WHERE id = $1', [log.id]);
-      synced++;
-    }
-  }
-
-  console.log(`[GitHub Backup] Synced ${synced}/${logs.length} pending changes`);
-  return synced;
+    console.log(`[GitHub Backup] Synced ${synced}/${logs.length} pending changes`);
+    return synced;
+  });
 }

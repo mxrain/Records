@@ -86,19 +86,21 @@ export async function getAllSettingsMeta(): Promise<SiteSetting[]> {
  * 更新单个配置
  */
 export async function updateSetting(key: string, value: SettingValue): Promise<void> {
-  await db.query(
-    `INSERT INTO site_settings (key, value, updated_at)
-     VALUES ($1, $2::jsonb, NOW())
-     ON CONFLICT (key) DO UPDATE SET
-       value = $2::jsonb, updated_at = NOW()`,
-    [key, JSON.stringify(value)]
-  );
+  await db.withTransaction(async (tx) => {
+    await tx.query(
+      `INSERT INTO site_settings (key, value, updated_at)
+       VALUES ($1, $2::jsonb, NOW())
+       ON CONFLICT (key) DO UPDATE SET
+         value = $2::jsonb, updated_at = NOW()`,
+      [key, JSON.stringify(value)]
+    );
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', `setting:${key}`, JSON.stringify({ key, value })]
-  );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', `setting:${key}`, JSON.stringify({ key, value })]
+    );
+  });
 
   await invalidateCache();
 }
@@ -108,21 +110,23 @@ export async function updateSetting(key: string, value: SettingValue): Promise<v
  */
 export async function upsertSetting(key: string, value: SettingValue, description?: string): Promise<void> {
   const desc = description ?? null;
-  await db.query(
-    `INSERT INTO site_settings (key, value, description, updated_at)
-     VALUES ($1, $2::jsonb, $3, NOW())
-     ON CONFLICT (key) DO UPDATE SET
-       value = $2::jsonb,
-       description = COALESCE($3, site_settings.description),
-       updated_at = NOW()`,
-    [key, JSON.stringify(value), desc]
-  );
+  await db.withTransaction(async (tx) => {
+    await tx.query(
+      `INSERT INTO site_settings (key, value, description, updated_at)
+       VALUES ($1, $2::jsonb, $3, NOW())
+       ON CONFLICT (key) DO UPDATE SET
+         value = $2::jsonb,
+         description = COALESCE($3, site_settings.description),
+         updated_at = NOW()`,
+      [key, JSON.stringify(value), desc]
+    );
 
-  await db.query(
-    `INSERT INTO change_logs (action, resource_uuid, data)
-     VALUES ($1, $2, $3)`,
-    ['edit', `setting:${key}`, JSON.stringify({ key, value })]
-  );
+    await tx.query(
+      `INSERT INTO change_logs (action, resource_uuid, data)
+       VALUES ($1, $2, $3)`,
+      ['edit', `setting:${key}`, JSON.stringify({ key, value })]
+    );
+  });
 
   await invalidateCache();
 }

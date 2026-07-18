@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import * as jwt from 'jsonwebtoken'
 import { defaultAuthConfig as authConfig, validateAuthConfig } from '@/lib/auth/config'
+import { verifyAccessToken } from '@/lib/auth/tokens'
 
 // 启动时校验认证配置完整性(模块级,仅执行一次)
 // 用 try-catch 包裹:配置缺失只记录错误,不中断请求处理(避免整体崩溃)
@@ -12,30 +12,29 @@ try {
 }
 
 /**
- * 直接校验 JWT Token 有效性（避免自 fetch /api/verify 带来的额外开销）
+ * 校验 JWT Token 有效性(含 Redis 黑名单检查)
+ *
+ * 与 lib/auth/tokens.ts 的 verifyAccessToken 行为一致:
+ * - 签名 + issuer/audience 校验
+ * - jti 在 Redis 黑名单中则拒绝(已登出/已撤销的 token)
+ * - Redis 故障时降级为仅签名校验(fail-open,避免锁死正常用户)
  */
-function verifyToken(token: string | undefined): boolean {
+async function verifyToken(token: string | undefined): Promise<boolean> {
   if (!token) return false
-  const secret = process.env.JWT_SECRET
-  if (!secret) {
-    console.error('JWT_SECRET 环境变量未配置')
-    return false
-  }
-  try {
-    jwt.verify(token, secret)
-    return true
-  } catch {
-    return false
-  }
+  const payload = await verifyAccessToken(token)
+  return payload !== null
 }
 
 /**
  * 身份验证代理（原 middleware，Next.js 16 已更名为 proxy）
  * - 全局开关关闭时直接放行
  * - 公开路径（/verify, /login）直接放行
- * - 受保护路径（/sys, /admin）校验 cookie 中的 token，失败则重定向到 /verify
+ * - 受保护路径（/sys, /admin）校验 cookie 中的 token(含黑名单检查),失败则重定向到 /verify
+ *
+ * 注意:此 proxy 使用 nodejs runtime,以便直接访问 Redis 检查 token 黑名单。
+ * 黑名单检查仅在 /sys /admin 受保护路径触发,其他路径不受影响。
  */
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   // 全局开关检查
   if (!authConfig.enabled) return NextResponse.next()
 
@@ -46,12 +45,12 @@ export function proxy(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // 受保护路径校验 token
+  // 受保护路径校验 token(含 Redis 黑名单检查)
   const isProtected = authConfig.paths.protected.some(p => pathname.startsWith(p))
   if (isProtected) {
     const token = req.cookies.get(authConfig.tokens.access.cookieName)?.value
 
-    if (!verifyToken(token)) {
+    if (!(await verifyToken(token))) {
       const redirectUrl = new URL(authConfig.paths.redirectTo, req.url)
       return NextResponse.redirect(redirectUrl)
     }
@@ -80,7 +79,9 @@ export function proxy(req: NextRequest) {
   return response
 }
 
-// 匹配所有路由，排除静态资源和 favicon
+// 使用 nodejs runtime 以便直接访问 Redis 检查 token 黑名单
+// 匹配所有路由,排除静态资源和 favicon
 export const config = {
+  runtime: 'nodejs',
   matcher: '/((?!_next/static|favicon.ico).*)',
 }
